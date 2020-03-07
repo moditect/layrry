@@ -1,0 +1,27 @@
+layers:
+  log:
+    modules:
+      - "org.apache.logging.log4j:log4j-api:jar:2.13.1"
+      - "org.apache.logging.log4j:log4j-core:jar:2.13.1"
+      - "com.example:logconfig:1.0.0"
+  foo:
+    parents:
+      - "log"
+    modules:
+      - "com.example:greeter:1.0.0"
+      - "com.example:foo:1.0.0"
+  bar:
+    parents:
+      - "log"
+    modules:
+      - "com.example:greeter:2.0.0"
+      - "com.example:bar:1.0.0"
+  app:
+    parents:
+      - "foo"
+      - "bar"
+    modules:
+      - "com.example:app:1.0.0"
+main:
+  module: com.example.app
+  class: com.example.app.App

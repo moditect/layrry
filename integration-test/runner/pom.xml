@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>org.moditect.layrry</groupId>
+    <artifactId>layrry-integrationtest</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>layrry-integrationtest-runner</artifactId>
+  <packaging>jar</packaging>
+  <name>Layrry Integration Test Runner</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.moditect.layrry</groupId>
+      <artifactId>layrry</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.6.0</version>
+          <configuration>
+            <executable>java</executable>
+            <arguments>
+              <argument>-classpath</argument>
+              <classpath/>
+              <argument>org.moditect.layrry.Layrry</argument>
+              <gument>--layers-config</gument>
+              <argument>src/test/resources/layers.yml</argument>
+              <argument>Alice</argument>
+            </arguments>
+          </configuration>
+        </plugin>
+    </plugins>
+  </build>
+</project>
