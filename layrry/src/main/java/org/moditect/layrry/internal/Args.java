@@ -11,7 +11,7 @@ public class Args {
     @Parameter(description = "Main arguments")
     private List<String> mainArgs = new ArrayList<>();
 
-    @Parameter(names = "--layers-config", description = "Layers configuration file")
+    @Parameter(names = "--layers-config", required = true, description = "Layers configuration file")
     private File layersConfig;
 
     public List<String> getMainArgs() {
