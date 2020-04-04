@@ -62,37 +62,5 @@ public class Layrry {
 
         layers.run(layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(), arguments.getMainArgs().toArray(new String[0]));
     }
-
 }
-
-//        ModuleLayer boot = ModuleLayer.boot();
-//        ClassLoader scl = ClassLoader.getSystemClassLoader();
-//
-//        File foo = Maven.resolver().resolve("dev.morling.demos.moduleversions:module-versions-foo:1.0-SNAPSHOT").withoutTransitivity().asSingleFile();
-//        File greeter10 = Maven.resolver().resolve("dev.morling.demos.moduleversions:module-versions-greeter:1.0.0").withoutTransitivity().asSingleFile();
-//
-//        ModuleFinder fooFinder = ModuleFinder.of(foo.toPath(), greeter10.toPath());
-//        Configuration fooConfig = boot.configuration().resolve(fooFinder, ModuleFinder.of(),
-//                Set.of("dev.morling.demos.moduleversions.foo", "dev.morling.demos.moduleversions.greeter"));
-//        ModuleLayer fooLayer = boot.defineModulesWithOneLoader(fooConfig, scl);
-//
-//        File bar = Maven.resolver().resolve("dev.morling.demos.moduleversions:module-versions-bar:1.0-SNAPSHOT").withoutTransitivity().asSingleFile();
-//        File greeter20 = Maven.resolver().resolve("dev.morling.demos.moduleversions:module-versions-greeter:2.0.0").withoutTransitivity().asSingleFile();
-//
-//        ModuleFinder barFinder = ModuleFinder.of(bar.toPath(), greeter20.toPath());
-//        Configuration barConfig = boot.configuration().resolve(barFinder, ModuleFinder.of(),
-//                Set.of("dev.morling.demos.moduleversions.bar", "dev.morling.demos.moduleversions.greeter"));
-//        ModuleLayer barLayer = boot.defineModulesWithOneLoader(barConfig, scl);
-//
-//        File app = Maven.resolver().resolve("dev.morling.demos.moduleversions:module-versions-app:1.0-SNAPSHOT").withoutTransitivity().asSingleFile();
-//        ModuleFinder appFinder = ModuleFinder.of(app.toPath());
-//        Configuration appConfig = Configuration.resolve(appFinder, List.of(fooLayer.configuration(), barLayer.configuration()), ModuleFinder.of(),
-//                Set.of("dev.morling.demos.moduleversions.app"));
-//
-//        ModuleLayer appLayer = ModuleLayer.defineModulesWithOneLoader(appConfig, List.of(fooLayer, barLayer), scl).layer();
-//
-//        Class<?> c = appLayer.findLoader("dev.morling.demos.moduleversions.app").loadClass("dev.morling.moduleversions.app.App");
-//        Method main = c.getDeclaredMethod("main", String[].class);
-//        main.invoke(null, (Object) args);
-//    }
 
