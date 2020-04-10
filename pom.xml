@@ -24,8 +24,8 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>aggregator</name>
-  <url>http://maven.apache.org</url>
+  <name>Layrry Aggregator</name>
+  <url>https://github.com/moditect/layrry</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

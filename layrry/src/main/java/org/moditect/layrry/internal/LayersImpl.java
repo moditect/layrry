@@ -49,9 +49,19 @@ public class LayersImpl implements Layers {
 
         MavenResolverSystem resolver = Maven.resolver();
         for(Entry<String, Layer> entry : layers.entrySet()) {
-            Path[] moduleJars = resolver.resolve(entry.getValue().getModuleGavs()).withoutTransitivity().as(Path.class);
+            Layer layer = entry.getValue();
+            List<String> moduleGavs = layer.getModuleGavs();
+
+            Path[] moduleJars;
+            if (moduleGavs.isEmpty()) {
+                moduleJars = new Path[0];
+            }
+            else {
+                moduleJars = resolver.resolve(moduleGavs).withoutTransitivity().as(Path.class);
+            }
+
             ModuleFinder finder = ModuleFinder.of(moduleJars);
-            List<ModuleLayer> parentLayers = getParentLayers(entry.getKey(), entry.getValue().getParents());
+            List<ModuleLayer> parentLayers = getParentLayers(entry.getKey(), layer.getParents());
             Set<String> roots = finder.findAll()
                 .stream()
                 .map(m -> m.descriptor().name())
@@ -63,8 +73,8 @@ public class LayersImpl implements Layers {
                     roots
             );
 
-            ModuleLayer layer = ModuleLayer.defineModulesWithOneLoader(appConfig, parentLayers, scl).layer();
-            moduleLayers.put(entry.getKey(), layer);
+            ModuleLayer moduleLayer = ModuleLayer.defineModulesWithOneLoader(appConfig, parentLayers, scl).layer();
+            moduleLayers.put(entry.getKey(), moduleLayer);
         }
 
         try {
