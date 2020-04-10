@@ -1,6 +1,6 @@
-# Layrry ⁠- A Runner and API for Layered Java Applications
+# Layrry ⁠- A Launcher and API for Modularized Java Applications
 
-Layrry is a runner and Java API for executing modularized Java applications.
+Layrry is a launcher and Java API for executing modularized Java applications.
 
 It allows to assemble modularized applications based on Maven artifact coordinates of the (modular) JARs to include.
 Layrry utilizes the Java Module System's notion of [module layers](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ModuleLayer.html), allowing multiple versions of one module to be used within an application at the same time.
@@ -63,8 +63,14 @@ main:
   class: <main class>
 ```
 
-Here's an example of an application with four layers, `log`, `foo`, `bar` and `app`.
-Note how two different versions of the `greeter` module are used in `foo` and `bar`:
+As an example, consider the following application whose modules `foo` and `bar` depend on two different versions of the `greeter` module:
+
+![Layrry Example](example.png)
+
+Running this application wouldn't be possible with the default module path,
+which only allows for one version of a given module.
+Here is how the application can be executed via Layrry,
+organizing all the modules in multiple layers:
 
 ```yaml
 layers:
