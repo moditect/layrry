@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.moditect.layrry.Layers;
 
-public class ExampleRunner {
+public class LayrryIntegrationTest {
 
     private ByteArrayOutputStream sysOut;
     private PrintStream originalSysOut;
