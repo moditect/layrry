@@ -58,10 +58,22 @@ layers:
     modules:
       - ...
       - ...
+  <name 3>:
+    parents:
+      - "<name 2"
+    directory: "relative/path/to/directory/of/layer/directories
+
 main:
   module: <main module>
   class: <main class>
 ```
+
+Each layer comprises:
+
+* A unique name
+* The list of parent layers
+* The list of contained modules given via Maven GAV coordinates OR
+* A directory which contains one or more sub-directories, each of which represent one layer made up of the modular JARs within that sub-directory; the directory path is resolved relatively to the location of the _layrry.yml_ file
 
 As an example, consider the following application whose modules `foo` and `bar` depend on two different versions of the `greeter` module:
 
@@ -123,7 +135,8 @@ In order to use Layrry programmatically, add the following dependency to your _p
 Then, the Layrry Java API can be used like this (showing the same example as above):
 
 ```java
-Layers layers = Layers.layer("log")
+Layers layers = Layers.builder()
+    .layer("log")
         .withModule("org.apache.logging.log4j:log4j-api:jar:2.13.1")
         .withModule("org.apache.logging.log4j:log4j-core:jar:2.13.1")
         .withModule("com.example:logconfig:1.0.0")

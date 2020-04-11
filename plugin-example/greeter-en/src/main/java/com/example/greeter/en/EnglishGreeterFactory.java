@@ -13,19 +13,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry;
+package com.example.greeter.en;
 
-import java.nio.file.Path;
+import com.example.greeter.api.Greeter;
+import com.example.greeter.api.GreeterFactory;
 
-public interface LayerBuilder {
+public class EnglishGreeterFactory implements GreeterFactory {
 
-    LayerBuilder withModulesIn(Path layerDir);
+    @Override
+    public String getLanguage() {
+        return "English";
+    }
 
-    LayerBuilder withModule(String moduleGav);
+    @Override
+    public String getFlag() {
+        return "🇬🇧";
+    }
 
-    LayerBuilder withParent(String parent);
+    @Override
+    public Greeter getGreeter() {
+        return new Greeter() {
 
-    LayerBuilder layer(String name);
-
-    Layers build();
+            @Override
+            public String greet(String name) {
+                return "Hi, " + name;
+            }
+        };
+    }
 }

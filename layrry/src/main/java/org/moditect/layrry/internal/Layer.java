@@ -15,23 +15,30 @@
  */
 package org.moditect.layrry.internal;
 
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
 public class Layer {
 
     private final String name;
+    private Path layerDir;
     private final List<String> moduleGavs;
     private final List<String> parents;
 
-    public Layer(String name, List<String> moduleGavs, List<String> parents) {
+    public Layer(String name, Path layerDir, List<String> moduleGavs, List<String> parents) {
         this.name = name;
+        this.layerDir = layerDir;
         this.moduleGavs = Collections.unmodifiableList(moduleGavs);
         this.parents = Collections.unmodifiableList(parents);
     }
 
     public String getName() {
         return name;
+    }
+
+    public Path getLayerDir() {
+        return layerDir;
     }
 
     public List<String> getModuleGavs() {
@@ -44,6 +51,7 @@ public class Layer {
 
     @Override
     public String toString() {
-        return "Layer [name=" + name + ", moduleGavs=" + moduleGavs + ", parents=" + parents + "]";
+        return "Layer [name=" + name + ", layerDir=" + layerDir + ", moduleGavs=" + moduleGavs + ", parents=" + parents
+                + "]";
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.moditect.layrry.internal;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +24,24 @@ import org.moditect.layrry.Layers;
 
 public class LayerBuilderImpl implements LayerBuilder {
 
-    private final LayersBuilder layersBuilder;
+    private final LayersBuilderImpl layersBuilder;
     private final String name;
+    private Path layerDir;
     private final List<String> moduleGavs;
     private final List<String> parents;
 
-    public LayerBuilderImpl(LayersBuilder layersBuilder, String name) {
+    public LayerBuilderImpl(LayersBuilderImpl layersBuilder, String name) {
         this.layersBuilder = layersBuilder;
         this.name = name;
         this.moduleGavs = new ArrayList<>();
         this.parents = new ArrayList<>();
+    }
+
+
+    @Override
+    public LayerBuilder withModulesIn(Path layerDir) {
+        this.layerDir = layerDir;
+        return this;
     }
 
     @Override
@@ -49,13 +58,31 @@ public class LayerBuilderImpl implements LayerBuilder {
 
     @Override
     public LayerBuilder layer(String name) {
-        layersBuilder.addLayer(this.name, this.moduleGavs, this.parents);
-        return new LayerBuilderImpl(layersBuilder, name);
+        return layersBuilder.layer(name);
     }
 
     @Override
     public Layers build() {
-        layersBuilder.addLayer(this.name, this.moduleGavs, this.parents);
         return layersBuilder.build();
+    }
+
+    public Path getLayerDir() {
+        return layerDir;
+    }
+
+    public void setLayerDir(Path layerDir) {
+        this.layerDir = layerDir;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getModuleGavs() {
+        return moduleGavs;
+    }
+
+    public List<String> getParents() {
+        return parents;
     }
 }

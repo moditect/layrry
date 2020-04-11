@@ -20,23 +20,19 @@
 
   <parent>
     <groupId>org.moditect.layrry</groupId>
-    <artifactId>layrry-integrationtest</artifactId>
+    <artifactId>layrry-plugin-example</artifactId>
     <version>1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>layrry-integrationtest-runner</artifactId>
+  <groupId>com.example.greeter</groupId>
+  <artifactId>greeter-api</artifactId>
   <packaging>jar</packaging>
-  <name>Layrry Integration Test Runner</name>
+  <name>Geeter API</name>
 
   <dependencies>
-    <dependency>
-      <groupId>org.moditect.layrry</groupId>
-      <artifactId>layrry</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -49,22 +45,5 @@
       <plugins>
       </plugins>
     </pluginManagement>
-    <plugins>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <configuration>
-            <executable>java</executable>
-            <arguments>
-              <argument>-classpath</argument>
-              <classpath/>
-              <argument>org.moditect.layrry.Layrry</argument>
-              <gument>--layers-config</gument>
-              <argument>src/test/resources/layers.yml</argument>
-              <argument>Alice</argument>
-            </arguments>
-          </configuration>
-        </plugin>
-    </plugins>
   </build>
 </project>

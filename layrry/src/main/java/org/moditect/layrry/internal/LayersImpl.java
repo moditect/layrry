@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,15 +53,17 @@ public class LayersImpl implements Layers {
             Layer layer = entry.getValue();
             List<String> moduleGavs = layer.getModuleGavs();
 
-            Path[] moduleJars;
-            if (moduleGavs.isEmpty()) {
-                moduleJars = new Path[0];
-            }
-            else {
-                moduleJars = resolver.resolve(moduleGavs).withoutTransitivity().as(Path.class);
+            List<Path> modulePathEntries = new ArrayList<>();
+
+            if (layer.getLayerDir() != null) {
+                modulePathEntries.add(layer.getLayerDir());
             }
 
-            ModuleFinder finder = ModuleFinder.of(moduleJars);
+            if (!moduleGavs.isEmpty()) {
+                modulePathEntries.addAll(Arrays.asList(resolver.resolve(moduleGavs).withoutTransitivity().as(Path.class)));
+            }
+
+            ModuleFinder finder = ModuleFinder.of(modulePathEntries.toArray(new Path[0]));
             List<ModuleLayer> parentLayers = getParentLayers(entry.getKey(), layer.getParents());
             Set<String> roots = finder.findAll()
                 .stream()
