@@ -45,7 +45,8 @@ public class LayrryIntegrationTest {
 
     @Test
     public void runLayers() {
-        Layers layers = Layers.layer("log")
+        Layers layers = Layers.builder()
+            .layer("log")
                 .withModule("org.apache.logging.log4j:log4j-api:jar:2.13.1")
                 .withModule("org.apache.logging.log4j:log4j-core:jar:2.13.1")
                 .withModule("com.example:logconfig:1.0.0")

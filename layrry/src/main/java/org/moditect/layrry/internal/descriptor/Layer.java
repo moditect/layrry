@@ -22,6 +22,7 @@ public class Layer {
 
     private List<String> parents = new ArrayList<>();
     private List<String> modules = new ArrayList<>();
+    private String directory;
 
     public List<String> getParents() {
         return parents;
@@ -39,8 +40,16 @@ public class Layer {
         this.modules = modules;
     }
 
+    public String getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
     @Override
     public String toString() {
-        return "Layer [parents=" + parents + ", modules=" + modules + "]";
+        return "Layer [parents=" + parents + ", modules=" + modules + ", directory=" + directory + "]";
     }
 }

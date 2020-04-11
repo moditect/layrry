@@ -15,13 +15,15 @@
  */
 package org.moditect.layrry;
 
-import org.moditect.layrry.internal.LayerBuilderImpl;
-import org.moditect.layrry.internal.LayersBuilder;
+import org.moditect.layrry.internal.LayersBuilderImpl;
 
+/**
+ * Builds a hierarchy of layers and executes them.
+ */
 public interface Layers {
 
-    static LayerBuilder layer(String name) {
-        return new LayerBuilderImpl(new LayersBuilder(), name);
+    static LayersBuilder builder() {
+        return new LayersBuilderImpl();
     }
 
     void run(String main, String... args);

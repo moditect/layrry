@@ -13,19 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry;
-
-import java.nio.file.Path;
-
-public interface LayerBuilder {
-
-    LayerBuilder withModulesIn(Path layerDir);
-
-    LayerBuilder withModule(String moduleGav);
-
-    LayerBuilder withParent(String parent);
-
-    LayerBuilder layer(String name);
-
-    Layers build();
+module com.example.greeter.app {
+    exports com.example.greeter.app;
+    requires com.example.greeter.api;
+    requires com.example.greeter.en;
+    uses com.example.greeter.api.GreeterFactory;
 }

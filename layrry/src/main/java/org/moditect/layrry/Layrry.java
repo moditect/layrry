@@ -15,7 +15,15 @@
  */
 package org.moditect.layrry;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.moditect.layrry.internal.Args;
 import org.moditect.layrry.internal.descriptor.Layer;
@@ -24,9 +32,16 @@ import org.moditect.layrry.internal.descriptor.LayersConfigParser;
 
 import com.beust.jcommander.JCommander;
 
+/**
+ * The main entry point for using Layrry. Expects the layers config file to be passed in:
+ * <p>
+ * <code>
+ * Layrry --layers-config &lt;path/to/layrry.yml&gt;
+ * </code>
+ */
 public class Layrry {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String... args) throws Exception {
         Args arguments= new Args();
 
         JCommander.newBuilder()
@@ -40,21 +55,17 @@ public class Layrry {
 
         LayersConfig layersConfig = LayersConfigParser.parseLayersConfig(arguments.getLayersConfig().toPath());
 
-        LayerBuilder builder = null;
+        Map<String, List<String>> layerDirsByName = new HashMap<>();
+
+        LayersBuilder builder = Layers.builder();
         for(Entry<String, Layer> layer : layersConfig.getLayers().entrySet()) {
-            if (builder == null) {
-                builder = Layers.layer(layer.getKey());
+            if (layer.getValue().getDirectory() != null) {
+                Path layersConfigDir = arguments.getLayersConfig().toPath().getParent();
+                List<String> layerNames = handleDirectoryOfLayers(layer.getValue(), layersConfigDir, builder);
+                layerDirsByName.put(layer.getKey(), layerNames);
             }
             else {
-                builder = builder.layer(layer.getKey());
-            }
-
-            for (String module : layer.getValue().getModules()) {
-                builder.withModule(module);
-            }
-
-            for (String parent : layer.getValue().getParents()) {
-                builder.withParent(parent);
+                handleLayer(layer, layerDirsByName, builder);
             }
         }
 
@@ -62,5 +73,62 @@ public class Layrry {
 
         layers.run(layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(), arguments.getMainArgs().toArray(new String[0]));
     }
-}
 
+    private static void handleLayer(Entry<String, Layer> layer, Map<String, List<String>> layerDirsByName,
+            LayersBuilder builder) {
+        LayerBuilder layerBuilder = builder.layer(layer.getKey());
+
+        for (String module : layer.getValue().getModules()) {
+            layerBuilder.withModule(module);
+        }
+
+        for (String parent : layer.getValue().getParents()) {
+            List<String> layersFromDirectory = layerDirsByName.get(parent);
+            if (!layersFromDirectory.isEmpty()) {
+                for (String layerFromDirectory : layersFromDirectory) {
+                    layerBuilder.withParent(layerFromDirectory);
+                }
+            }
+            else {
+                layerBuilder.withParent(parent);
+            }
+        }
+    }
+
+    private static List<String> handleDirectoryOfLayers(Layer layer,
+            Path layersConfigDir, LayersBuilder builder) {
+        Path layersDir = layersConfigDir.resolve(layer.getDirectory());
+        if (!Files.isDirectory(layersDir)) {
+            throw new IllegalArgumentException("Specified layer directory doesn't exist: " + layersDir);
+        }
+
+        ArrayList<String> layerNames = new ArrayList<String>();
+        List<Path> layerDirs = getLayerDirs(layersDir);
+        for (Path layerDir : layerDirs) {
+            LayerBuilder layerBuilder = builder.layer(layerDir.getFileName().toString());
+
+            layerBuilder.withModulesIn(layerDir);
+            layerNames.add(layerDir.getFileName().toString());
+            for (String parent : layer.getParents()) {
+                layerBuilder.withParent(parent);
+            }
+        }
+
+        return layerNames;
+    }
+
+    private static List<Path> getLayerDirs(Path layersDir) {
+        List<Path> layers;
+        try {
+            layers = Files.walk(layersDir, 1)
+                         .filter(Files::isDirectory)
+                         .collect(Collectors.toList());
+            layers.remove(0);
+
+            return layers;
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

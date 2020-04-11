@@ -15,15 +15,7 @@
  */
 package org.moditect.layrry;
 
-import java.nio.file.Path;
-
-public interface LayerBuilder {
-
-    LayerBuilder withModulesIn(Path layerDir);
-
-    LayerBuilder withModule(String moduleGav);
-
-    LayerBuilder withParent(String parent);
+public interface LayersBuilder {
 
     LayerBuilder layer(String name);
 
