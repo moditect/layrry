@@ -13,11 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.de.GermanGreeterFactory;
-
-module com.example.greeter.de {
-    requires com.example.greeter.api;
-    requires com.example.greeter.dateutil;
-    provides GreeterFactory with GermanGreeterFactory;
+module com.example.greeter.dateutil {
+    exports com.example.greeter.dateutil;
 }

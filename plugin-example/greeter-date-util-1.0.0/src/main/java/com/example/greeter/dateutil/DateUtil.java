@@ -13,34 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.greeter.de;
+package com.example.greeter.dateutil;
 
 import java.util.Date;
 
-import com.example.greeter.api.Greeter;
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.dateutil.DateUtil;
+public class DateUtil {
 
-public class GermanGreeterFactory implements GreeterFactory {
-
-    @Override
-    public String getLanguage() {
-        return "German";
-    }
-
-    @Override
-    public String getFlag() {
-        return "🇩🇪";
-    }
-
-    @Override
-    public Greeter getGreeter() {
-        return new Greeter() {
-
-            @Override
-            public String greet(String name) {
-                return "Hallo, " + name + " am " + DateUtil.dateToString(new Date());
-            }
-        };
+    public static String dateToString(Date date) {
+        return date.toString();
     }
 }

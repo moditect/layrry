@@ -88,6 +88,25 @@
             </configuration>
           </execution>
           <execution>
+            <id>copy-date-util-en</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.example.greeter</groupId>
+                  <artifactId>greeter-date-util</artifactId>
+                  <version>2.0.0</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/layers/greeter-en</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
             <id>copy-greeter-de</id>
             <phase>generate-test-resources</phase>
             <goals>
@@ -99,6 +118,25 @@
                   <groupId>com.example.greeter</groupId>
                   <artifactId>greeter-de</artifactId>
                   <version>1.0-SNAPSHOT</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/layers/greeter-de</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-date-util-de</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.example.greeter</groupId>
+                  <artifactId>greeter-date-util</artifactId>
+                  <version>1.0.0</version>
                   <type>jar</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}/layers/greeter-de</outputDirectory>

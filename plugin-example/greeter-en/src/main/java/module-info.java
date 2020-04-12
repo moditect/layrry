@@ -18,5 +18,6 @@ import com.example.greeter.en.EnglishGreeterFactory;
 
 module com.example.greeter.en {
     requires com.example.greeter.api;
+    requires com.example.greeter.dateutil;
     provides GreeterFactory with EnglishGreeterFactory;
 }

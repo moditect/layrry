@@ -32,6 +32,8 @@
 
   <modules>
     <module>greeter-api</module>
+    <module>greeter-date-util-1.0.0</module>
+    <module>greeter-date-util-2.0.0</module>
     <module>greeter-en</module>
     <module>greeter-de</module>
     <module>greeter-main</module>

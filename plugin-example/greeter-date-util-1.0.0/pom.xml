@@ -28,20 +28,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.example.greeter</groupId>
-  <artifactId>greeter-de</artifactId>
+  <artifactId>greeter-date-util</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>Greeter DE</name>
+  <name>Greeter Date Util</name>
 
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>greeter-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>greeter-date-util</artifactId>
-      <version>1.0.0</version>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
