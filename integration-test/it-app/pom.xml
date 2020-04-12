@@ -27,27 +27,34 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example</groupId>
-  <artifactId>foo</artifactId>
+  <groupId>com.example.it</groupId>
+  <artifactId>it-app</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>foo</name>
+  <name>Layrry Integration Test - App</name>
 
   <dependencies>
-<!--     <dependency> -->
-<!--       <groupId>org.slf4j</groupId> -->
-<!--       <artifactId>slf4j-api</artifactId> -->
-<!--     </dependency> -->
-<dependency>
-		<groupId>org.apache.logging.log4j</groupId>
-		<artifactId>log4j-api</artifactId>
-		<version>2.11.2</version>
-	</dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>greeter</artifactId>
-      <version>1.0.0</version>
+      <artifactId>it-foo</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>it-bar</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

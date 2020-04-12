@@ -29,7 +29,7 @@
 
   <artifactId>layrry-integrationtest-runner</artifactId>
   <packaging>jar</packaging>
-  <name>Layrry Integration Test Runner</name>
+  <name>Layrry Integration Test - Runner</name>
 
   <dependencies>
     <dependency>

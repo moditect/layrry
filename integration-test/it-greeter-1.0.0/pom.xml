@@ -27,23 +27,13 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example</groupId>
-  <artifactId>app</artifactId>
+  <groupId>com.example.it</groupId>
+  <artifactId>it-greeter</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>app</name>
+  <name>Layrry Integration Test - Greeter</name>
 
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>foo</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>bar</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -51,10 +41,4 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-      </plugins>
-    </pluginManagement>
-  </build>
 </project>

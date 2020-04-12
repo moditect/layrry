@@ -28,14 +28,15 @@
 
   <artifactId>layrry-integrationtest</artifactId>
   <packaging>pom</packaging>
+  <name>Layrry Integration Test - Aggregator</name>
 
   <modules>
-    <module>greeter-1.0.0</module>
-    <module>greeter-2.0.0</module>
-    <module>foo</module>
-    <module>bar</module>
-    <module>app</module>
-    <module>logconfig</module>
-    <module>runner</module>
+    <module>it-greeter-1.0.0</module>
+    <module>it-greeter-2.0.0</module>
+    <module>it-foo</module>
+    <module>it-bar</module>
+    <module>it-app</module>
+    <module>it-logconfig</module>
+    <module>it-runner</module>
   </modules>
 </project>

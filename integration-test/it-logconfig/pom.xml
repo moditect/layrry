@@ -27,11 +27,11 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example</groupId>
-  <artifactId>logconfig</artifactId>
+  <groupId>com.example.it</groupId>
+  <artifactId>it-logconfig</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>logconfig</name>
+  <name>Layrry Integration Test - Log Config</name>
 
   <dependencies>
   </dependencies>
