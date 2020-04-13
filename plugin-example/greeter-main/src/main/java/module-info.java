@@ -16,6 +16,5 @@
 module com.example.greeter.app {
     exports com.example.greeter.app;
     requires com.example.greeter.api;
-    requires com.example.greeter.en;
     uses com.example.greeter.api.GreeterFactory;
 }

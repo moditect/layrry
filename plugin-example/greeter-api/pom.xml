@@ -29,6 +29,7 @@
 
   <groupId>com.example.greeter</groupId>
   <artifactId>greeter-api</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>Geeter API</name>
 

@@ -29,6 +29,7 @@
 
   <groupId>com.example.greeter</groupId>
   <artifactId>greeter-app</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>Greeter App</name>
 
@@ -36,10 +37,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>greeter-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>greeter-en</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

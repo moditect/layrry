@@ -17,7 +17,7 @@
 layers:
   api:
     modules:
-      - "com.example.greeter:greeter-api:1.0-SNAPSHOT"
+      - "com.example.greeter:greeter-api:1.0.0"
   plugins:
     parents:
       - "api"
@@ -26,7 +26,7 @@ layers:
     parents:
       - "plugins"
     modules:
-      - "com.example.greeter:greeter-app:1.0-SNAPSHOT"
+      - "com.example.greeter:greeter-app:1.0.0"
 main:
   module: com.example.greeter.app
   class: com.example.greeter.app.App

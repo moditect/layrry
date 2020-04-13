@@ -29,6 +29,7 @@
 
   <groupId>com.example.greeter</groupId>
   <artifactId>greeter-en</artifactId>
+  <version>1.0.0</version>
   <name>Greeter EN</name>
 
   <dependencies>

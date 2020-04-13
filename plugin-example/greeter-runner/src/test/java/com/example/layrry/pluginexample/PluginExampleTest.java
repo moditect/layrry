@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.layrry.integrationtest;
+package com.example.layrry.pluginexample;
 
 import static org.junit.Assert.assertTrue;
 
