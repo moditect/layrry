@@ -17,37 +17,36 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.moditect.layrry</groupId>
-    <artifactId>layrry-aggregator</artifactId>
+    <artifactId>layrry-plugin-example</artifactId>
     <version>1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>layrry-plugin-example</artifactId>
-  <packaging>pom</packaging>
-  <name>Layrry Plug-in Example</name>
+  <modelVersion>4.0.0</modelVersion>
 
-  <modules>
-    <module>greeter-api</module>
-    <module>greeter-date-util-1.0.0</module>
-    <module>greeter-date-util-2.0.0</module>
-    <module>greeter-en</module>
-    <module>greeter-de</module>
-    <module>greeter-fr</module>
-    <module>greeter-main</module>
-    <module>greeter-runner</module>
-  </modules>
-  
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>greeter-api</artifactId>
-        <version>1.0.0</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <groupId>com.example.greeter</groupId>
+  <artifactId>greeter-fr</artifactId>
+  <version>1.0.0</version>
+  <name>Greeter FR</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>greeter-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>greeter-date-util</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
 </project>
