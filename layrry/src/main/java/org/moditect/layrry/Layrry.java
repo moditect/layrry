@@ -15,6 +15,7 @@
  */
 package org.moditect.layrry;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,18 +50,20 @@ public class Layrry {
             .build()
             .parse(args);
 
-        if (!arguments.getLayersConfig().exists()) {
-            throw new IllegalArgumentException("Specified layers config file doesn't exist: " + arguments.getLayersConfig());
+        File layersConfigFile = arguments.getLayersConfig().getAbsoluteFile();
+
+        if (!layersConfigFile.exists()) {
+            throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
         }
 
-        LayersConfig layersConfig = LayersConfigParser.parseLayersConfig(arguments.getLayersConfig().toPath());
+        LayersConfig layersConfig = LayersConfigParser.parseLayersConfig(layersConfigFile.toPath());
 
         Map<String, List<String>> layerDirsByName = new HashMap<>();
 
         LayersBuilder builder = Layers.builder();
         for(Entry<String, Layer> layer : layersConfig.getLayers().entrySet()) {
             if (layer.getValue().getDirectory() != null) {
-                Path layersConfigDir = arguments.getLayersConfig().toPath().getParent();
+                Path layersConfigDir = layersConfigFile.toPath().getParent();
                 List<String> layerNames = handleDirectoryOfLayers(layer.getValue(), layersConfigDir, builder);
                 layerDirsByName.put(layer.getKey(), layerNames);
             }

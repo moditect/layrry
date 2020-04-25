@@ -36,4 +36,9 @@ public class Args {
     public File getLayersConfig() {
         return layersConfig;
     }
+
+    @Override
+    public String toString() {
+        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + "]";
+    }
 }
