@@ -13,16 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+package org.moditect.layrry.platform;
 
-import org.moditect.layrry.platform.PluginLifecycleListener;
+/**
+ * Implementations get notified about the addition or removal of plug-in layers.
+ * Retrieved via the service loader API.
+ */
+public interface PluginLifecycleListener {
 
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.app.internal.GreeterPluginLifecycleListener;
+    void pluginAdded(PluginDescriptor plugin);
 
-module com.example.greeter.api {
-    requires org.moditect.layrry.platform;
-    exports com.example.greeter.api;
-    exports com.example.greeter.app;
-    provides PluginLifecycleListener with GreeterPluginLifecycleListener;
-    uses GreeterFactory;
+    void pluginRemoved(PluginDescriptor plugin);
 }

@@ -16,18 +16,9 @@
 package org.moditect.layrry;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.moditect.layrry.internal.Args;
-import org.moditect.layrry.internal.descriptor.Layer;
+import org.moditect.layrry.internal.LayersFactory;
 import org.moditect.layrry.internal.descriptor.LayersConfig;
 import org.moditect.layrry.internal.descriptor.LayersConfigParser;
 
@@ -57,81 +48,11 @@ public class Layrry {
         }
 
         LayersConfig layersConfig = LayersConfigParser.parseLayersConfig(layersConfigFile.toPath());
+        Layers layers = new LayersFactory().createLayers(layersConfig, layersConfigFile.toPath().getParent());
 
-        Map<String, List<String>> layerDirsByName = new HashMap<>();
-
-        LayersBuilder builder = Layers.builder();
-        for(Entry<String, Layer> layer : layersConfig.getLayers().entrySet()) {
-            if (layer.getValue().getDirectory() != null) {
-                Path layersConfigDir = layersConfigFile.toPath().getParent();
-                List<String> layerNames = handleDirectoryOfLayers(layer.getValue(), layersConfigDir, builder);
-                layerDirsByName.put(layer.getKey(), layerNames);
-            }
-            else {
-                handleLayer(layer, layerDirsByName, builder);
-            }
-        }
-
-        Layers layers = builder.build();
-
-        layers.run(layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(), arguments.getMainArgs().toArray(new String[0]));
-    }
-
-    private static void handleLayer(Entry<String, Layer> layer, Map<String, List<String>> layerDirsByName,
-            LayersBuilder builder) {
-        LayerBuilder layerBuilder = builder.layer(layer.getKey());
-
-        for (String module : layer.getValue().getModules()) {
-            layerBuilder.withModule(module);
-        }
-
-        for (String parent : layer.getValue().getParents()) {
-            List<String> layersFromDirectory = layerDirsByName.get(parent);
-            if (!layersFromDirectory.isEmpty()) {
-                for (String layerFromDirectory : layersFromDirectory) {
-                    layerBuilder.withParent(layerFromDirectory);
-                }
-            }
-            else {
-                layerBuilder.withParent(parent);
-            }
-        }
-    }
-
-    private static List<String> handleDirectoryOfLayers(Layer layer,
-            Path layersConfigDir, LayersBuilder builder) {
-        Path layersDir = layersConfigDir.resolve(layer.getDirectory());
-        if (!Files.isDirectory(layersDir)) {
-            throw new IllegalArgumentException("Specified layer directory doesn't exist: " + layersDir);
-        }
-
-        ArrayList<String> layerNames = new ArrayList<String>();
-        List<Path> layerDirs = getLayerDirs(layersDir);
-        for (Path layerDir : layerDirs) {
-            LayerBuilder layerBuilder = builder.layer(layerDir.getFileName().toString());
-
-            layerBuilder.withModulesIn(layerDir);
-            layerNames.add(layerDir.getFileName().toString());
-            for (String parent : layer.getParents()) {
-                layerBuilder.withParent(parent);
-            }
-        }
-
-        return layerNames;
-    }
-
-    private static List<Path> getLayerDirs(Path layersDir) {
-        List<Path> layers;
-        try {
-            layers = Files.walk(layersDir, 1)
-                         .filter(Files::isDirectory)
-                         .collect(Collectors.toList());
-            layers.remove(0);
-
-            return layers;
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        layers.run(
+                layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(),
+                arguments.getMainArgs().toArray(new String[0])
+        );
     }
 }

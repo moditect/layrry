@@ -13,8 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-module com.example.greeter.app {
-    exports com.example.greeter.app;
-    requires com.example.greeter.api;
-    uses com.example.greeter.api.GreeterFactory;
+
+import org.moditect.layrry.platform.PluginLifecycleListener;
+
+module org.moditect.layrry.platform {
+    exports org.moditect.layrry.platform;
+    opens org.moditect.layrry.platform.internal;
+    uses PluginLifecycleListener;
 }

@@ -70,10 +70,6 @@ public class LayerBuilderImpl implements LayerBuilder {
         return layerDir;
     }
 
-    public void setLayerDir(Path layerDir) {
-        this.layerDir = layerDir;
-    }
-
     public String getName() {
         return name;
     }

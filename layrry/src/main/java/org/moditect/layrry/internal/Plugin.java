@@ -15,29 +15,33 @@
  */
 package org.moditect.layrry.internal;
 
-import java.util.Collections;
+import java.nio.file.Path;
 import java.util.List;
 
-public class Layer extends Component {
+public class Plugin extends Component {
 
-    private final List<String> moduleGavs;
+    private final Path layerDir;
 
-    public Layer(String name, List<String> moduleGavs, List<String> parents) {
+    public Plugin(String name, Path layerDir, List<String> parents) {
         super(name, parents);
-        this.moduleGavs = Collections.unmodifiableList(moduleGavs);
+        this.layerDir = layerDir;
     }
 
-    public List<String> getModuleGavs() {
-        return moduleGavs;
+    public Path getLayerDir() {
+        return layerDir;
+    }
+
+    public Path getPluginDir() {
+        return layerDir.getParent();
     }
 
     @Override
     public boolean isPlugin() {
-        return false;
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Layer [moduleGavs=" + moduleGavs + "]";
+        return "Plugin [layerDir=" + layerDir + "]";
     }
 }

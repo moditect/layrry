@@ -13,16 +13,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+package com.example.greeter.app.internal;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.moditect.layrry.platform.PluginDescriptor;
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.app.internal.GreeterPluginLifecycleListener;
+public class GreeterPluginLifecycleListener implements PluginLifecycleListener {
 
-module com.example.greeter.api {
-    requires org.moditect.layrry.platform;
-    exports com.example.greeter.api;
-    exports com.example.greeter.app;
-    provides PluginLifecycleListener with GreeterPluginLifecycleListener;
-    uses GreeterFactory;
+    private static Map<String, ModuleLayer> moduleLayers = new ConcurrentHashMap<>();
+
+    @Override
+    public void pluginAdded(PluginDescriptor plugin) {
+        moduleLayers.put(plugin.getName(), plugin.getModuleLayer());
+    }
+
+    @Override
+    public void pluginRemoved(PluginDescriptor plugin) {
+    }
+
+    public static Map<String, ModuleLayer> getModuleLayers() {
+        return moduleLayers;
+    }
 }

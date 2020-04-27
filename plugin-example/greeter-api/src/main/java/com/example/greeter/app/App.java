@@ -18,11 +18,14 @@ package com.example.greeter.app;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.ServiceLoader;
-import java.util.stream.Collectors;
 
 import com.example.greeter.api.GreeterFactory;
+import com.example.greeter.app.internal.GreeterPluginLifecycleListener;
 
 /**
  * Hello world!
@@ -33,32 +36,34 @@ public class App {
         System.out.println("### Layrry plug-in example ###");
         System.out.println("");
 
-        List<GreeterFactory> factories = getGreeterFactories();
+        while (true) {
+            List<GreeterFactory> factories = getGreeterFactories();
 
-        if (factories.isEmpty()) {
-            System.out.println("No greeters available; exiting.");
-            return;
-        }
+            if (factories.isEmpty()) {
+                System.out.println("No greeters available");
+            }
 
-        System.out.println("Available greeters:");
-        int i = 1;
-        for (GreeterFactory greeterFactory : factories) {
-            System.out.println(i++ + ": " + greeterFactory.getFlag() + "  " + greeterFactory.getLanguage());
-        }
+            System.out.println("Available greeters:");
+            int i = 1;
+            for (GreeterFactory greeterFactory : factories) {
+                System.out.println(i++ + ": " + greeterFactory.getFlag() + "  " + greeterFactory.getLanguage());
+            }
 
 
-        BufferedReader systemIn = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+            BufferedReader systemIn = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 
-        try {
-            int factoryIndex = getGreeterFactoryIndex(factories.size(), systemIn);
-            String name = getName(systemIn);
+            try {
+                int factoryIndex = getGreeterFactoryIndex(factories.size(), systemIn);
+                String name = getName(systemIn);
 
-            System.out.println("");
-            System.out.print("Here's your " + factories.get(factoryIndex).getLanguage() + " greeting: ");
-            System.out.println(factories.get(factoryIndex).getGreeter().greet(name));
-        }
-        catch(ProgramStoppedException e) {
-            System.out.println("Exiting");
+                System.out.println("");
+                System.out.print("Here's your " + factories.get(factoryIndex).getLanguage() + " greeting: ");
+                System.out.println(factories.get(factoryIndex).getGreeter().greet(name));
+            }
+            catch(ProgramStoppedException e) {
+                System.out.println("Exiting");
+                return;
+            }
         }
     }
 
@@ -121,11 +126,18 @@ public class App {
     }
 
     private static List<GreeterFactory> getGreeterFactories() {
-        return ServiceLoader.load(App.class.getModule().getLayer(), GreeterFactory.class)
-            .stream()
-            .map(p -> p.get())
-            .sorted((gf1, gf2) -> gf1.getLanguage().compareTo(gf2.getLanguage()))
-            .collect(Collectors.toList());
+        List<GreeterFactory> factories = new ArrayList<>();
+
+        for (Entry<String, ModuleLayer> layer : GreeterPluginLifecycleListener.getModuleLayers().entrySet()) {
+            ServiceLoader.load(layer.getValue(), GreeterFactory.class)
+                .stream()
+                .map(p -> p.get())
+                .forEach(factories::add);
+        }
+
+        Collections.sort(factories, (gf1, gf2) -> gf1.getLanguage().compareTo(gf2.getLanguage()));
+
+        return factories;
     }
 
     private static class ProgramStoppedException extends RuntimeException {

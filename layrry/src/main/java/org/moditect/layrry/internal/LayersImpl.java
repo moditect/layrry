@@ -15,11 +15,17 @@
  */
 package org.moditect.layrry.internal;
 
+import java.io.IOException;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +33,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
@@ -36,48 +46,41 @@ import org.moditect.layrry.Layers;
 
 public class LayersImpl implements Layers {
 
-    private final Map<String, Layer> layers;
+    private final Map<String, Component> components;
     private final Map<String, ModuleLayer> moduleLayers;
 
-    public LayersImpl(Map<String, Layer> layers) {
-        this.layers = Collections.unmodifiableMap(layers);
+    public LayersImpl(Map<String, Component> components) {
+        this.components = Collections.unmodifiableMap(components);
         this.moduleLayers = new HashMap<>();
     }
 
     @Override
     public void run(String main, String... args) {
-        ClassLoader scl = ClassLoader.getSystemClassLoader();
-
         MavenResolverSystem resolver = Maven.resolver();
-        for(Entry<String, Layer> entry : layers.entrySet()) {
-            Layer layer = entry.getValue();
-            List<String> moduleGavs = layer.getModuleGavs();
+        Map<String, ModuleLayer> pluginLayersByName = new HashMap<>();
+        Map<Path, List<String>> parentsByPluginDirectory = new HashMap<>();
 
-            List<Path> modulePathEntries = new ArrayList<>();
+        for(Entry<String, Component> entry : components.entrySet()) {
+            Component component = entry.getValue();
 
-            if (layer.getLayerDir() != null) {
-                modulePathEntries.add(layer.getLayerDir());
-            }
+            List<Path> modulePathEntries = getModulePathEntries(component, resolver);
+            List<ModuleLayer> parentLayers = getParentLayers(entry.getKey(), component.getParents());
+            ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
 
-            if (!moduleGavs.isEmpty()) {
-                modulePathEntries.addAll(Arrays.asList(resolver.resolve(moduleGavs).withoutTransitivity().as(Path.class)));
-            }
-
-            ModuleFinder finder = ModuleFinder.of(modulePathEntries.toArray(new Path[0]));
-            List<ModuleLayer> parentLayers = getParentLayers(entry.getKey(), layer.getParents());
-            Set<String> roots = finder.findAll()
-                .stream()
-                .map(m -> m.descriptor().name())
-                .collect(Collectors.toSet());
-            Configuration appConfig = Configuration.resolve(
-                    finder,
-                    parentLayers.stream().map(ModuleLayer::configuration).collect(Collectors.toList()),
-                    ModuleFinder.of(),
-                    roots
-            );
-
-            ModuleLayer moduleLayer = ModuleLayer.defineModulesWithOneLoader(appConfig, parentLayers, scl).layer();
             moduleLayers.put(entry.getKey(), moduleLayer);
+
+            if (entry.getValue().isPlugin()) {
+                pluginLayersByName.put(entry.getKey(), moduleLayer);
+                parentsByPluginDirectory.put(((Plugin) entry.getValue()).getPluginDir(), component.getParents());
+            }
+        }
+
+        if (!pluginLayersByName.isEmpty()) {
+            Deployer deployer = new Deployer(parentsByPluginDirectory);
+
+            for (Entry<String, ModuleLayer> plugin : pluginLayersByName.entrySet()) {
+                deployer.deploy(plugin.getKey(), plugin.getValue());
+            }
         }
 
         try {
@@ -88,7 +91,36 @@ public class LayersImpl implements Layers {
         catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new RuntimeException("Couldn't run module main class", e);
         }
+    }
 
+    private ModuleLayer createModuleLayer(List<ModuleLayer> parentLayers, List<Path> modulePathEntries) {
+        ClassLoader scl = ClassLoader.getSystemClassLoader();
+
+        ModuleFinder finder = ModuleFinder.of(modulePathEntries.toArray(new Path[0]));
+
+        Set<String> roots = finder.findAll()
+            .stream()
+            .map(m -> m.descriptor().name())
+            .collect(Collectors.toSet());
+        Configuration appConfig = Configuration.resolve(
+                finder,
+                parentLayers.stream().map(ModuleLayer::configuration).collect(Collectors.toList()),
+                ModuleFinder.of(),
+                roots
+        );
+
+        ModuleLayer moduleLayer = ModuleLayer.defineModulesWithOneLoader(appConfig, parentLayers, scl).layer();
+        return moduleLayer;
+    }
+
+    private List<Path> getModulePathEntries(Component component, MavenResolverSystem resolver) {
+        if (component.isPlugin()) {
+            return Arrays.asList(((Plugin) component).getLayerDir());
+        }
+        else {
+            List<String> moduleGavs = ((Layer) component).getModuleGavs();
+            return Arrays.asList(resolver.resolve(moduleGavs).withoutTransitivity().as(Path.class));
+        }
     }
 
     private Class<?> getMainClass(String main) throws ClassNotFoundException {
@@ -120,4 +152,104 @@ public class LayersImpl implements Layers {
         return parentLayers.isEmpty() ? Collections.singletonList(ModuleLayer.boot()) : parentLayers;
     }
 
+    private class Deployer {
+
+        private final Method notify;
+        private final Object supportInstance;
+
+        public Deployer(Map<Path, List<String>> parentsByPluginDirectory) {
+            try {
+                ModuleLayer platformLayer = getLayrryPlatformLayer(moduleLayers);
+                ClassLoader loader = platformLayer.findLoader("org.moditect.layrry.platform");
+                Class<?> support = loader.loadClass("org.moditect.layrry.platform.internal.PluginLifecycleSupport");
+                supportInstance = support.newInstance();
+                notify = support.getDeclaredMethods()[0];
+            }
+            catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            ExecutorService executor = Executors.newFixedThreadPool(parentsByPluginDirectory.size());
+
+            for (Entry<Path, List<String>> pluginDirectory : parentsByPluginDirectory.entrySet()) {
+                executor.execute(() -> {
+                    try (WatchService watch = pluginDirectory.getKey().getFileSystem().newWatchService()) {
+                        pluginDirectory.getKey().register(watch,
+                                StandardWatchEventKinds.ENTRY_CREATE
+//                                StandardWatchEventKinds.ENTRY_DELETE,
+//                                StandardWatchEventKinds.ENTRY_MODIFY,
+//                                StandardWatchEventKinds.OVERFLOW
+                        );
+
+                        WatchKey key;
+                        while ((key = watch.take()).isValid()) {
+                            for (WatchEvent<?> event : key.pollEvents()) {
+                                if (!Files.isDirectory((Path) event.context())) {
+                                    continue;
+                                }
+
+                                String pluginName = ((Path) event.context()).getFileName().toString();
+                                List<Path> modulePathEntries = Arrays.asList(pluginDirectory.getKey().resolve((Path) event.context()));
+                                List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getValue());
+
+                                ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
+
+                                moduleLayers.put(pluginName, moduleLayer);
+                                deploy(pluginName, moduleLayer);
+                            }
+
+                            key.reset();
+                        }
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    catch (InterruptedException e) {
+                        // regular exit of this polling loop, no need to log
+                        return;
+                    }
+                });
+            }
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                executor.shutdownNow();
+                try {
+                    if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                        System.out.println("Executor did not terminate in the specified time.");
+                    }
+                }
+                catch (InterruptedException e) {
+                }
+            }));
+
+        }
+
+        public void deploy(String pluginName, ModuleLayer pluginLayer) {
+            // for each existing layer, notify any potential lifecycle listeners about the new layer
+            for (ModuleLayer moduleLayer : moduleLayers.values()) {
+                try {
+                    notify.invoke(supportInstance, moduleLayer, pluginName, pluginLayer);
+                }
+                catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        }
+
+        private ModuleLayer getLayrryPlatformLayer(Map<String, ModuleLayer> moduleLayers) {
+            for (Entry<String, ModuleLayer> layer : moduleLayers.entrySet()) {
+                Optional<Module> platformModule = layer.getValue()
+                    .modules()
+                    .stream()
+                    .filter(m -> m.getName().equals("org.moditect.layrry.platform"))
+                    .findFirst();
+
+                if (platformModule.isPresent()) {
+                    return layer.getValue();
+                }
+            }
+
+            throw new IllegalArgumentException("Layrry Platform module not found");
+        }
+    }
 }

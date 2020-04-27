@@ -37,7 +37,6 @@
     <module>greeter-en</module>
     <module>greeter-de</module>
     <module>greeter-fr</module>
-    <module>greeter-main</module>
     <module>greeter-runner</module>
   </modules>
   
