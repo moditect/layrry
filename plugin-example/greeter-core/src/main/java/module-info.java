@@ -19,7 +19,7 @@ import org.moditect.layrry.platform.PluginLifecycleListener;
 import com.example.greeter.api.GreeterFactory;
 import com.example.greeter.app.internal.GreeterPluginLifecycleListener;
 
-module com.example.greeter.api {
+module com.example.greeter.core {
     requires org.moditect.layrry.platform;
     exports com.example.greeter.api;
     exports com.example.greeter.app;

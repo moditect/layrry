@@ -20,7 +20,7 @@ layers:
       - "org.moditect.layrry:layrry-platform:1.0-SNAPSHOT"
   api:
     modules:
-      - "com.example.greeter:greeter-api:1.0.0"
+      - "com.example.greeter:greeter-core:1.0.0"
     parents:
       - "layrry-platform"
   plugins:
@@ -28,5 +28,5 @@ layers:
       - "api"
     directory: ../../../target/layers
 main:
-  module: com.example.greeter.api
+  module: com.example.greeter.core
   class: com.example.greeter.app.App

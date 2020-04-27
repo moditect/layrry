@@ -27,9 +27,9 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>layrry</artifactId>
+  <artifactId>layrry-launcher</artifactId>
   <packaging>jar</packaging>
-  <name>Layrry</name>
+  <name>Layrry Launcher</name>
 
   <dependencies>
     <dependency>

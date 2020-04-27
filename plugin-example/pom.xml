@@ -31,7 +31,7 @@
   <name>Layrry Plug-in Example</name>
 
   <modules>
-    <module>greeter-api</module>
+    <module>greeter-core</module>
     <module>greeter-date-util-1.0.0</module>
     <module>greeter-date-util-2.0.0</module>
     <module>greeter-en</module>
@@ -44,7 +44,7 @@
     <dependencies>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>greeter-api</artifactId>
+        <artifactId>greeter-core</artifactId>
         <version>1.0.0</version>
       </dependency>
     </dependencies>
