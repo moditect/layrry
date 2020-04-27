@@ -17,7 +17,7 @@ import com.example.greeter.api.GreeterFactory;
 import com.example.greeter.de.GermanGreeterFactory;
 
 module com.example.greeter.de {
-    requires com.example.greeter.api;
+    requires com.example.greeter.core;
     requires com.example.greeter.dateutil;
     provides GreeterFactory with GermanGreeterFactory;
 }

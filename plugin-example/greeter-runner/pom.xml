@@ -34,7 +34,7 @@
   <dependencies>
     <dependency>
       <groupId>org.moditect.layrry</groupId>
-      <artifactId>layrry</artifactId>
+      <artifactId>layrry-launcher</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
