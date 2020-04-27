@@ -18,26 +18,32 @@ package org.moditect.layrry.internal;
 import java.util.Collections;
 import java.util.List;
 
-public class Layer extends Component {
+public abstract class Component {
 
-    private final List<String> moduleGavs;
+    private final String name;
+    private final List<String> parents;
 
-    public Layer(String name, List<String> moduleGavs, List<String> parents) {
-        super(name, parents);
-        this.moduleGavs = Collections.unmodifiableList(moduleGavs);
+    protected Component(String name, List<String> parents) {
+        this.name = name;
+        this.parents = Collections.unmodifiableList(parents);
     }
 
-    public List<String> getModuleGavs() {
-        return moduleGavs;
+    public static Component fromLayer(LayerBuilderImpl layer) {
+        if (layer.getLayerDir() != null) {
+            return new Plugin(layer.getName(), layer.getLayerDir(), layer.getParents());
+        }
+        else {
+            return new Layer(layer.getName(), layer.getModuleGavs(), layer.getParents());
+        }
     }
 
-    @Override
-    public boolean isPlugin() {
-        return false;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public String toString() {
-        return "Layer [moduleGavs=" + moduleGavs + "]";
+    public List<String> getParents() {
+        return parents;
     }
+
+    public abstract boolean isPlugin();
 }

@@ -13,16 +13,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+package org.moditect.layrry.platform;
 
-import org.moditect.layrry.platform.PluginLifecycleListener;
+public class PluginDescriptor {
 
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.app.internal.GreeterPluginLifecycleListener;
+    private final String name;
+    private final ModuleLayer moduleLayer;
 
-module com.example.greeter.api {
-    requires org.moditect.layrry.platform;
-    exports com.example.greeter.api;
-    exports com.example.greeter.app;
-    provides PluginLifecycleListener with GreeterPluginLifecycleListener;
-    uses GreeterFactory;
+    public PluginDescriptor(String name, ModuleLayer moduleLayer) {
+        this.name = name;
+        this.moduleLayer = moduleLayer;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ModuleLayer getModuleLayer() {
+        return moduleLayer;
+    }
+
+    @Override
+    public String toString() {
+        return "PluginDescriptor [name=" + name + ", moduleLayer=" + moduleLayer + "]";
+    }
 }

@@ -34,12 +34,18 @@
 
   <modules>
     <module>layrry</module>
+    <module>layrry-platform</module>
     <module>integration-test</module>
     <module>plugin-example</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>layrry-platform</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.jboss.shrinkwrap.resolver</groupId>
         <artifactId>shrinkwrap-resolver-bom</artifactId>

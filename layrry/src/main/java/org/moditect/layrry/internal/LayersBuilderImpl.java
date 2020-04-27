@@ -25,7 +25,7 @@ import org.moditect.layrry.LayersBuilder;
 public class LayersBuilderImpl implements LayersBuilder {
 
     private LayerBuilderImpl currentLayer;
-    private Map<String, Layer> layers = new LinkedHashMap<>();
+    private Map<String, Component> layers = new LinkedHashMap<>();
 
     @Override
     public LayerBuilder layer(String name) {
@@ -38,10 +38,7 @@ public class LayersBuilderImpl implements LayersBuilder {
     }
 
     private void addLayer(LayerBuilderImpl layer) {
-        layers.put(
-                layer.getName(),
-                new Layer(layer.getName(), layer.getLayerDir(), layer.getModuleGavs(), layer.getParents())
-        );
+        layers.put(layer.getName(), Component.fromLayer(layer));
     }
 
     @Override

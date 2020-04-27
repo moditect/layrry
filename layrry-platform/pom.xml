@@ -20,29 +20,18 @@
 
   <parent>
     <groupId>org.moditect.layrry</groupId>
-    <artifactId>layrry-plugin-example</artifactId>
+    <artifactId>layrry-aggregator</artifactId>
     <version>1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example.greeter</groupId>
-  <artifactId>greeter-app</artifactId>
-  <version>1.0.0</version>
+  <artifactId>layrry-platform</artifactId>
   <packaging>jar</packaging>
-  <name>Greeter App</name>
+  <name>Layrry Platform</name>
 
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>greeter-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
@@ -50,5 +39,7 @@
       <plugins>
       </plugins>
     </pluginManagement>
+    <plugins>
+    </plugins>
   </build>
 </project>
