@@ -32,6 +32,7 @@ public class GreeterPluginLifecycleListener implements PluginLifecycleListener {
 
     @Override
     public void pluginRemoved(PluginDescriptor plugin) {
+        moduleLayers.remove(plugin.getName());
     }
 
     public static Map<String, ModuleLayer> getModuleLayers() {

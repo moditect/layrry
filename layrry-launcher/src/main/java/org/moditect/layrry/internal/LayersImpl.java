@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -43,15 +44,42 @@ import java.util.stream.Collectors;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.moditect.layrry.Layers;
+import org.moditect.layrry.internal.util.FilesHelper;
 
 public class LayersImpl implements Layers {
 
+    /**
+     * The configured components (static layers or plug-ins) by name.
+     */
     private final Map<String, Component> components;
+
+    /**
+     * The actual module layers by name.
+     */
     private final Map<String, ModuleLayer> moduleLayers;
+
+    /**
+     * Temporary directory where all plug-ins will be copied to. Modules will be
+     * sourced from there, allowing to remove plug-ins by deleting their original
+     * directory.
+     */
+    private final Path pluginsWorkingDir;
+
+    private final Map<Path, String> pluginConfigByDirectory;
+
+    private int pluginIndex = 0;
 
     public LayersImpl(Map<String, Component> components) {
         this.components = Collections.unmodifiableMap(components);
-        this.moduleLayers = new HashMap<>();
+        this.moduleLayers = new ConcurrentHashMap<>();
+        this.pluginConfigByDirectory = new ConcurrentHashMap<>();
+
+        try {
+            this.pluginsWorkingDir = Files.createTempDirectory("layrry-plugins");
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -63,7 +91,20 @@ public class LayersImpl implements Layers {
         for(Entry<String, Component> entry : components.entrySet()) {
             Component component = entry.getValue();
 
-            List<Path> modulePathEntries = getModulePathEntries(component, resolver);
+            List<Path> modulePathEntries;
+
+            if (component.isPlugin()) {
+                Plugin plugin = (Plugin)component;
+                Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + plugin.getName());
+                FilesHelper.copyFolder(plugin.getLayerDir(),pluginDir);
+                pluginConfigByDirectory.put(plugin.getPluginDir(), plugin.getDerivedFrom());
+
+                modulePathEntries = Arrays.asList(pluginDir);
+            }
+            else {
+                modulePathEntries = getModulePathEntries(component, resolver);
+            }
+
             List<ModuleLayer> parentLayers = getParentLayers(entry.getKey(), component.getParents());
             ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
 
@@ -154,7 +195,8 @@ public class LayersImpl implements Layers {
 
     private class Deployer {
 
-        private final Method notify;
+        private final Method notifyOnAddition;
+        private final Method notifyOnRemoval;
         private final Object supportInstance;
 
         public Deployer(Map<Path, List<String>> parentsByPluginDirectory) {
@@ -163,7 +205,8 @@ public class LayersImpl implements Layers {
                 ClassLoader loader = platformLayer.findLoader("org.moditect.layrry.platform");
                 Class<?> support = loader.loadClass("org.moditect.layrry.platform.internal.PluginLifecycleSupport");
                 supportInstance = support.newInstance();
-                notify = support.getDeclaredMethods()[0];
+                notifyOnAddition = support.getDeclaredMethod("notifyPluginListenersOnAddition", ModuleLayer.class, String.class, ModuleLayer.class);
+                notifyOnRemoval = support.getDeclaredMethod("notifyPluginListenersOnRemoval", ModuleLayer.class, String.class, ModuleLayer.class);
             }
             catch(Exception e) {
                 throw new RuntimeException(e);
@@ -175,8 +218,8 @@ public class LayersImpl implements Layers {
                 executor.execute(() -> {
                     try (WatchService watch = pluginDirectory.getKey().getFileSystem().newWatchService()) {
                         pluginDirectory.getKey().register(watch,
-                                StandardWatchEventKinds.ENTRY_CREATE
-//                                StandardWatchEventKinds.ENTRY_DELETE,
+                                StandardWatchEventKinds.ENTRY_CREATE,
+                                StandardWatchEventKinds.ENTRY_DELETE
 //                                StandardWatchEventKinds.ENTRY_MODIFY,
 //                                StandardWatchEventKinds.OVERFLOW
                         );
@@ -184,18 +227,29 @@ public class LayersImpl implements Layers {
                         WatchKey key;
                         while ((key = watch.take()).isValid()) {
                             for (WatchEvent<?> event : key.pollEvents()) {
-                                if (!Files.isDirectory((Path) event.context())) {
-                                    continue;
+                                Path pluginSourceDir = pluginDirectory.getKey().resolve((Path) event.context());
+
+                                String derivedFrom = pluginConfigByDirectory.get(pluginDirectory.getKey());
+                                String pluginName = derivedFrom + "-" + ((Path) event.context()).getFileName().toString();
+
+                                if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+                                    Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + pluginName);
+                                    FilesHelper.copyFolder(pluginSourceDir, pluginDir);
+                                    List<Path> modulePathEntries = Arrays.asList(pluginDir);
+                                    List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getValue());
+
+                                    ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
+
+                                    moduleLayers.put(pluginName, moduleLayer);
+                                    deploy(pluginName, moduleLayer);
                                 }
+                                else {
+                                    ModuleLayer pluginLayer = moduleLayers.get(pluginName);
+                                    undeploy(pluginName, pluginLayer);
+                                    moduleLayers.remove(pluginName);
 
-                                String pluginName = ((Path) event.context()).getFileName().toString();
-                                List<Path> modulePathEntries = Arrays.asList(pluginDirectory.getKey().resolve((Path) event.context()));
-                                List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getValue());
-
-                                ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
-
-                                moduleLayers.put(pluginName, moduleLayer);
-                                deploy(pluginName, moduleLayer);
+                                    System.gc();
+                                }
                             }
 
                             key.reset();
@@ -228,7 +282,19 @@ public class LayersImpl implements Layers {
             // for each existing layer, notify any potential lifecycle listeners about the new layer
             for (ModuleLayer moduleLayer : moduleLayers.values()) {
                 try {
-                    notify.invoke(supportInstance, moduleLayer, pluginName, pluginLayer);
+                    notifyOnAddition.invoke(supportInstance, moduleLayer, pluginName, pluginLayer);
+                }
+                catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        }
+
+        public void undeploy(String pluginName, ModuleLayer pluginLayer) {
+            // for each existing layer, notify any potential lifecycle listeners about the new layer
+            for (ModuleLayer moduleLayer : moduleLayers.values()) {
+                try {
+                    notifyOnRemoval.invoke(supportInstance, moduleLayer, pluginName, pluginLayer);
                 }
                 catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     throw new IllegalArgumentException(e);

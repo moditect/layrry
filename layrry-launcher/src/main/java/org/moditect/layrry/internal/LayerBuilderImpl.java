@@ -26,13 +26,15 @@ public class LayerBuilderImpl implements LayerBuilder {
 
     private final LayersBuilderImpl layersBuilder;
     private final String name;
+    private final String derivedFrom;
     private Path layerDir;
     private final List<String> moduleGavs;
     private final List<String> parents;
 
-    public LayerBuilderImpl(LayersBuilderImpl layersBuilder, String name) {
+    public LayerBuilderImpl(LayersBuilderImpl layersBuilder, String name, String derivedFrom) {
         this.layersBuilder = layersBuilder;
         this.name = name;
+        this.derivedFrom = derivedFrom;
         this.moduleGavs = new ArrayList<>();
         this.parents = new ArrayList<>();
     }
@@ -62,6 +64,11 @@ public class LayerBuilderImpl implements LayerBuilder {
     }
 
     @Override
+    public LayerBuilder layer(String name, String derivedFrom) {
+        return layersBuilder.layer(name, derivedFrom);
+    }
+
+    @Override
     public Layers build() {
         return layersBuilder.build();
     }
@@ -72,6 +79,10 @@ public class LayerBuilderImpl implements LayerBuilder {
 
     public String getName() {
         return name;
+    }
+
+    public String getDerivedFrom() {
+        return derivedFrom;
     }
 
     public List<String> getModuleGavs() {

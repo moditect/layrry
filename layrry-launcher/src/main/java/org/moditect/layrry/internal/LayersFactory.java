@@ -42,7 +42,7 @@ public class LayersFactory {
         LayersBuilder builder = Layers.builder();
         for(Entry<String, Layer> layer : layersConfig.getLayers().entrySet()) {
             if (layer.getValue().getDirectory() != null) {
-                List<String> layerNames = handleDirectoryOfLayers(layer.getValue(), layersConfigDir, builder);
+                List<String> layerNames = handleDirectoryOfLayers(layer, layersConfigDir, builder);
                 layerDirsByName.put(layer.getKey(), layerNames);
             }
             else {
@@ -74,9 +74,12 @@ public class LayersFactory {
         }
     }
 
-    private List<String> handleDirectoryOfLayers(Layer layer,
+    /**
+     * Processes a directory of layers, i.e. plug-ins.
+     */
+    private List<String> handleDirectoryOfLayers(Entry<String, Layer> layer,
             Path layersConfigDir, LayersBuilder builder) {
-        Path layersDir = layersConfigDir.resolve(layer.getDirectory()).normalize();
+        Path layersDir = layersConfigDir.resolve(layer.getValue().getDirectory()).normalize();
         if (!Files.isDirectory(layersDir)) {
             throw new IllegalArgumentException("Specified layer directory doesn't exist: " + layersDir);
         }
@@ -84,11 +87,11 @@ public class LayersFactory {
         ArrayList<String> layerNames = new ArrayList<String>();
         List<Path> layerDirs = getLayerDirs(layersDir);
         for (Path layerDir : layerDirs) {
-            LayerBuilder layerBuilder = builder.layer(layerDir.getFileName().toString());
+            LayerBuilder layerBuilder = builder.layer(layerDir.getFileName().toString(), layer.getKey());
 
             layerBuilder.withModulesIn(layerDir);
             layerNames.add(layerDir.getFileName().toString());
-            for (String parent : layer.getParents()) {
+            for (String parent : layer.getValue().getParents()) {
                 layerBuilder.withParent(parent);
             }
         }

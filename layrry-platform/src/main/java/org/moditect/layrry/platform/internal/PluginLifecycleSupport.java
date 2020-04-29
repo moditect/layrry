@@ -44,5 +44,20 @@ public class PluginLifecycleSupport {
         }
     }
 
-    // notifyPluginListenersOnRemoval
+    public void notifyPluginListenersOnRemoval(ModuleLayer moduleLayer, String pluginName, ModuleLayer pluginLayer) {
+        ServiceLoader<PluginLifecycleListener> loader = ServiceLoader.load(moduleLayer, PluginLifecycleListener.class);
+
+        PluginDescriptor plugin = new PluginDescriptor(pluginName, pluginLayer);
+
+        Iterator<PluginLifecycleListener> listeners = loader.iterator();
+        while(listeners.hasNext()) {
+            PluginLifecycleListener listener = listeners.next();
+
+            // notify each listener only through it defining layer, but not via other layers
+            // derived from that
+            if (listener.getClass().getModule().getLayer().equals(moduleLayer)) {
+                listener.pluginRemoved(plugin);
+            }
+        }
+    }
 }
