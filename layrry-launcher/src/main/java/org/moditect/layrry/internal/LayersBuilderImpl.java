@@ -29,10 +29,15 @@ public class LayersBuilderImpl implements LayersBuilder {
 
     @Override
     public LayerBuilder layer(String name) {
+        return layer(name, null);
+    }
+
+    @Override
+    public LayerBuilder layer(String name, String derivedFrom) {
         if (currentLayer != null) {
             addLayer(currentLayer);
         }
-        currentLayer = new LayerBuilderImpl(this, name);
+        currentLayer = new LayerBuilderImpl(this, name, derivedFrom);
 
         return currentLayer;
     }

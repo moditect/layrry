@@ -27,5 +27,7 @@ public interface LayerBuilder {
 
     LayerBuilder layer(String name);
 
+    LayerBuilder layer(String name, String derivedFrom);
+
     Layers build();
 }
