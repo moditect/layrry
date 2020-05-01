@@ -55,6 +55,13 @@
       <version>1.78</version>
     </dependency>
     <dependency>
+      <groupId>io.methvin</groupId>
+      <artifactId>directory-watcher</artifactId>
+      <version>0.9.9</version>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>

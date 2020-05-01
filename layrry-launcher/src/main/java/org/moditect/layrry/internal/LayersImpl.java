@@ -22,10 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,6 +43,9 @@ import org.moditect.layrry.Layers;
 import org.moditect.layrry.internal.jfr.PluginLayerAddedEvent;
 import org.moditect.layrry.internal.jfr.PluginLayerRemovedEvent;
 import org.moditect.layrry.internal.util.FilesHelper;
+
+import io.methvin.watcher.DirectoryChangeEvent.EventType;
+import io.methvin.watcher.DirectoryWatcher;
 
 public class LayersImpl implements Layers {
 
@@ -218,51 +217,43 @@ public class LayersImpl implements Layers {
 
             for (Entry<Path, List<String>> pluginDirectory : parentsByPluginDirectory.entrySet()) {
                 executor.execute(() -> {
-                    try (WatchService watch = pluginDirectory.getKey().getFileSystem().newWatchService()) {
-                        pluginDirectory.getKey().register(watch,
-                                StandardWatchEventKinds.ENTRY_CREATE,
-                                StandardWatchEventKinds.ENTRY_DELETE
-//                                StandardWatchEventKinds.ENTRY_MODIFY,
-//                                StandardWatchEventKinds.OVERFLOW
-                        );
+                    DirectoryWatcher watcher;
+                    try {
+                        watcher = DirectoryWatcher.builder()
+                                .path(pluginDirectory.getKey())
+                                .listener(event -> {
+                                    // only interested in direct sub-directories atm.
+                                    if (event.path().getNameCount() > pluginDirectory.getKey().getNameCount() + 1) {
+                                        return;
+                                    }
 
-                        WatchKey key;
-                        while ((key = watch.take()).isValid()) {
-                            for (WatchEvent<?> event : key.pollEvents()) {
-                                Path pluginSourceDir = pluginDirectory.getKey().resolve((Path) event.context());
+                                    Path pluginSourceDir = event.path();
+                                    String derivedFrom = pluginConfigByDirectory.get(pluginDirectory.getKey());
+                                    String pluginName = derivedFrom + "-" + event.path().getFileName().toString();
 
-                                String derivedFrom = pluginConfigByDirectory.get(pluginDirectory.getKey());
-                                String pluginName = derivedFrom + "-" + ((Path) event.context()).getFileName().toString();
+                                    if (event.eventType() == EventType.CREATE) {
+                                        Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + pluginName);
+                                        FilesHelper.copyFolder(pluginSourceDir, pluginDir);
+                                        List<Path> modulePathEntries = Arrays.asList(pluginDir);
+                                        List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getValue());
 
-                                if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
-                                    Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + pluginName);
-                                    FilesHelper.copyFolder(pluginSourceDir, pluginDir);
-                                    List<Path> modulePathEntries = Arrays.asList(pluginDir);
-                                    List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getValue());
+                                        ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
 
-                                    ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
+                                        moduleLayers.put(pluginName, moduleLayer);
+                                        deploy(pluginName, moduleLayer);
+                                    }
+                                    else if (event.eventType() == EventType.DELETE) {
+                                        ModuleLayer pluginLayer = moduleLayers.get(pluginName);
+                                        undeploy(pluginName, pluginLayer);
+                                        moduleLayers.remove(pluginName);
+                                    }
+                                })
+                                .build();
 
-                                    moduleLayers.put(pluginName, moduleLayer);
-                                    deploy(pluginName, moduleLayer);
-                                }
-                                else {
-                                    ModuleLayer pluginLayer = moduleLayers.get(pluginName);
-                                    undeploy(pluginName, pluginLayer);
-                                    moduleLayers.remove(pluginName);
-
-                                    System.gc();
-                                }
-                            }
-
-                            key.reset();
-                        }
+                        watcher.watch();
                     }
                     catch (IOException e) {
                         throw new RuntimeException(e);
-                    }
-                    catch (InterruptedException e) {
-                        // regular exit of this polling loop, no need to log
-                        return;
                     }
                 });
             }
