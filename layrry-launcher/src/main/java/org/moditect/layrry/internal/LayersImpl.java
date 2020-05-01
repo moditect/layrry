@@ -44,6 +44,8 @@ import java.util.stream.Collectors;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.moditect.layrry.Layers;
+import org.moditect.layrry.internal.jfr.PluginLayerAddedEvent;
+import org.moditect.layrry.internal.jfr.PluginLayerRemovedEvent;
 import org.moditect.layrry.internal.util.FilesHelper;
 
 public class LayersImpl implements Layers {
@@ -288,6 +290,11 @@ public class LayersImpl implements Layers {
                     throw new IllegalArgumentException(e);
                 }
             }
+
+            PluginLayerAddedEvent event = new PluginLayerAddedEvent();
+            event.name = pluginName;
+            event.modules = pluginLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+            event.commit();
         }
 
         public void undeploy(String pluginName, ModuleLayer pluginLayer) {
@@ -300,6 +307,11 @@ public class LayersImpl implements Layers {
                     throw new IllegalArgumentException(e);
                 }
             }
+
+            PluginLayerRemovedEvent event = new PluginLayerRemovedEvent();
+            event.name = pluginName;
+            event.modules = pluginLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+            event.commit();
         }
 
         private ModuleLayer getLayrryPlatformLayer(Map<String, ModuleLayer> moduleLayers) {
