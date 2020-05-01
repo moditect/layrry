@@ -43,7 +43,7 @@ public class LayersBuilderImpl implements LayersBuilder {
     }
 
     private void addLayer(LayerBuilderImpl layer) {
-        layers.put(layer.getName(), Component.fromLayer(layer));
+        layers.put(layer.getDerivedFrom() != null ? layer.getDerivedFrom() + "-" + layer.getName() : layer.getName(), Component.fromLayer(layer));
     }
 
     @Override

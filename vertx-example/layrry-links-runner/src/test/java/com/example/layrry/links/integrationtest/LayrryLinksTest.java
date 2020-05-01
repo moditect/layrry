@@ -68,18 +68,28 @@ public class LayrryLinksTest {
 
         FilesHelper.copyFolder(preparedPluginDir.resolve("tournament"), pluginDir.resolve("tournament"));
 
-        await().atMost(30, TimeUnit.SECONDS).until(() -> {
+        await().atMost(5, TimeUnit.SECONDS).until(() -> {
             return given()
             .when()
                 .get("/tournaments")
             .then()
-            .extract().statusCode() == 200;
+                .extract().statusCode() == 200;
         });
 
         given()
-        .when().get("/tournaments/123")
-        .then()
-            .statusCode(200)
-            .body("name", equalTo("Easter 36"));
+            .when().get("/tournaments/123")
+            .then()
+                .statusCode(200)
+                .body("name", equalTo("Easter 36"));
+
+        FilesHelper.deleteFolder(pluginDir.resolve("tournament"));
+
+        await().atMost(5, TimeUnit.SECONDS).until(() -> {
+            return given()
+            .when()
+                .get("/tournaments")
+            .then()
+                .extract().statusCode() == 404;
+        });
     }
 }
