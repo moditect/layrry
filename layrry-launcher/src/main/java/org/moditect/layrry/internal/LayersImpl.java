@@ -90,6 +90,9 @@ public class LayersImpl implements Layers {
         Map<Path, List<String>> parentsByPluginDirectory = new HashMap<>();
 
         for(Entry<String, Component> entry : components.entrySet()) {
+            PluginLayerAddedEvent event = new PluginLayerAddedEvent();
+            event.begin();
+
             Component component = entry.getValue();
 
             List<Path> modulePathEntries;
@@ -115,6 +118,10 @@ public class LayersImpl implements Layers {
                 pluginLayersByName.put(entry.getKey(), moduleLayer);
                 parentsByPluginDirectory.put(((Plugin) entry.getValue()).getPluginDir(), component.getParents());
             }
+
+            event.name = entry.getKey();
+            event.modules = moduleLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+            event.commit();
         }
 
         if (!pluginLayersByName.isEmpty()) {
@@ -232,6 +239,9 @@ public class LayersImpl implements Layers {
                                     String pluginName = derivedFrom + "-" + event.path().getFileName().toString();
 
                                     if (event.eventType() == EventType.CREATE) {
+                                        PluginLayerAddedEvent jfrEvent = new PluginLayerAddedEvent();
+                                        jfrEvent.begin();
+
                                         Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + pluginName);
                                         FilesHelper.copyFolder(pluginSourceDir, pluginDir);
                                         List<Path> modulePathEntries = Arrays.asList(pluginDir);
@@ -241,11 +251,22 @@ public class LayersImpl implements Layers {
 
                                         moduleLayers.put(pluginName, moduleLayer);
                                         deploy(pluginName, moduleLayer);
+
+                                        jfrEvent.name = pluginName;
+                                        jfrEvent.modules = moduleLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+                                        jfrEvent.commit();
                                     }
                                     else if (event.eventType() == EventType.DELETE) {
+                                        PluginLayerRemovedEvent jfrEvent = new PluginLayerRemovedEvent();
+                                        jfrEvent.begin();
+
                                         ModuleLayer pluginLayer = moduleLayers.get(pluginName);
                                         undeploy(pluginName, pluginLayer);
                                         moduleLayers.remove(pluginName);
+
+                                        jfrEvent.name = pluginName;
+                                        jfrEvent.modules = pluginLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+                                        jfrEvent.commit();
                                     }
                                 })
                                 .build();
@@ -281,11 +302,6 @@ public class LayersImpl implements Layers {
                     throw new IllegalArgumentException(e);
                 }
             }
-
-            PluginLayerAddedEvent event = new PluginLayerAddedEvent();
-            event.name = pluginName;
-            event.modules = pluginLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
-            event.commit();
         }
 
         public void undeploy(String pluginName, ModuleLayer pluginLayer) {
@@ -298,11 +314,6 @@ public class LayersImpl implements Layers {
                     throw new IllegalArgumentException(e);
                 }
             }
-
-            PluginLayerRemovedEvent event = new PluginLayerRemovedEvent();
-            event.name = pluginName;
-            event.modules = pluginLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
-            event.commit();
         }
 
         private ModuleLayer getLayrryPlatformLayer(Map<String, ModuleLayer> moduleLayers) {
