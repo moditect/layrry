@@ -116,6 +116,49 @@ main:
 
 You can find the complete example in the tests of the Layrry project.
 
+## Dynamic Plug-Ins
+
+Layrry also supports the dynamic addition and removal of plug-ins at runtime.
+For that, simply add or remove plug-in sub-directories to the `directory` of a layer configuration.
+Layrry watches the given plug-ins directory and will add or remove the corresponding module layer to/from the application in case a new plug-in is added or removed.
+The core of an application can react to added or removed module layers.
+In order to do so, the module _org.moditect.layrry:layrry-platform_  must be added to the application core layer and an implementation of the `PluginLifecycleListener` interface must be created and registered as service:
+
+```java
+public interface PluginLifecycleListener {
+
+    void pluginAdded(PluginDescriptor plugin);
+
+    void pluginRemoved(PluginDescriptor plugin);
+}
+```
+
+Typically, an application will retrieve application-specific services from newly added module layers:
+
+```java
+@Override
+public void pluginAdded(PluginDescriptor plugin) {
+  ServiceLoader<MyService> services = ServiceLoader.load(
+      plugin.getModuleLayer(), MyService.class);
+
+    services.forEach(service -> {
+      // only process services declared by the added layer itself, but not
+      // from ancestor layers
+      if (service.getClass().getModule().getLayer() == layer) {
+        // process service ...
+      }
+    });
+}
+```
+
+To avoid class-loader leaks, it's vital that all references to plug-in contribued classes are released upon `pluginRemoved()`.
+Note that classes typically will not instantly be unloaded, but only upon the next full GC (when using G1).
+
+You can find a complete example for the usage of dynamic plug-ins in the _vertx-example_ directory:
+"Layrry Links" is an example application for managing golf courses, centered around a web application core built using Vert.x.
+Routes of the web application (_/members_, _/tournaments_) are contributed by plug-ins which can be added to or removed from the application at runtime.
+The _routes_ path shows all routes available at a given time.
+
 ## Using the Layrry API
 
 In addition to the YAML-based launcher, Layrry provides also a Java API for assembling and running layered applications.
