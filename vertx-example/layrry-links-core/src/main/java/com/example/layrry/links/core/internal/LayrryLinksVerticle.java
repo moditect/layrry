@@ -15,7 +15,6 @@
  */
 package com.example.layrry.links.core.internal;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,11 +28,12 @@ import org.moditect.layrry.platform.PluginDescriptor;
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
 import com.example.layrry.links.core.spi.RouterContributor;
-import com.example.layrry.links.core.spi.RouterContributor.RouterContributions;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
 public class LayrryLinksVerticle extends AbstractVerticle {
@@ -41,7 +41,7 @@ public class LayrryLinksVerticle extends AbstractVerticle {
     private static final Logger LOGGER = LogManager.getLogger(LayrryLinksVerticle.class);
 
     private static Map<String, ModuleLayer> moduleLayers = new ConcurrentHashMap<>();
-    private static Map<ModuleLayer, Set<String>> routesByLayer = new HashMap<>();
+    private static Map<ModuleLayer, Set<String>> routesByLayer = new ConcurrentHashMap<>();
 
     private static volatile Router mainRouter;
     private static volatile Vertx vertx;
@@ -52,6 +52,8 @@ public class LayrryLinksVerticle extends AbstractVerticle {
 
         mainRouter = Router.router(vertx);
         mainRouter.route().handler(BodyHandler.create());
+
+        registerContributedRoutes(LayrryLinksVerticle.class.getModule().getLayer());
 
         for(Entry<String, ModuleLayer> layer : moduleLayers.entrySet()) {
             registerContributedRoutes(layer.getValue());
@@ -67,16 +69,14 @@ public class LayrryLinksVerticle extends AbstractVerticle {
         Set<String> routes = new HashSet<>();
 
         contributors.forEach(contributor -> {
-            contributor.install(vertx, new RouterContributions() {
-
-                @Override
-                public void add(String path, Router router) {
-                    LOGGER.info("Added router for path: " + path);
+            if (contributor.getClass().getModule().getLayer() == layer) {
+                contributor.install(vertx, (path, router) -> {
+                    LOGGER.info("Adding router for path: " + path);
 
                     mainRouter.mountSubRouter(path, router);
                     routes.add(path);
-                }
-            });
+                });
+            }
         });
 
         routesByLayer.put(layer, routes);
@@ -90,6 +90,8 @@ public class LayrryLinksVerticle extends AbstractVerticle {
                 route.remove();
                 LOGGER.info("Removed router for path: " + route.getPath());
             });
+
+        routesByLayer.remove(layer);
     }
 
     private static boolean startsWithAny(String path, Set<String> paths) {
@@ -110,15 +112,45 @@ public class LayrryLinksVerticle extends AbstractVerticle {
 
         @Override
         public void pluginRemoved(PluginDescriptor plugin) {
-            LOGGER.info("Removing plug-in: " + plugin);
-
             unregisterContributedRoutes(plugin.getModuleLayer());
             moduleLayers.remove(plugin.getName());
-            routesByLayer.remove(plugin.getModuleLayer());
+            LOGGER.info("Removed plug-in: " + plugin);
+        }
+    }
+
+    public static class RoutesOverviewRouterContributor implements RouterContributor {
+
+        @Override
+        public void install(Vertx vertx, RouterContributions contributions) {
+            Router router = Router.router(vertx);
+
+            router.get("/").handler(this::handleGetRoutesOverview);
+
+            contributions.add("/routes", router);
         }
 
-        public static Map<String, ModuleLayer> getModuleLayers() {
-            return moduleLayers;
+        private void handleGetRoutesOverview(RoutingContext routingContext) {
+            HttpServerResponse response = routingContext.response();
+
+            StringBuilder overview = new StringBuilder()
+                            .append("<!DOCTYPE html>")
+                            .append("<html>")
+                            .append("  <head>")
+                            .append("    <title>Layrry Links -- Routes</title>")
+                            .append("  </head>")
+                            .append("  <body>")
+                            .append("    <h1>Layrry Links -- Routes</h1>");
+
+            for (Entry<ModuleLayer, Set<String>> layerAndRoutes : routesByLayer.entrySet()) {
+                for (String route : layerAndRoutes.getValue()) {
+                    overview.append("    <p><a href=\"" + route + "\">" + route + "</a></p>");
+                }
+            }
+
+                    overview.append("  </body>")
+                            .append("</html>");
+
+            response.putHeader("content-type", "text/html").end(overview.toString());
         }
     }
 }

@@ -29,7 +29,6 @@ import org.moditect.layrry.Layrry;
 
 public class LayrryLinksTest {
 
-
     private String layersConfig;
     private Path pluginDir;
     private Path preparedPluginDir;

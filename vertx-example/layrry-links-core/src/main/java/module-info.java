@@ -16,7 +16,9 @@
 
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
+import com.example.layrry.links.core.internal.LayrryLinksVerticle.RoutesOverviewRouterContributor;
 import com.example.layrry.links.core.internal.LayrryLinksVerticle.RoutesPluginLifecycleListener;
+import com.example.layrry.links.core.spi.RouterContributor;
 
 module com.example.layrry.links.core {
     requires org.moditect.layrry.platform;
@@ -27,6 +29,7 @@ module com.example.layrry.links.core {
     exports com.example.layrry.links.core;
     exports com.example.layrry.links.core.spi;
 
-    uses com.example.layrry.links.core.spi.RouterContributor;
+    uses RouterContributor;
     provides PluginLifecycleListener with RoutesPluginLifecycleListener;
+    provides RouterContributor with RoutesOverviewRouterContributor;
 }

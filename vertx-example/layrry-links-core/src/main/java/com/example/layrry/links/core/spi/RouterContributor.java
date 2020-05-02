@@ -18,8 +18,18 @@ package com.example.layrry.links.core.spi;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 
+/**
+ * Service interface to be implemented by plug-ins of the Layrry Links
+ * application for contributing routes to the web application.
+ */
 public interface RouterContributor {
 
+    /**
+     * Invoked when adding a plug-in with a contributor implementation.
+     *
+     * @param vertx         The Vertx instance
+     * @param contributions Callback for registering one or more routes
+     */
     void install(Vertx vertx, RouterContributions contributions);
 
     interface RouterContributions {
