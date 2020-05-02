@@ -23,6 +23,8 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.moditect.layrry.platform.PluginDescriptor;
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
@@ -34,7 +36,9 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
-public class ExampleApp extends AbstractVerticle {
+public class LayrryLinksVerticle extends AbstractVerticle {
+
+    private static final Logger LOGGER = LogManager.getLogger(LayrryLinksVerticle.class);
 
     private static Map<String, ModuleLayer> moduleLayers = new ConcurrentHashMap<>();
     private static Map<ModuleLayer, Set<String>> routesByLayer = new HashMap<>();
@@ -67,7 +71,7 @@ public class ExampleApp extends AbstractVerticle {
 
                 @Override
                 public void add(String path, Router router) {
-                    System.out.println("Added router for path: " + path);
+                    LOGGER.info("Added router for path: " + path);
 
                     mainRouter.mountSubRouter(path, router);
                     routes.add(path);
@@ -84,7 +88,7 @@ public class ExampleApp extends AbstractVerticle {
             .filter(route -> route.getPath() != null && startsWithAny(route.getPath(), routesByLayer.get(layer)))
             .forEach(route -> {
                 route.remove();
-                System.out.println("Removed router for path: " + route.getPath());
+                LOGGER.info("Removed router for path: " + route.getPath());
             });
     }
 
@@ -96,7 +100,7 @@ public class ExampleApp extends AbstractVerticle {
 
         @Override
         public void pluginAdded(PluginDescriptor plugin) {
-            System.out.println("Adding plug-in: " + plugin);
+            LOGGER.info("Adding plug-in: " + plugin);
 
             moduleLayers.put(plugin.getName(), plugin.getModuleLayer());
             if (mainRouter != null) {
@@ -106,7 +110,7 @@ public class ExampleApp extends AbstractVerticle {
 
         @Override
         public void pluginRemoved(PluginDescriptor plugin) {
-            System.out.println("Removing plug-in: " + plugin);
+            LOGGER.info("Removing plug-in: " + plugin);
 
             unregisterContributedRoutes(plugin.getModuleLayer());
             moduleLayers.remove(plugin.getName());

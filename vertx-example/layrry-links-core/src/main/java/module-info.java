@@ -16,14 +16,17 @@
 
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
-import com.example.layrry.links.core.internal.ExampleApp.RoutesPluginLifecycleListener;
+import com.example.layrry.links.core.internal.LayrryLinksVerticle.RoutesPluginLifecycleListener;
 
 module com.example.layrry.links.core {
     requires org.moditect.layrry.platform;
+    requires org.apache.logging.log4j;
     requires transitive vertx.core;
     requires transitive vertx.web;
+
     exports com.example.layrry.links.core;
     exports com.example.layrry.links.core.spi;
+
     uses com.example.layrry.links.core.spi.RouterContributor;
     provides PluginLifecycleListener with RoutesPluginLifecycleListener;
 }

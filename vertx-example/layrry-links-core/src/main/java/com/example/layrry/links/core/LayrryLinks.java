@@ -15,7 +15,7 @@
  */
 package com.example.layrry.links.core;
 
-import com.example.layrry.links.core.internal.ExampleApp;
+import com.example.layrry.links.core.internal.LayrryLinksVerticle;
 
 import io.vertx.core.Vertx;
 
@@ -26,6 +26,6 @@ public class LayrryLinks {
 
     public static void main(final String[] args) {
         Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new ExampleApp());
+        vertx.deployVerticle(new LayrryLinksVerticle());
     }
 }
