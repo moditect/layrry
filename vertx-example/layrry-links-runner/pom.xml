@@ -85,7 +85,7 @@
             <id>copy-members-plugin</id>
             <phase>generate-test-resources</phase>
             <goals>
-              <goal>copy</goal>
+              <goal>unpack</goal>
             </goals>
             <configuration>
               <artifactItems>
@@ -93,9 +93,9 @@
                   <groupId>com.example.layrry.links</groupId>
                   <artifactId>layrry-links-membership</artifactId>
                   <version>1.0.0</version>
-                  <type>jar</type>
+                  <type>tar.gz</type>
                   <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/route-plugins/members</outputDirectory>
+                  <outputDirectory>${project.build.directory}/route-plugins</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -104,7 +104,7 @@
             <id>copy-tournaments-plugin</id>
             <phase>generate-test-resources</phase>
             <goals>
-              <goal>copy</goal>
+              <goal>unpack</goal>
             </goals>
             <configuration>
               <artifactItems>
@@ -112,9 +112,9 @@
                   <groupId>com.example.layrry.links</groupId>
                   <artifactId>layrry-links-tournament</artifactId>
                   <version>1.0.0</version>
-                  <type>jar</type>
+                  <type>tar.gz</type>
                   <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/plugins-prepared/tournament</outputDirectory>
+                  <outputDirectory>${project.build.directory}/plugins-prepared</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>

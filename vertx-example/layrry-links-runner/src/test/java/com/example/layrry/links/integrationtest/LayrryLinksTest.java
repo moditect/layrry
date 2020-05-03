@@ -29,6 +29,7 @@ import org.moditect.layrry.Layrry;
 
 public class LayrryLinksTest {
 
+    private static final String TOURNAMENT_PLUGIN_NAME = "layrry-links-tournament-1.0.0";
     private String layersConfig;
     private Path pluginDir;
     private Path preparedPluginDir;
@@ -55,7 +56,7 @@ public class LayrryLinksTest {
 
     @Test
     public void runLayers() throws Exception {
-        FilesHelper.deleteFolder(pluginDir.resolve("tournament"));
+        FilesHelper.deleteFolder(pluginDir.resolve(TOURNAMENT_PLUGIN_NAME));
 
         Layrry.main("--layers-config", layersConfig);
 
@@ -65,7 +66,7 @@ public class LayrryLinksTest {
                 .statusCode(200)
                 .body("name", equalTo("Rudy Rough"));
 
-        FilesHelper.copyFolder(preparedPluginDir.resolve("tournament"), pluginDir.resolve("tournament"));
+        FilesHelper.copyFolder(preparedPluginDir.resolve(TOURNAMENT_PLUGIN_NAME), pluginDir.resolve(TOURNAMENT_PLUGIN_NAME));
 
         await().atMost(5, TimeUnit.SECONDS).until(() -> {
             return given()
@@ -81,7 +82,7 @@ public class LayrryLinksTest {
                 .statusCode(200)
                 .body("name", equalTo("Easter 36"));
 
-        FilesHelper.deleteFolder(pluginDir.resolve("tournament"));
+        FilesHelper.deleteFolder(pluginDir.resolve(TOURNAMENT_PLUGIN_NAME));
 
         await().atMost(5, TimeUnit.SECONDS).until(() -> {
             return given()
