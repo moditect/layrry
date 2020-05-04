@@ -25,6 +25,7 @@ module com.example.layrry.links.core {
     requires org.apache.logging.log4j;
     requires transitive vertx.core;
     requires transitive vertx.web;
+    requires transitive vertx.bridge.common;
 
     exports com.example.layrry.links.core;
     exports com.example.layrry.links.core.spi;

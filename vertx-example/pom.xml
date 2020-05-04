@@ -31,7 +31,11 @@
   <name>Layrry Links Example</name>
   <description>The Layrry Links Golf Course Management Application is a comprehensive example
   application show-casing Layrry's dynamic plug-in capabilities</description>
-  
+
+  <properties>
+    <maven.compiler.release>14</maven.compiler.release>
+  </properties>
+
   <modules>
     <module>layrry-links-logconfig</module>
     <module>layrry-links-core</module>
@@ -57,6 +61,19 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>default-compile</id>
+              <configuration>
+                <release>${maven.compiler.release}</release>
+                <compilerArgs>--enable-preview</compilerArgs>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>

@@ -19,6 +19,8 @@ layers:
     modules:
       - "io.vertx:vertx-core:3.9.0"
       - "io.vertx:vertx-web:3.9.0"
+      - "io.vertx:vertx-web-common:3.9.0"
+      - "io.vertx:vertx-bridge-common:3.9.0"
       - "io.netty:netty-all:4.1.48.Final"
       - "com.fasterxml.jackson.core:jackson-core:2.10.2"
       - "com.fasterxml.jackson.core:jackson-databind:2.10.2"

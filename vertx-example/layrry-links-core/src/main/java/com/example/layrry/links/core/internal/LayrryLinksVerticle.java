@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,12 +32,17 @@ import com.example.layrry.links.core.spi.RouterContributor;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServerResponse;
+import io.vertx.ext.bridge.BridgeEventType;
+import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 public class LayrryLinksVerticle extends AbstractVerticle {
+
+    private static final String EVENT_BUS_ADDRESS = "routes-updates";
 
     private static final Logger LOGGER = LogManager.getLogger(LayrryLinksVerticle.class);
 
@@ -80,6 +86,8 @@ public class LayrryLinksVerticle extends AbstractVerticle {
         });
 
         routesByLayer.put(layer, routes);
+
+        vertx.eventBus().publish(EVENT_BUS_ADDRESS, getRoutesList());
     }
 
     private static void unregisterContributedRoutes(ModuleLayer layer) {
@@ -92,6 +100,8 @@ public class LayrryLinksVerticle extends AbstractVerticle {
             });
 
         routesByLayer.remove(layer);
+
+        vertx.eventBus().publish(EVENT_BUS_ADDRESS, getRoutesList());
     }
 
     private static boolean startsWithAny(String path, Set<String> paths) {
@@ -118,39 +128,78 @@ public class LayrryLinksVerticle extends AbstractVerticle {
         }
     }
 
+    private static String getRoutesList() {
+        return routesByLayer.values()
+            .stream()
+            .flatMap(routes -> routes.stream())
+            .map(route -> "<p><a href=\"" + route + "\">" + route + "<a/></p>")
+            .sorted()
+            .collect(Collectors.joining());
+    }
+
     public static class RoutesOverviewRouterContributor implements RouterContributor {
 
         @Override
         public void install(Vertx vertx, RouterContributions contributions) {
+            BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress(EVENT_BUS_ADDRESS));
+            SockJSHandler sockJsHandler = SockJSHandler.create(vertx);
+
+            sockJsHandler.bridge(options, event -> {
+              if (event.type() == BridgeEventType.SOCKET_CREATED) {
+                  LOGGER.info("Socket created");
+              }
+
+              event.complete(true);
+            });
+
             Router router = Router.router(vertx);
 
             router.get("/").handler(this::handleGetRoutesOverview);
+            router.route("/eventbus/*").handler(sockJsHandler);
 
             contributions.add("/routes", router);
         }
 
         private void handleGetRoutesOverview(RoutingContext routingContext) {
-            HttpServerResponse response = routingContext.response();
+            String index = """
+                <!DOCTYPE html>
+                <html lang="en">
+                  <head>
+                    <title>Layrry Links</title>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-            StringBuilder overview = new StringBuilder()
-                            .append("<!DOCTYPE html>")
-                            .append("<html>")
-                            .append("  <head>")
-                            .append("    <title>Layrry Links -- Routes</title>")
-                            .append("  </head>")
-                            .append("  <body>")
-                            .append("    <h1>Layrry Links -- Routes</h1>");
+                    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/vertx3-eventbus-client@3.9.0/vertx-eventbus.min.js"></script>
 
-            for (Entry<ModuleLayer, Set<String>> layerAndRoutes : routesByLayer.entrySet()) {
-                for (String route : layerAndRoutes.getValue()) {
-                    overview.append("    <p><a href=\"" + route + "\">" + route + "</a></p>");
-                }
-            }
+                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+                  </head>
+                  <body>
 
-                    overview.append("  </body>")
-                            .append("</html>");
+                    <div class="container">
+                      <h1>Layrry Links -- Routes</h1>
+                      <div id="status">%s</div>
+                    </div>
 
-            response.putHeader("content-type", "text/html").end(overview.toString());
+                    <script>
+                      var eb = new EventBus("http://localhost:8080/routes/eventbus");
+
+                      eb.onopen = function () {
+                        eb.registerHandler("routes-updates", function (err, msg) {
+                          $('#status').html(msg.body);
+                        });
+                      }
+                    </script>
+                  </body>
+                </html>
+                """;
+
+            index = String.format(index, getRoutesList());
+
+            routingContext.response()
+                    .putHeader("content-type", "text/html")
+                    .end(index);
         }
     }
 }
