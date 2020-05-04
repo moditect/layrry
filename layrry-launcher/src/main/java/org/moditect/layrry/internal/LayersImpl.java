@@ -236,7 +236,7 @@ public class LayersImpl implements Layers {
 
                                     Path pluginSourceDir = event.path();
                                     String derivedFrom = pluginConfigByDirectory.get(pluginDirectory.getKey());
-                                    String pluginName = derivedFrom + "-" + event.path().getFileName().toString();
+                                    String pluginName = derivedFrom + "-" + pluginSourceDir.getFileName().toString();
 
                                     if (event.eventType() == EventType.CREATE) {
                                         PluginLayerAddedEvent jfrEvent = new PluginLayerAddedEvent();
