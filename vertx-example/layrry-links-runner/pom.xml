@@ -130,6 +130,7 @@
             <pluginDir>${project.build.directory}/route-plugins</pluginDir>
             <preparedPluginDir>${project.build.directory}/plugins-prepared</preparedPluginDir>
           </systemPropertyVariables>
+          <argLine>--enable-preview</argLine>
         </configuration>
       </plugin>
     </plugins>
