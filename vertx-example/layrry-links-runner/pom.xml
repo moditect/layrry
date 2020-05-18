@@ -69,7 +69,7 @@
               <argument>-classpath</argument>
               <classpath/>
               <argument>org.moditect.layrry.Layrry</argument>
-              <gument>--layers-config</gument>
+              <argument>--layers-config</argument>
               <argument>src/test/resources/layers.yml</argument>
             </arguments>
           </configuration>
