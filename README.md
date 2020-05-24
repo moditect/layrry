@@ -3,9 +3,15 @@
 Layrry is a launcher and Java API for executing modularized Java applications.
 
 It allows to assemble modularized applications based on Maven artifact coordinates of the (modular) JARs to include.
-Layrry utilizes the Java Module System's notion of [module layers](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ModuleLayer.html), allowing multiple versions of one module to be used within an application at the same time.
+Layrry utilizes the Java Module System's notion of [module layers](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ModuleLayer.html), allowing multiple versions of one module to be used within an application at the same time, as well as dynamically adding and removing modules at application runtime.
 
 The module graph is built either declaratively (using YAML descriptors) or programmatically (using a fluent API).
+
+Learn more about Layrry in this series of blog posts:
+
+* [Part 1: "Introducing Layrry: A Launcher and API for Modularized Java Applications"](https://www.morling.dev/blog/introducing-layrry-runner-and-api-for-modularized-java-applications/)
+* [Part 2: "Plug-in Architectures With Layrry and the Java Module System"](https://www.morling.dev/blog/plugin-architectures-with-layrry-and-the-java-module-system/)
+* Part 3: Dynamically loading Java modules at application runtime with Layrry (coming soon)
 
 ## Why Layrry?
 
