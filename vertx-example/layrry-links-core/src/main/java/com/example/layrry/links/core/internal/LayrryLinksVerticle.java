@@ -65,9 +65,12 @@ public class LayrryLinksVerticle extends AbstractVerticle {
             registerContributedRoutes(layer.getValue());
         }
 
+        int port = Integer.getInteger("port", 8080);
         vertx.createHttpServer()
             .requestHandler(mainRouter)
-            .listen(8080);
+            .listen(port);
+
+        LOGGER.info("Server ready! Browse to http://localhost:{}/routes", port);
     }
 
     private static void registerContributedRoutes(ModuleLayer layer) {
