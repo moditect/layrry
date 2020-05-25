@@ -37,7 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import io.methvin.watcher.DirectoryChangeEvent;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.moditect.layrry.Layers;
@@ -45,6 +44,7 @@ import org.moditect.layrry.internal.jfr.PluginLayerAddedEvent;
 import org.moditect.layrry.internal.jfr.PluginLayerRemovedEvent;
 import org.moditect.layrry.internal.util.FilesHelper;
 
+import io.methvin.watcher.DirectoryChangeEvent;
 import io.methvin.watcher.DirectoryChangeEvent.EventType;
 import io.methvin.watcher.DirectoryWatcher;
 
@@ -132,7 +132,6 @@ public class LayersImpl implements Layers {
     }
 
     private List<Path> resolveModulePathEntries(MavenResolverSystem resolver, Component component) {
-
         if (component.isPlugin()) {
             Plugin plugin = (Plugin)component;
             Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + plugin.getName());
@@ -141,8 +140,9 @@ public class LayersImpl implements Layers {
 
             return List.of(pluginDir);
         }
-
-        return getModulePathEntries(component, resolver);
+        else {
+            return getModulePathEntries((Layer) component, resolver);
+        }
     }
 
     private ModuleLayer createModuleLayer(List<ModuleLayer> parentLayers, List<Path> modulePathEntries) {
@@ -166,12 +166,8 @@ public class LayersImpl implements Layers {
         return moduleLayer;
     }
 
-    private List<Path> getModulePathEntries(Component component, MavenResolverSystem resolver) {
-        if (component.isPlugin()) {
-            return List.of(((Plugin) component).getLayerDir());
-        }
-
-        List<String> moduleGavs = ((Layer) component).getModuleGavs();
+    private List<Path> getModulePathEntries(Layer layer, MavenResolverSystem resolver) {
+        List<String> moduleGavs = layer.getModuleGavs();
         return Arrays.asList(resolver.resolve(moduleGavs).withoutTransitivity().as(Path.class));
     }
 
