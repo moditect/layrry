@@ -212,7 +212,7 @@ Layrry is not available on Maven Central yet.
 In order to use it, build it from source like so:
 
 ```
-mvn clean install
+mvn package
 ```
 
 Java 11 or later is needed in order to do so.
