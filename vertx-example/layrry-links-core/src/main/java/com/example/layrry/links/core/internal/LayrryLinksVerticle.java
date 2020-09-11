@@ -15,6 +15,10 @@
  */
 package com.example.layrry.links.core.internal;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,14 +65,12 @@ public class LayrryLinksVerticle extends AbstractVerticle {
 
         registerContributedRoutes(LayrryLinksVerticle.class.getModule().getLayer());
 
-        for(Entry<String, ModuleLayer> layer : moduleLayers.entrySet()) {
+        for (Entry<String, ModuleLayer> layer : moduleLayers.entrySet()) {
             registerContributedRoutes(layer.getValue());
         }
 
         int port = Integer.getInteger("port", 8080);
-        vertx.createHttpServer()
-            .requestHandler(mainRouter)
-            .listen(port);
+        vertx.createHttpServer().requestHandler(mainRouter).listen(port);
 
         LOGGER.info("Server ready! Browse to http://localhost:{}/routes", port);
     }
@@ -94,13 +96,12 @@ public class LayrryLinksVerticle extends AbstractVerticle {
     }
 
     private static void unregisterContributedRoutes(ModuleLayer layer) {
-        mainRouter.getRoutes()
-            .stream()
-            .filter(route -> route.getPath() != null && startsWithAny(route.getPath(), routesByLayer.get(layer)))
-            .forEach(route -> {
-                route.remove();
-                LOGGER.info("Removed router for path: " + route.getPath());
-            });
+        mainRouter.getRoutes().stream()
+                .filter(route -> route.getPath() != null && startsWithAny(route.getPath(), routesByLayer.get(layer)))
+                .forEach(route -> {
+                    route.remove();
+                    LOGGER.info("Removed router for path: " + route.getPath());
+                });
 
         routesByLayer.remove(layer);
 
@@ -132,27 +133,25 @@ public class LayrryLinksVerticle extends AbstractVerticle {
     }
 
     private static String getRoutesList() {
-        return routesByLayer.values()
-            .stream()
-            .flatMap(routes -> routes.stream())
-            .map(route -> "<p><a href=\"" + route + "\">" + route + "<a/></p>")
-            .sorted()
-            .collect(Collectors.joining());
+        return routesByLayer.values().stream().flatMap(routes -> routes.stream())
+                .map(route -> "<p><a href=\"" + route + "\">" + route + "<a/></p>").sorted()
+                .collect(Collectors.joining());
     }
 
     public static class RoutesOverviewRouterContributor implements RouterContributor {
 
         @Override
         public void install(Vertx vertx, RouterContributions contributions) {
-            BridgeOptions options = new BridgeOptions().addOutboundPermitted(new PermittedOptions().setAddress(EVENT_BUS_ADDRESS));
+            BridgeOptions options = new BridgeOptions()
+                    .addOutboundPermitted(new PermittedOptions().setAddress(EVENT_BUS_ADDRESS));
             SockJSHandler sockJsHandler = SockJSHandler.create(vertx);
 
             sockJsHandler.bridge(options, event -> {
-              if (event.type() == BridgeEventType.SOCKET_CREATED) {
-                  LOGGER.info("Socket created");
-              }
+                if (event.type() == BridgeEventType.SOCKET_CREATED) {
+                    LOGGER.info("Socket created");
+                }
 
-              event.complete(true);
+                event.complete(true);
             });
 
             Router router = Router.router(vertx);
@@ -164,45 +163,16 @@ public class LayrryLinksVerticle extends AbstractVerticle {
         }
 
         private void handleGetRoutesOverview(RoutingContext routingContext) {
-            String index = """
-                <!DOCTYPE html>
-                <html lang="en">
-                  <head>
-                    <title>Layrry Links</title>
-                    <meta charset="utf-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            try {
+                String index = Files.readString(Paths.get(getClass().getResource("index.html").toURI()));
+                System.out.println("HTML");
+                System.out.println(index);
+                index = String.format(index, getRoutesList());
 
-                    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/vertx3-eventbus-client@3.9.0/vertx-eventbus.min.js"></script>
-
-                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-                  </head>
-                  <body>
-
-                    <div class="container">
-                      <h1>Layrry Links -- Routes</h1>
-                      <div id="status">%s</div>
-                    </div>
-
-                    <script>
-                      var eb = new EventBus("http://localhost:8080/routes/eventbus");
-
-                      eb.onopen = function () {
-                        eb.registerHandler("routes-updates", function (err, msg) {
-                          $('#status').html(msg.body);
-                        });
-                      }
-                    </script>
-                  </body>
-                </html>
-                """;
-
-            index = String.format(index, getRoutesList());
-
-            routingContext.response()
-                    .putHeader("content-type", "text/html")
-                    .end(index);
+                routingContext.response().putHeader("content-type", "text/html").end(index);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

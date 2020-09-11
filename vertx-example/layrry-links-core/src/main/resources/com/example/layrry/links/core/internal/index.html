@@ -1,0 +1,52 @@
+<!--
+
+     Copyright 2020 The ModiTect authors
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Layrry Links</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vertx3-eventbus-client@3.9.0/vertx-eventbus.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Layrry Links -- Routes</h1>
+        <div id="status">%s</div>
+    </div>
+
+    <script>
+        var eb = new EventBus("http://localhost:8080/routes/eventbus");
+
+        eb.onopen = function () {
+            eb.registerHandler("routes-updates", function (err, msg) {
+                $('#status').html(msg.body);
+            });
+        }
+    </script>
+</body>
+
+</html>

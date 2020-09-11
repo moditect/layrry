@@ -33,7 +33,7 @@
   application show-casing Layrry's dynamic plug-in capabilities</description>
 
   <properties>
-    <maven.compiler.release>14</maven.compiler.release>
+    <maven.compiler.release>11</maven.compiler.release>
   </properties>
 
   <modules>
