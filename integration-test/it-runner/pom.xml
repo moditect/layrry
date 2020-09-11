@@ -53,17 +53,36 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <configuration>
-            <executable>java</executable>
-            <arguments>
-              <argument>-classpath</argument>
-              <classpath/>
-              <argument>org.moditect.layrry.Layrry</argument>
-              <gument>--layers-config</gument>
-              <argument>src/test/resources/layers.yml</argument>
-              <argument>Alice</argument>
-            </arguments>
-          </configuration>
+          <executions>
+            <execution>
+              <id>run-yaml</id>
+              <configuration>
+                <executable>java</executable>
+                <arguments>
+                  <argument>-classpath</argument>
+                  <classpath/>
+                  <argument>org.moditect.layrry.Layrry</argument>
+                  <argument>--layers-config</argument>
+                  <argument>src/test/resources/layers.yml</argument>
+                  <argument>Alice</argument>
+                </arguments>
+              </configuration>
+            </execution>
+            <execution>
+              <id>run-toml</id>
+              <configuration>
+                <executable>java</executable>
+                <arguments>
+                  <argument>-classpath</argument>
+                  <classpath/>
+                  <argument>org.moditect.layrry.Layrry</argument>
+                  <argument>--layers-config</argument>
+                  <argument>src/test/resources/layers.toml</argument>
+                  <argument>Alice</argument>
+                </arguments>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
     </plugins>
   </build>

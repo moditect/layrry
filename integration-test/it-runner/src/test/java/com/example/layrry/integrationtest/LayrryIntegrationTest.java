@@ -15,15 +15,17 @@
  */
 package com.example.layrry.integrationtest;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moditect.layrry.Layers;
+import org.moditect.layrry.Layrry;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.file.Path;
+
+import static org.junit.Assert.assertTrue;
 
 public class LayrryIntegrationTest {
 
@@ -43,8 +45,16 @@ public class LayrryIntegrationTest {
         System.setOut(originalSysOut);
     }
 
+    private void assertOutput() {
+        String output = sysOut.toString();
+
+        assertTrue(output.contains("com.example.foo.Foo - Hello, Alice from Foo (Greeter 1.0.0)"));
+        assertTrue(output.contains("com.example.bar.Bar - Hello, Alice from Bar (Greeter 2.0.0)"));
+        assertTrue(output.contains("com.example.bar.Bar - Good bye, Alice from Bar (Greeter 2.0.0)"));
+    }
+
     @Test
-    public void runLayers() {
+    public void runLayersFromApi() {
         Layers layers = Layers.builder()
             .layer("log")
                 .withModule("org.apache.logging.log4j:log4j-api:jar:2.13.1")
@@ -66,10 +76,24 @@ public class LayrryIntegrationTest {
 
         layers.run("com.example.app/com.example.app.App", "Alice");
 
-        String output = sysOut.toString();
+        assertOutput();
+    }
 
-        assertTrue(output.contains("com.example.foo.Foo - Hello, Alice from Foo (Greeter 1.0.0)"));
-        assertTrue(output.contains("com.example.bar.Bar - Hello, Alice from Bar (Greeter 2.0.0)"));
-        assertTrue(output.contains("com.example.bar.Bar - Good bye, Alice from Bar (Greeter 2.0.0)"));
+    @Test
+    public void runLayersFromYaml() throws Exception {
+        Layrry.main("--layers-config",
+            Path.of("src", "test", "resources", "layers.yml").toAbsolutePath().toString(),
+            "Alice");
+
+        assertOutput();
+    }
+
+    @Test
+    public void runLayersFromToml() throws Exception {
+        Layrry.main("--layers-config",
+            Path.of("src", "test", "resources", "layers.toml").toAbsolutePath().toString(),
+            "Alice");
+
+        assertOutput();
     }
 }
