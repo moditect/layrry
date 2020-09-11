@@ -120,6 +120,34 @@ main:
   class: com.example.app.App
 ```
 
+Alternatively you may use TOML instead of YAML
+
+```toml
+[layers.log]
+  modules = [
+    "org.apache.logging.log4j:log4j-api:jar:2.13.1",
+    "org.apache.logging.log4j:log4j-core:jar:2.13.1",
+    "com.example.it:it-logconfig:1.0.0"]
+[layers.foo]
+  parents = ["log"]
+  modules = [
+    "com.example.it:it-greeter:1.0.0",
+    "com.example.it:it-foo:1.0.0"]
+[layers.bar]
+  parents = ["log"]
+  modules = [
+    "com.example.it:it-greeter:2.0.0",
+    "com.example.it:it-bar:1.0.0"]
+[layers.app]
+  parents = ["foo", "bar"]
+  modules = ["com.example.it:it-app:1.0.0"]
+[main]
+  module = "com.example.app"
+  class = "com.example.app.App"
+```
+
+Be sure to use `.toml` as file extension to let Layrry know which format should be parsed.
+
 You can find the complete example in the tests of the Layrry project.
 
 ## Dynamic Plug-Ins

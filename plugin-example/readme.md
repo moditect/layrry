@@ -11,6 +11,13 @@ mvn clean package
 
 # Run
 To run the example app, use the following command:
+
+With **YAML** configuration
 ```
 java -jar ../layrry-launcher/target/layrry-launcher-1.0-SNAPSHOT-jar-with-dependencies.jar --layers-config greeter-runner/src/test/resources/layers.yml
+```
+
+With **TOML** configuration
+```
+java -jar ../layrry-launcher/target/layrry-launcher-1.0-SNAPSHOT-jar-with-dependencies.jar --layers-config greeter-runner/src/test/resources/layers.toml
 ```
