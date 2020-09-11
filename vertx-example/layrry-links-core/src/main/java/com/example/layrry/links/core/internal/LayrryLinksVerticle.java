@@ -165,8 +165,6 @@ public class LayrryLinksVerticle extends AbstractVerticle {
         private void handleGetRoutesOverview(RoutingContext routingContext) {
             try {
                 String index = Files.readString(Paths.get(getClass().getResource("index.html").toURI()));
-                System.out.println("HTML");
-                System.out.println(index);
                 index = String.format(index, getRoutesList());
 
                 routingContext.response().putHeader("content-type", "text/html").end(index);
