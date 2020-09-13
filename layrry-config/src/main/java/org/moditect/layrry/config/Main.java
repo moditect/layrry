@@ -13,32 +13,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.descriptor;
+package org.moditect.layrry.config;
 
-import java.util.Map;
+public class Main {
+    private String module;
+    private String clazz;
 
-public class LayersConfig {
-
-    private Map<String, Layer> layers;
-    private Main main;
-
-    public Map<String, Layer> getLayers() {
-        return layers;
+    public String getModule() {
+        return module;
     }
-    public void setLayers(Map<String, Layer> layers) {
-        this.layers = layers;
+    public void setModule(String module) {
+        this.module = module;
     }
-
-    public Main getMain() {
-        return main;
+    public String getClazz() {
+        return clazz;
     }
-
-    public void setMain(Main main) {
-        this.main = main;
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
     }
-
     @Override
     public String toString() {
-        return "LayersConfig [layers=" + layers + ", main=" + main + "]";
+        return "Main [module=" + module + ", clazz=" + clazz + "]";
     }
 }

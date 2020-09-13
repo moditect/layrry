@@ -13,26 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.descriptor;
+package org.moditect.layrry.config;
 
-public class Main {
-    private String module;
-    private String clazz;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
 
-    public String getModule() {
-        return module;
-    }
-    public void setModule(String module) {
-        this.module = module;
-    }
-    public String getClazz() {
-        return clazz;
-    }
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
-    }
-    @Override
-    public String toString() {
-        return "Main [module=" + module + ", clazz=" + clazz + "]";
-    }
+public interface LayersConfigParser {
+
+    boolean supports(Path layersConfigFile);
+
+    LayersConfig parse(InputStream inputStream) throws IOException;
+
 }
