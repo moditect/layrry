@@ -19,10 +19,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
+/**
+ * This type allows externable configuration to be expressed with a custom format.
+ */
 public interface LayersConfigParser {
 
+    /**
+     * Whether the given config file format is supported or not.</p>
+     * Implementors would typically look at the file extension.
+     *
+     * @param layersConfigFile the configuration file to inspect
+     * @return {@code true} if the given format is supported, {@code false} otherwise.
+     */
     boolean supports(Path layersConfigFile);
 
+    /**
+     * Reads and parses external configuration into a {@code LayersConfig} instance.
+     * @param inputStream the configuration's input source
+     * @return a configured {@code LayersConfig} instance.
+     * @throws IOException if an error occurs while reading from the {@code InputStream}.
+     */
     LayersConfig parse(InputStream inputStream) throws IOException;
 
 }
