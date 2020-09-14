@@ -13,14 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.descriptor;
+package org.moditect.layrry.config.toml;
 
 import com.github.jezza.Toml;
 import com.github.jezza.TomlTable;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.introspector.Property;
-import org.yaml.snakeyaml.introspector.PropertyUtils;
+import org.moditect.layrry.config.Layer;
+import org.moditect.layrry.config.LayersConfig;
+import org.moditect.layrry.config.LayersConfigParser;
+import org.moditect.layrry.config.Main;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,47 +29,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LayersConfigParser {
+public class TomlLayersConfigParser implements LayersConfigParser {
 
-    public static LayersConfig parseLayersConfig(Path layersConfigFile) {
-        if (layersConfigFile.getFileName().toString().endsWith(".toml")) {
-            return parseFromToml(layersConfigFile);
-        }
-
-        // YAML is the default format
-        return parseFromYaml(layersConfigFile);
+    @Override
+    public boolean supports(Path layersConfigFile) {
+        return layersConfigFile.getFileName().toString().endsWith(".toml");
     }
 
-    private static LayersConfig parseFromYaml(Path layersConfigFile) {
-        Constructor c = new Constructor(LayersConfig.class);
+    @Override
+    public LayersConfig parse(InputStream inputStream) throws IOException {
+        TomlTable toml = Toml.from(inputStream);
 
-        c.setPropertyUtils(new PropertyUtils() {
-            @Override
-            public Property getProperty(Class<? extends Object> type, String name) {
-                if (name.equals("class")) {
-                    name = "clazz";
-                }
-                return super.getProperty(type, name);
-            }
-        });
+        LayersConfig config = new LayersConfig();
 
-        Yaml yaml = new Yaml(c);
+        readLayers(config, (TomlTable) toml.get("layers"));
+        readMain(config, (TomlTable) toml.get("main"));
 
-        try (InputStream inputStream = layersConfigFile.toUri().toURL().openStream()) {
-            return yaml.load(inputStream);
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static LayersConfig parseFromToml(Path layersConfigFile) {
-        try (InputStream inputStream = layersConfigFile.toUri().toURL().openStream()) {
-            return readFromToml(Toml.from(inputStream));
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return config;
     }
 
     private static LayersConfig readFromToml(TomlTable toml) {

@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
 import org.moditect.layrry.LayerBuilder;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.LayersBuilder;
-import org.moditect.layrry.internal.descriptor.Layer;
-import org.moditect.layrry.internal.descriptor.LayersConfig;
+import org.moditect.layrry.config.LayersConfig;
 
 /**
  * Creates a {@link Layers} instance based on a given configuration.
@@ -40,7 +39,7 @@ public class LayersFactory {
         Map<String, List<String>> layerDirsByName = new HashMap<>();
 
         LayersBuilder builder = Layers.builder();
-        for(Entry<String, Layer> layer : layersConfig.getLayers().entrySet()) {
+        for(Entry<String, org.moditect.layrry.config.Layer> layer : layersConfig.getLayers().entrySet()) {
             if (layer.getValue().getDirectory() != null) {
                 List<String> layerNames = handleDirectoryOfLayers(layer, layersConfigDir, builder);
                 layerDirsByName.put(layer.getKey(), layerNames);
@@ -53,7 +52,7 @@ public class LayersFactory {
         return builder.build();
     }
 
-    private void handleLayer(Entry<String, Layer> layer, Map<String, List<String>> layerDirsByName,
+    private void handleLayer(Entry<String, org.moditect.layrry.config.Layer> layer, Map<String, List<String>> layerDirsByName,
             LayersBuilder builder) {
         LayerBuilder layerBuilder = builder.layer(layer.getKey());
 
@@ -77,7 +76,7 @@ public class LayersFactory {
     /**
      * Processes a directory of layers, i.e. plug-ins.
      */
-    private List<String> handleDirectoryOfLayers(Entry<String, Layer> layer,
+    private List<String> handleDirectoryOfLayers(Entry<String, org.moditect.layrry.config.Layer> layer,
             Path layersConfigDir, LayersBuilder builder) {
         Path layersDir = layersConfigDir.resolve(layer.getValue().getDirectory()).normalize();
         if (!Files.isDirectory(layersDir)) {

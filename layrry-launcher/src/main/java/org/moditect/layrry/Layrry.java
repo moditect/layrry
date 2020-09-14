@@ -17,10 +17,10 @@ package org.moditect.layrry;
 
 import java.io.File;
 
+import org.moditect.layrry.config.LayersConfig;
+import org.moditect.layrry.config.LayersConfigLoader;
 import org.moditect.layrry.internal.Args;
 import org.moditect.layrry.internal.LayersFactory;
-import org.moditect.layrry.internal.descriptor.LayersConfig;
-import org.moditect.layrry.internal.descriptor.LayersConfigParser;
 
 import com.beust.jcommander.JCommander;
 
@@ -47,7 +47,7 @@ public class Layrry {
             throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
         }
 
-        LayersConfig layersConfig = LayersConfigParser.parseLayersConfig(layersConfigFile.toPath());
+        LayersConfig layersConfig = LayersConfigLoader.loadConfig(layersConfigFile.toPath());
         Layers layers = new LayersFactory().createLayers(layersConfig, layersConfigFile.toPath().getParent());
 
         layers.run(
