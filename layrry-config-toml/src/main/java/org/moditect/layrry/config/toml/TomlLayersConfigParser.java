@@ -13,10 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.config;
+package org.moditect.layrry.config.toml;
 
 import com.github.jezza.Toml;
 import com.github.jezza.TomlTable;
+import org.moditect.layrry.config.Layer;
+import org.moditect.layrry.config.LayersConfig;
+import org.moditect.layrry.config.LayersConfigParser;
+import org.moditect.layrry.config.Main;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;

@@ -13,8 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.config;
+package org.moditect.layrry.config.yaml;
 
+import org.moditect.layrry.config.LayersConfig;
+import org.moditect.layrry.config.LayersConfigParser;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.Property;

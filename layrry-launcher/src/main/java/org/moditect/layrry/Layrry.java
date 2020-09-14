@@ -21,7 +21,6 @@ import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigLoader;
 import org.moditect.layrry.internal.Args;
 import org.moditect.layrry.internal.LayersFactory;
-import org.moditect.layrry.config.TomlLayersConfigParser;
 
 import com.beust.jcommander.JCommander;
 
