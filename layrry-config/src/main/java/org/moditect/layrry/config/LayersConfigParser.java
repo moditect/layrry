@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
- * This type allows externable configuration to be expressed with a custom format.
+ * This type allows external configuration to be expressed with a custom format.
  */
 public interface LayersConfigParser {
 
