@@ -23,7 +23,6 @@
     <groupId>org.moditect.layrry</groupId>
     <artifactId>layrry-aggregator</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>layrry-links-example</artifactId>
@@ -50,7 +49,7 @@
         <groupId>com.example.layrry.links</groupId>
         <artifactId>layrry-links-core</artifactId>
         <version>1.0.0</version>
-    </dependency>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

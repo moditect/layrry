@@ -30,15 +30,4 @@
   <packaging>jar</packaging>
   <name>Layrry Platform</name>
 
-  <dependencies>
-  </dependencies>
-
-  <build>
-    <pluginManagement>
-      <plugins>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-    </plugins>
-  </build>
 </project>

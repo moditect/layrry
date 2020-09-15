@@ -24,7 +24,6 @@
     <groupId>org.moditect.layrry</groupId>
     <artifactId>layrry-links-example</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>com.example.layrry.links</groupId>
@@ -33,13 +32,4 @@
   <packaging>jar</packaging>
   <name>Layrry Links Log Configuration</name>
 
-  <dependencies>
-  </dependencies>
-
-  <build>
-    <pluginManagement>
-      <plugins>
-      </plugins>
-    </pluginManagement>
-  </build>
 </project>

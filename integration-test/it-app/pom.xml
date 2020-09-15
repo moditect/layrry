@@ -22,7 +22,6 @@
     <groupId>org.moditect.layrry</groupId>
     <artifactId>layrry-integrationtest</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -50,11 +49,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <pluginManagement>
-      <plugins>
-      </plugins>
-    </pluginManagement>
-  </build>
 </project>
