@@ -240,7 +240,7 @@ Layrry is not available on Maven Central yet.
 In order to use it, build it from source like so:
 
 ```
-mvn package
+mvn install
 ```
 
 Java 11 or later is needed in order to do so.
