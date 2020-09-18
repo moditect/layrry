@@ -153,15 +153,15 @@ You can find the complete example in the tests of the Layrry project.
 ## Using jbang
 
 [jbang](https://github.com/jbangdev/jbang) can launch self contained Java sources, JShell scripts, JARs. jbang has a feature
-that allows you to rey out Layrry withlut having to install or build Layrry yourself. You only need a JDK (11+ is preferred)
-and jbang installed. Once you do you may invoke the previous example with
+that allows you to tey out Layrry withlut having to install or build Layrry yourself. You only need a JDK (11+ is preferred)
+and jbang installed. Once you do, you may invoke the previous example with
 
 ```sh
 jbang layrry@moditect --layers-config layers.yml
 ```
 
-jbang will resolve and download the appropriate Layrry bootstrap binary, then Larry resolves the modules described in
-the inpit configuration file, finally the application is launched.
+jbang will resolve and download the appropriate Layrry bootstrap binary, then Layrry resolves the modules described in
+the input configuration file, finally the application is launched.
 
 ## Dynamic Plug-Ins
 
