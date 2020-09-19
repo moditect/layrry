@@ -33,7 +33,7 @@
   <dependencies>
     <dependency>
       <groupId>org.moditect.layrry</groupId>
-      <artifactId>layrry-launcher</artifactId>
+      <artifactId>layrry-cli</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -54,7 +54,7 @@
             <arguments>
               <argument>-classpath</argument>
               <classpath/>
-              <argument>org.moditect.layrry.Layrry</argument>
+              <argument>org.moditect.layrry.cli.LayrryRunner</argument>
               <gument>--layers-config</gument>
               <argument>src/test/resources/layers.yml</argument>
             </arguments>

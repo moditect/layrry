@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal;
+package org.moditect.layrry.cli.internal;
 
 import java.io.File;
 import java.util.ArrayList;
