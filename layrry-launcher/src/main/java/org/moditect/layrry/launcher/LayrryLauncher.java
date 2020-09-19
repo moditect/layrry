@@ -13,11 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.cli;
+package org.moditect.layrry.launcher;
 
 import com.beust.jcommander.JCommander;
 import org.moditect.layrry.Layrry;
-import org.moditect.layrry.cli.internal.Args;
+import org.moditect.layrry.launcher.internal.Args;
 
 import java.io.File;
 
@@ -25,16 +25,16 @@ import java.io.File;
  * The main entry point for using Layrry on the command line. Expects the layers config file to be passed in:
  * <p>
  * <code>
- * Layrry --layers-config &lt;path/to/layrry.yml&gt;
+ * LayrryLauncher --layers-config &lt;path/to/layrry.yml&gt;
  * </code>
  */
-public final class LayrryRunner {
+public final class LayrryLauncher {
 
     public static void main(String... args) throws Exception {
-        run(args);
+        launch(args);
     }
 
-    public static void run(String... args) throws Exception {
+    public static void launch(String... args) throws Exception {
         Args arguments = new Args();
 
         JCommander.newBuilder()
@@ -45,6 +45,6 @@ public final class LayrryRunner {
         File layersConfigFile = arguments.getLayersConfig().getAbsoluteFile();
         String[] parsedArgs = arguments.getMainArgs().toArray(new String[0]);
 
-        Layrry.run(layersConfigFile, parsedArgs);
+        Layrry.run(layersConfigFile.toPath(), parsedArgs);
     }
 }
