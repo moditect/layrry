@@ -136,7 +136,7 @@ public class LayersImpl implements Layers {
         if (component.isPlugin()) {
             Plugin plugin = (Plugin)component;
             Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + plugin.getName());
-            FilesHelper.copyFolder(plugin.getLayerDir(),pluginDir);
+            FilesHelper.copyFolder(plugin.getLayerDir(), pluginDir);
 
             return List.of(pluginDir);
         }

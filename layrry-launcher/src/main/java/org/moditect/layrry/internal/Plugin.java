@@ -24,25 +24,15 @@ import java.util.List;
  */
 public class Plugin extends Component {
 
-    private final String derivedFrom;
     private final Path layerDir;
 
     public Plugin(String name, String derivedFrom, Path layerDir, List<String> parents) {
         super(derivedFrom + "-" + name, parents);
-        this.derivedFrom = derivedFrom;
         this.layerDir = layerDir;
-    }
-
-    public String getDerivedFrom() {
-        return derivedFrom;
     }
 
     public Path getLayerDir() {
         return layerDir;
-    }
-
-    public Path getPluginDir() {
-        return layerDir.getParent();
     }
 
     @Override
