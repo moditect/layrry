@@ -64,11 +64,6 @@ public class LayerBuilderImpl implements LayerBuilder {
     }
 
     @Override
-    public LayerBuilder layer(String name, String derivedFrom) {
-        return layersBuilder.layer(name, derivedFrom);
-    }
-
-    @Override
     public Layers build() {
         return layersBuilder.build();
     }
