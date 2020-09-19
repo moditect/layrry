@@ -15,8 +15,12 @@
  */
 package org.moditect.layrry.internal;
 
+import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.moditect.layrry.LayerBuilder;
 import org.moditect.layrry.Layers;
@@ -26,6 +30,13 @@ public class LayersBuilderImpl implements LayersBuilder {
 
     private LayerBuilderImpl currentLayer;
     private Map<String, Component> layers = new LinkedHashMap<>();
+    private Set<PluginsDirectory> pluginsDirectories = new HashSet<>();
+
+    @Override
+    public LayersBuilder pluginsDirectory(String name, Path directory, List<String> parents) {
+        pluginsDirectories.add(new PluginsDirectory(name, directory, parents));
+        return this;
+    }
 
     @Override
     public LayerBuilder layer(String name) {
@@ -52,6 +63,6 @@ public class LayersBuilderImpl implements LayersBuilder {
             addLayer(currentLayer);
         }
 
-        return new LayersImpl(layers);
+        return new LayersImpl(pluginsDirectories, layers);
     }
 }

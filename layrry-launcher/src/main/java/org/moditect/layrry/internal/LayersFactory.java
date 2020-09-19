@@ -62,6 +62,8 @@ public class LayersFactory {
 
         for (String parent : layer.getValue().getParents()) {
             List<String> layersFromDirectory = layerDirsByName.get(parent);
+
+            // if the parent is a plug-ins directory, add each contained plug-in as a parent
             if (layersFromDirectory != null && !layersFromDirectory.isEmpty()) {
                 for (String layerFromDirectory : layersFromDirectory) {
                     layerBuilder.withParent(layerFromDirectory);
@@ -82,6 +84,8 @@ public class LayersFactory {
         if (!Files.isDirectory(layersDir)) {
             throw new IllegalArgumentException("Specified layer directory doesn't exist: " + layersDir);
         }
+
+        builder.pluginsDirectory(layer.getKey(), layersDir, layer.getValue().getParents());
 
         ArrayList<String> layerNames = new ArrayList<String>();
         List<Path> layerDirs = getLayerDirs(layersDir);

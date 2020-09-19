@@ -76,6 +76,23 @@
       </plugins>
     </pluginManagement>
     <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-antrun-plugin</artifactId>
+      <executions>
+        <execution>
+          <phase>generate-test-resources</phase>
+          <configuration>
+            <target>
+              <mkdir dir="${project.build.directory}/route-plugins2" />
+            </target>
+          </configuration>
+          <goals>
+            <goal>run</goal>
+          </goals>
+        </execution>
+    </executions>
+    </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -94,7 +111,7 @@
                   <version>1.0.0</version>
                   <type>tar.gz</type>
                   <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/route-plugins</outputDirectory>
+                  <outputDirectory>${project.build.directory}/route-plugins1</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -118,6 +135,25 @@
               </artifactItems>
             </configuration>
           </execution>
+          <execution>
+            <id>copy-greenkeeping-plugin</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.example.layrry.links</groupId>
+                  <artifactId>layrry-links-greenkeeping</artifactId>
+                  <version>1.0.0</version>
+                  <type>tar.gz</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/plugins-prepared</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -126,7 +162,8 @@
         <configuration>
           <systemPropertyVariables>
             <layersConfig>${project.basedir}/src/test/resources/layers.yml</layersConfig>
-            <pluginDir>${project.build.directory}/route-plugins</pluginDir>
+            <pluginDir1>${project.build.directory}/route-plugins1</pluginDir1>
+            <pluginDir2>${project.build.directory}/route-plugins2</pluginDir2>
             <preparedPluginDir>${project.build.directory}/plugins-prepared</preparedPluginDir>
           </systemPropertyVariables>
           <argLine>--enable-preview</argLine>

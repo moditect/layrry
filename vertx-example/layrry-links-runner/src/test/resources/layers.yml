@@ -37,11 +37,16 @@ layers:
     parents:
       - "log"
       - "vertx"
-  plugins:
+  plugins1:
     parents:
       - "platform"
       - "log"
-    directory: ../../../target/route-plugins
+    directory: ../../../target/route-plugins1
+  plugins2:
+    parents:
+      - "platform"
+      - "log"
+    directory: ../../../target/route-plugins2
 main:
   module: com.example.layrry.links.core
   class: com.example.layrry.links.core.LayrryLinks

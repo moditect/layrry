@@ -30,8 +30,11 @@ import org.moditect.layrry.Layrry;
 public class LayrryLinksTest {
 
     private static final String TOURNAMENT_PLUGIN_NAME = "layrry-links-tournament-1.0.0";
+    private static final String GREENKEEPING_PLUGIN_NAME = "layrry-links-greenkeeping-1.0.0";
+
     private String layersConfig;
-    private Path pluginDir;
+    private Path pluginDir1;
+    private Path pluginDir2;
     private Path preparedPluginDir;
 
     @Before
@@ -41,11 +44,17 @@ public class LayrryLinksTest {
             throw new IllegalStateException("Specify layers.yml file via 'layersConfig' system property");
         }
 
-        String pluginDirProp = System.getProperty("pluginDir");
-        if (pluginDirProp == null) {
-            throw new IllegalStateException("Specify plug-in directory via 'pluginDir' system property");
+        String pluginDir1Prop = System.getProperty("pluginDir1");
+        if (pluginDir1Prop == null) {
+            throw new IllegalStateException("Specify plug-in directory 1 via 'pluginDir1' system property");
         }
-        pluginDir = new File(pluginDirProp).toPath();
+        pluginDir1 = new File(pluginDir1Prop).toPath();
+
+        String pluginDir2Prop = System.getProperty("pluginDir2");
+        if (pluginDir2Prop == null) {
+            throw new IllegalStateException("Specify plug-in directory 2 via 'pluginDir2' system property");
+        }
+        pluginDir2 = new File(pluginDir2Prop).toPath();
 
         String preparedPluginDirProp = System.getProperty("preparedPluginDir");
         if (preparedPluginDirProp == null) {
@@ -55,8 +64,8 @@ public class LayrryLinksTest {
     }
 
     @Test
-    public void runLayers() throws Exception {
-        FilesHelper.deleteFolder(pluginDir.resolve(TOURNAMENT_PLUGIN_NAME));
+    public void canAddAndRemovePlugin() throws Exception {
+        FilesHelper.deleteFolder(pluginDir1.resolve(TOURNAMENT_PLUGIN_NAME));
 
         Layrry.main("--layers-config", layersConfig);
 
@@ -66,9 +75,9 @@ public class LayrryLinksTest {
                 .statusCode(200)
                 .body("name", equalTo("Rudy Rough"));
 
-        FilesHelper.copyFolder(preparedPluginDir.resolve(TOURNAMENT_PLUGIN_NAME), pluginDir.resolve(TOURNAMENT_PLUGIN_NAME));
+        FilesHelper.copyFolder(preparedPluginDir.resolve(TOURNAMENT_PLUGIN_NAME), pluginDir1.resolve(TOURNAMENT_PLUGIN_NAME));
 
-        await().atMost(5, TimeUnit.SECONDS).until(() -> {
+        await().atMost(30, TimeUnit.SECONDS).until(() -> {
             return given()
             .when()
                 .get("/tournaments")
@@ -82,14 +91,37 @@ public class LayrryLinksTest {
                 .statusCode(200)
                 .body("name", equalTo("Easter 36"));
 
-        FilesHelper.deleteFolder(pluginDir.resolve(TOURNAMENT_PLUGIN_NAME));
+        FilesHelper.deleteFolder(pluginDir1.resolve(TOURNAMENT_PLUGIN_NAME));
 
-        await().atMost(5, TimeUnit.SECONDS).until(() -> {
+        await().atMost(30, TimeUnit.SECONDS).until(() -> {
             return given()
             .when()
                 .get("/tournaments")
             .then()
                 .extract().statusCode() == 404;
         });
+    }
+
+    @Test
+    public void canAddPluginToEmptyPluginsDirectory() throws Exception {
+        FilesHelper.deleteFolder(pluginDir2.resolve(GREENKEEPING_PLUGIN_NAME));
+
+        Layrry.main("--layers-config", layersConfig);
+
+        FilesHelper.copyFolder(preparedPluginDir.resolve(GREENKEEPING_PLUGIN_NAME), pluginDir2.resolve(GREENKEEPING_PLUGIN_NAME));
+
+        await().atMost(30, TimeUnit.SECONDS).until(() -> {
+            return given()
+            .when()
+                .get("/greenkeeping-activities")
+            .then()
+                .extract().statusCode() == 200;
+        });
+
+        given()
+            .when().get("/greenkeeping-activities/123")
+            .then()
+                .statusCode(200)
+                .body("name", equalTo("Sand Front 9"));
     }
 }
