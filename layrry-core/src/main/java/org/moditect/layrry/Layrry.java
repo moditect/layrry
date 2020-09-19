@@ -19,7 +19,7 @@ import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigLoader;
 import org.moditect.layrry.internal.LayersFactory;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * The main entry point for using Layrry in embedded mode. Expects the layers config file to be passed in:
@@ -30,13 +30,13 @@ import java.io.File;
  */
 public final class Layrry {
 
-    public static void run(File layersConfigFile, String... args) {
-        if (!layersConfigFile.exists()) {
+    public static void run(Path layersConfigFile, String... args) {
+        if (!layersConfigFile.toFile().exists()) {
             throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
         }
 
-        LayersConfig layersConfig = LayersConfigLoader.loadConfig(layersConfigFile.toPath());
-        Layers layers = new LayersFactory().createLayers(layersConfig, layersConfigFile.toPath().getParent());
+        LayersConfig layersConfig = LayersConfigLoader.loadConfig(layersConfigFile);
+        Layers layers = new LayersFactory().createLayers(layersConfig, layersConfigFile.getParent());
 
         layers.run(layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(), args);
     }

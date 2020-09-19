@@ -37,8 +37,8 @@
     <module>layrry-config</module>
     <module>layrry-config-yaml</module>
     <module>layrry-config-toml</module>
+    <module>layrry-core</module>
     <module>layrry-launcher</module>
-    <module>layrry-cli</module>
     <module>integration-test</module>
     <module>plugin-example</module>
     <module>vertx-example</module>
@@ -68,12 +68,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>layrry-launcher</artifactId>
+        <artifactId>layrry-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>layrry-cli</artifactId>
+        <artifactId>layrry-launcher</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
