@@ -106,7 +106,7 @@ public class LayrryLinksTest {
     public void canAddPluginToEmptyPluginsDirectory() throws Exception {
         FilesHelper.deleteFolder(pluginDir2.resolve(GREENKEEPING_PLUGIN_NAME));
 
-        Layrry.main("--layers-config", layersConfig);
+        LayrryLauncher.main("--layers-config", layersConfig);
 
         FilesHelper.copyFolder(preparedPluginDir.resolve(GREENKEEPING_PLUGIN_NAME), pluginDir2.resolve(GREENKEEPING_PLUGIN_NAME));
 
