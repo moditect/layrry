@@ -25,7 +25,7 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moditect.layrry.Layrry;
+import org.moditect.layrry.cli.LayrryRunner;
 
 public class PluginExampleTest {
 
@@ -57,7 +57,7 @@ public class PluginExampleTest {
         InputStream testInput = new ByteArrayInputStream( input.getBytes("UTF-8") );
         System.setIn(testInput);
 
-        Layrry.main("--layers-config", layersConfig);
+        LayrryRunner.run("--layers-config", layersConfig);
 
         String output = sysOut.toString();
 

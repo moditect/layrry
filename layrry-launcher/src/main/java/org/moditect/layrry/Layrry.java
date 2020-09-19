@@ -15,34 +15,22 @@
  */
 package org.moditect.layrry;
 
-import java.io.File;
-
 import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigLoader;
-import org.moditect.layrry.internal.Args;
 import org.moditect.layrry.internal.LayersFactory;
 
-import com.beust.jcommander.JCommander;
+import java.io.File;
 
 /**
- * The main entry point for using Layrry. Expects the layers config file to be passed in:
+ * The main entry point for using Layrry in embedded mode. Expects the layers config file to be passed in:
  * <p>
  * <code>
- * Layrry --layers-config &lt;path/to/layrry.yml&gt;
+ * Layrry.run(&lt;path/to/layrry.yml&gt;, &lt;args&gt;)
  * </code>
  */
-public class Layrry {
+public final class Layrry {
 
-    public static void main(String... args) throws Exception {
-        Args arguments= new Args();
-
-        JCommander.newBuilder()
-            .addObject(arguments)
-            .build()
-            .parse(args);
-
-        File layersConfigFile = arguments.getLayersConfig().getAbsoluteFile();
-
+    public static void run(File layersConfigFile, String... args) {
         if (!layersConfigFile.exists()) {
             throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
         }
@@ -50,9 +38,6 @@ public class Layrry {
         LayersConfig layersConfig = LayersConfigLoader.loadConfig(layersConfigFile.toPath());
         Layers layers = new LayersFactory().createLayers(layersConfig, layersConfigFile.toPath().getParent());
 
-        layers.run(
-                layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(),
-                arguments.getMainArgs().toArray(new String[0])
-        );
+        layers.run(layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(), args);
     }
 }

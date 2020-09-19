@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.moditect.layrry.Layrry;
+import org.moditect.layrry.cli.LayrryRunner;
 
 public class LayrryLinksTest {
 
@@ -67,7 +67,7 @@ public class LayrryLinksTest {
     public void canAddAndRemovePlugin() throws Exception {
         FilesHelper.deleteFolder(pluginDir1.resolve(TOURNAMENT_PLUGIN_NAME));
 
-        Layrry.main("--layers-config", layersConfig);
+        LayrryRunner.run("--layers-config", layersConfig);
 
         given()
             .when().get("/members/123")

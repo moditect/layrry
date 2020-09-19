@@ -19,7 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moditect.layrry.Layers;
-import org.moditect.layrry.Layrry;
+import org.moditect.layrry.cli.LayrryRunner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -81,7 +81,7 @@ public class LayrryIntegrationTest {
 
     @Test
     public void runLayersFromYaml() throws Exception {
-        Layrry.main("--layers-config",
+        LayrryRunner.run("--layers-config",
             Path.of("src", "test", "resources", "layers.yml").toAbsolutePath().toString(),
             "Alice");
 
@@ -90,7 +90,7 @@ public class LayrryIntegrationTest {
 
     @Test
     public void runLayersFromToml() throws Exception {
-        Layrry.main("--layers-config",
+        LayrryRunner.run("--layers-config",
             Path.of("src", "test", "resources", "layers.toml").toAbsolutePath().toString(),
             "Alice");
 
