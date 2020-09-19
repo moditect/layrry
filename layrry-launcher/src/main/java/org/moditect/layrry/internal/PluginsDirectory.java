@@ -19,39 +19,23 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * A plug-in is a layer represented by a file-system directory, containing the
- * layer's modules.
+ * A directory containing zero or more plug-ins.
  */
-public class Plugin extends Component {
+public class PluginsDirectory extends Component {
 
-    private final String derivedFrom;
-    private final Path layerDir;
+    private final Path directory;
 
-    public Plugin(String name, String derivedFrom, Path layerDir, List<String> parents) {
-        super(derivedFrom + "-" + name, parents);
-        this.derivedFrom = derivedFrom;
-        this.layerDir = layerDir;
+    public PluginsDirectory(String name, Path directory, List<String> parents) {
+        super(name, parents);
+        this.directory = directory;
     }
 
-    public String getDerivedFrom() {
-        return derivedFrom;
-    }
-
-    public Path getLayerDir() {
-        return layerDir;
-    }
-
-    public Path getPluginDir() {
-        return layerDir.getParent();
+    public Path getDirectory() {
+        return directory;
     }
 
     @Override
     public boolean isPlugin() {
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Plugin [layerDir=" + layerDir + "]";
+        return false;
     }
 }

@@ -67,14 +67,17 @@ public class LayersImpl implements Layers {
      */
     private final Path pluginsWorkingDir;
 
-    private final Map<Path, String> pluginConfigByDirectory;
+    /**
+     * All configured directories potentially containing plug-ins.
+     */
+    private final Set<PluginsDirectory> pluginsDirectories;
 
     private int pluginIndex = 0;
 
-    public LayersImpl(Map<String, Component> components) {
+    public LayersImpl(Set<PluginsDirectory> pluginsDirectories, Map<String, Component> components) {
         this.components = Collections.unmodifiableMap(components);
         this.moduleLayers = new ConcurrentHashMap<>();
-        this.pluginConfigByDirectory = new ConcurrentHashMap<>();
+        this.pluginsDirectories = Collections.unmodifiableSet(pluginsDirectories);
 
         try {
             this.pluginsWorkingDir = Files.createTempDirectory("layrry-plugins");
@@ -88,7 +91,6 @@ public class LayersImpl implements Layers {
     public void run(String main, String... args) {
         MavenResolverSystem resolver = Maven.resolver();
         Map<String, ModuleLayer> pluginLayersByName = new HashMap<>();
-        Map<Path, List<String>> parentsByPluginDirectory = new HashMap<>();
 
         for(Entry<String, Component> entry : components.entrySet()) {
             PluginLayerAddedEvent event = new PluginLayerAddedEvent();
@@ -105,7 +107,6 @@ public class LayersImpl implements Layers {
 
             if (entry.getValue().isPlugin()) {
                 pluginLayersByName.put(entry.getKey(), moduleLayer);
-                parentsByPluginDirectory.put(((Plugin) entry.getValue()).getPluginDir(), component.getParents());
             }
 
             event.name = entry.getKey();
@@ -113,8 +114,8 @@ public class LayersImpl implements Layers {
             event.commit();
         }
 
-        if (!pluginLayersByName.isEmpty()) {
-            Deployer deployer = new Deployer(parentsByPluginDirectory);
+        if (!pluginsDirectories.isEmpty()) {
+            Deployer deployer = new Deployer(pluginsDirectories);
 
             for (Entry<String, ModuleLayer> plugin : pluginLayersByName.entrySet()) {
                 deployer.deploy(plugin.getKey(), plugin.getValue());
@@ -136,7 +137,6 @@ public class LayersImpl implements Layers {
             Plugin plugin = (Plugin)component;
             Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + plugin.getName());
             FilesHelper.copyFolder(plugin.getLayerDir(),pluginDir);
-            pluginConfigByDirectory.put(plugin.getPluginDir(), plugin.getDerivedFrom());
 
             return List.of(pluginDir);
         }
@@ -207,7 +207,7 @@ public class LayersImpl implements Layers {
         private final Method notifyOnRemoval;
         private final Object supportInstance;
 
-        public Deployer(Map<Path, List<String>> parentsByPluginDirectory) {
+        public Deployer(Set<PluginsDirectory> pluginsDirectories) {
             try {
                 ModuleLayer platformLayer = getLayrryPlatformLayer(moduleLayers);
                 ClassLoader loader = platformLayer.findLoader("org.moditect.layrry.platform");
@@ -220,13 +220,13 @@ public class LayersImpl implements Layers {
                 throw new RuntimeException(e);
             }
 
-            ExecutorService executor = Executors.newFixedThreadPool(parentsByPluginDirectory.size());
+            ExecutorService executor = Executors.newFixedThreadPool(pluginsDirectories.size());
 
-            for (Entry<Path, List<String>> pluginDirectory : parentsByPluginDirectory.entrySet()) {
+            for (PluginsDirectory pluginDirectory : pluginsDirectories) {
                 executor.execute(() -> {
                     try {
                         DirectoryWatcher watcher = DirectoryWatcher.builder()
-                                .path(pluginDirectory.getKey())
+                                .path(pluginDirectory.getDirectory())
                                 .listener(event -> onDirectoryChange(event, pluginDirectory))
                                 .build();
 
@@ -251,15 +251,15 @@ public class LayersImpl implements Layers {
             }));
         }
 
-        private void onDirectoryChange(DirectoryChangeEvent event, Entry<Path, List<String>> pluginDirectory) {
+        private void onDirectoryChange(DirectoryChangeEvent event, PluginsDirectory pluginDirectory) {
 
             // only interested in direct sub-directories atm.
-            if (event.path().getNameCount() > pluginDirectory.getKey().getNameCount() + 1) {
+            if (event.path().getNameCount() > pluginDirectory.getDirectory().getNameCount() + 1) {
                 return;
             }
 
             Path pluginSourceDir = event.path();
-            String derivedFrom = pluginConfigByDirectory.get(pluginDirectory.getKey());
+            String derivedFrom = pluginDirectory.getName();
             String pluginName = derivedFrom + "-" + pluginSourceDir.getFileName().toString();
 
             if (event.eventType() == EventType.CREATE) {
@@ -269,7 +269,7 @@ public class LayersImpl implements Layers {
                 Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + pluginName);
                 FilesHelper.copyFolder(pluginSourceDir, pluginDir);
                 List<Path> modulePathEntries = List.of(pluginDir);
-                List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getValue());
+                List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getParents());
 
                 ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
 

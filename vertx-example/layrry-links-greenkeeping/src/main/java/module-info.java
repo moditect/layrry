@@ -1,3 +1,6 @@
+import com.example.layrry.links.core.spi.RouterContributor;
+import com.example.layrry.links.greenkeeping.internal.GreenkeepingRouterContributor;
+
 /**
  *  Copyright 2020 The ModiTect authors
  *
@@ -13,21 +16,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry;
 
-import java.nio.file.Path;
-import java.util.List;
-
-/**
- * Builds a hierarchy of layers.
- */
-public interface LayersBuilder {
-
-    LayersBuilder pluginsDirectory(String name, Path directory, List<String> parents);
-
-    LayerBuilder layer(String name);
-
-    LayerBuilder layer(String name, String derivedFrom);
-
-    Layers build();
+module com.example.layrry.links.greenkeeping {
+    requires org.moditect.layrry.platform;
+    requires com.example.layrry.links.core;
+    provides RouterContributor with GreenkeepingRouterContributor;
 }
