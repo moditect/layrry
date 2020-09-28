@@ -32,6 +32,8 @@ import java.util.ServiceLoader;
 
 public class LayersConfigLoader {
 
+    private static final String JAVAFX_OS_CLASSIFIER = "javafx.os.classifier";
+
     public static LayersConfig loadConfig(Path layersConfigFile) {
         ServiceLoader<LayersConfigParser> parsers = ServiceLoader.load(LayersConfigParser.class, LayersConfigLoader.class.getClassLoader());
 
@@ -57,7 +59,7 @@ public class LayersConfigLoader {
         // special case for JavaFX OS classifier
         String javafxClassifier = resolveJavaFxClassifier(detector.get(Detector.DETECTED_NAME));
         if (null != javafxClassifier) {
-            props.put("javafx.os.classifier", javafxClassifier);
+            props.put(JAVAFX_OS_CLASSIFIER, javafxClassifier);
         }
 
         // evaluate expressions
@@ -75,10 +77,11 @@ public class LayersConfigLoader {
             case "linux":
                 return "linux";
             case "windows":
-                return "windows";
+                return "win";
             case "osx":
                 return "mac";
             default:
+                // any other OS is not supported, leave classifier as null
                 return null;
         }
     }
