@@ -79,7 +79,9 @@ Each layer comprises:
 * A unique name
 * The list of parent layers
 * The list of contained modules given via Maven GAV coordinates OR
-* A directory which contains one or more sub-directories, each of which represent one layer made up of the modular JARs within that sub-directory; the directory path is resolved relatively to the location of the _layrry.yml_ file
+* A directory which contains one or more sub-directories, each of which represent one layer made up of the modular JARs 
+within that sub-directory; the directory path is resolved relatively to the location of the _layrry.yml_ file. Alternatively
+the directory may be an absolute path however **be very careful** as this may cause a non portable configuration.
 
 As an example, consider the following application whose modules `foo` and `bar` depend on two different versions of the `greeter` module:
 
@@ -206,9 +208,45 @@ You can find a complete example for the usage of dynamic plug-ins in the _vertx-
 Routes of the web application (_/members_, _/tournaments_) are contributed by plug-ins which can be added to or removed from the application at runtime.
 The _routes_ path shows all routes available at a given time.
 
+## Parameterized Layer Configuration
+
+Layrry supports the [Mustache](https://github.com/spullara/mustache.java) template syntax, enabling parameterization of
+the content found in configuration files, regardless of their target format (YAML, TOML, etc). To use this feature you must
+use a `{{property}}` expression to refer to value placeholders. Layrry makes all `System` properties available for value
+replacement, as well as an extra set of properties that are related to OS values; these include all properties exposed by
+the [os-maven-plugin](https://github.com/trustin/os-maven-plugin/) plus `javax.os.classifier` which is specific to JavaFX
+dependencies. This last property can have the following values: `linux`, `win`, `mac`.
+
+The following example shows a parameterized TOML config file for a JavaFX application that can be run on any of the 3 platforms
+supported by JavaFX
+
+```toml
+[layers.javafx]
+    modules = [
+        "org.openjfx:javafx-base:jar:{{javafx.os.classifier}}:11.0.2",
+        "org.openjfx:javafx-controls:jar:{{javafx.os.classifier}}:11.0.2",
+        "org.openjfx:javafx-graphics:jar:{{javafx.os.classifier}}:11.0.2",
+        "org.openjfx:javafx-web:jar:{{javafx.os.classifier}}:11.0.2",
+        "org.openjfx:javafx-media:jar:{{javafx.os.classifier}}:11.0.2"]
+[layers.core]
+    modules = [
+        "org.kordamp.tiles:modular-tiles-model:1.0.0",
+        "org.kordamp.tiles:modular-tiles-core:1.0.0",
+        "org.kordamp.tiles:modular-tiles-app:1.0.0",
+        "org.moditect.layrry:layrry-platform:1.0-SNAPSHOT",
+        "eu.hansolo:tilesfx:11.44"]
+    parents = ["javafx"]
+[layers.plugins]
+    parents = ["core"]
+    directory = "plugins"
+[main]
+  module = "org.kordamp.tiles.app"
+  class = "org.kordamp.tiles.app.Main"
+```
+
 ## Using the Layrry API
 
-In addition to the YAML-based launcher, Layrry provides also a Java API for assembling and running layered applications.
+In addition to the YAML-based/TOML-based launcher, Layrry provides also a Java API for assembling and running layered applications.
 This can be used in cases where the structure of layers is only known at runtime,
 or for implementing plug-in architectures.
 
