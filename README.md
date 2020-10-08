@@ -1,4 +1,4 @@
-# Layrry ⁠- A Launcher and API for Modularized Java Applications
+# Layrry - A Launcher and API for Modularized Java Applications
 
 Layrry is a launcher and Java API for executing modularized Java applications.
 
@@ -85,7 +85,7 @@ the directory may be an absolute path however **be very careful** as this may ca
 
 As an example, consider the following application whose modules `foo` and `bar` depend on two different versions of the `greeter` module:
 
-![Layrry Example](example.png)
+![Layrry Example](images/example.png)
 
 Running this application wouldn't be possible with the default module path,
 which only allows for one version of a given module.
