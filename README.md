@@ -299,7 +299,7 @@ In order to use it, build it from source like so:
 mvn install
 ```
 
-Java 11 or later is needed in order to do so.
+Java 15 or later is needed in order to do so.
 
 ## Contributing
 
