@@ -37,7 +37,7 @@ Module layers allow to use different versions of one and the same module in diff
 Module layers and thus Layrry also allow application extensions to be added and removed dynamically at runtime.
 Here's [an example](https://github.com/moditect/layrry-examples/tree/master/modular-tiles) for using the Layrry plug-in API to dynamically modify a JavaFX application:
 
-![JavaFX app based on Layrry](javafx-layrry.gif)
+![JavaFX app based on Layrry](images/javafx-layrry.gif)
 
 ## Using the Layrry Launcher
 
