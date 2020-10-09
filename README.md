@@ -34,6 +34,11 @@ solving the issue of retrieving all required JARs in the right version.
 Module layers allow to use different versions of one and the same module in different layers of an application
 (as long as they are not exposed in a conflicting way on module API boundaries).
 
+Module layers and thus Layrry also allow application extensions to be added and removed dynamically at runtime.
+Here's [an example](https://github.com/moditect/layrry-examples/tree/master/modular-tiles) for using the Layrry plug-in API to dynamically modify a JavaFX application:
+
+![JavaFX app based on Layrry](javafx-layrry.gif)
+
 ## Using the Layrry Launcher
 
 The Layrry Launcher is a CLI tool which takes a configuration of a layered application and executes it.
