@@ -29,6 +29,9 @@ public class Args {
     @Parameter(names = "--layers-config", required = true, description = "Layers configuration file")
     private File layersConfig;
 
+    @Parameter(names = "--properties", description = "Additional config properties")
+    private File properties;
+
     public List<String> getMainArgs() {
         return mainArgs;
     }
@@ -37,8 +40,12 @@ public class Args {
         return layersConfig;
     }
 
+    public File getProperties() {
+        return properties;
+    }
+
     @Override
     public String toString() {
-        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + "]";
+        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + ", properties=" + properties+ "]";
     }
 }

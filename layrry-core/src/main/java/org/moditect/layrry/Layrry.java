@@ -26,6 +26,7 @@ import java.nio.file.Path;
  * <p>
  * <code>
  * Layrry.run(&lt;path/to/layrry.yml&gt;, &lt;args&gt;)
+ * Layrry.run(&lt;path/to/layrry.yml&gt;, &lt;path/to/layrry.properties&gt;&lt;args&gt;)
  * </code>
  */
 public final class Layrry {
@@ -35,7 +36,21 @@ public final class Layrry {
             throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
         }
 
-        LayersConfig layersConfig = LayersConfigLoader.loadConfig(layersConfigFile);
+        launch(layersConfigFile, LayersConfigLoader.loadConfig(layersConfigFile), args);
+    }
+
+    public static void run(Path layersConfigFile, Path propertiesFile, String... args) {
+        if (!layersConfigFile.toFile().exists()) {
+            throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
+        }
+        if (!propertiesFile.toFile().exists()) {
+            throw new IllegalArgumentException("Specified properties config file doesn't exist: " + propertiesFile);
+        }
+
+        launch(layersConfigFile, LayersConfigLoader.loadConfig(layersConfigFile, propertiesFile), args);
+    }
+
+    private static void launch(Path layersConfigFile, LayersConfig layersConfig, String... args){
         Layers layers = new LayersFactory().createLayers(layersConfig, layersConfigFile.getParent());
 
         layers.run(layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(), args);
