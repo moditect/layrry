@@ -26,6 +26,7 @@ import java.io.File;
  * <p>
  * <code>
  * LayrryLauncher --layers-config &lt;path/to/layrry.yml&gt;
+ * LayrryLauncher --layers-config &lt;path/to/layrry.yml&gt; --properties &lt;path/to/layrry.properties&gt;
  * </code>
  */
 public final class LayrryLauncher {
@@ -43,8 +44,13 @@ public final class LayrryLauncher {
             .parse(args);
 
         File layersConfigFile = arguments.getLayersConfig().getAbsoluteFile();
+        File propertiesFile = arguments.getProperties();
         String[] parsedArgs = arguments.getMainArgs().toArray(new String[0]);
 
-        Layrry.run(layersConfigFile.toPath(), parsedArgs);
+        if (null == propertiesFile) {
+            Layrry.run(layersConfigFile.toPath(), parsedArgs);
+        } else {
+            Layrry.run(layersConfigFile.toPath(), propertiesFile.getAbsoluteFile().toPath(), parsedArgs);
+        }
     }
 }

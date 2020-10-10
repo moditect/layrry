@@ -35,12 +35,28 @@ public class LayersConfigLoader {
     private static final String JAVAFX_OS_CLASSIFIER = "javafx.os.classifier";
 
     public static LayersConfig loadConfig(Path layersConfigFile) {
+        return loadConfig(layersConfigFile, new Properties());
+    }
+
+    public static LayersConfig loadConfig(Path layersConfigFile, Path propertiesFile) {
+        Properties properties = new Properties();
+
+        try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Unexpected error reading properties file. " + propertiesFile, e);
+        }
+
+        return loadConfig(layersConfigFile, properties);
+    }
+
+    private static LayersConfig loadConfig(Path layersConfigFile, Properties properties) {
         ServiceLoader<LayersConfigParser> parsers = ServiceLoader.load(LayersConfigParser.class, LayersConfigLoader.class.getClassLoader());
 
         for (LayersConfigParser parser : parsers) {
             if (parser.supports(layersConfigFile)) {
                 try (InputStream inputStream = layersConfigFile.toUri().toURL().openStream()) {
-                    return parser.parse(replacePlaceholders(inputStream));
+                    return parser.parse(replacePlaceholders(properties, inputStream));
                 } catch (IOException e) {
                     throw new IllegalArgumentException("Unexpected error parsing config file. " + layersConfigFile, e);
                 }
@@ -49,14 +65,18 @@ public class LayersConfigLoader {
         throw new IllegalArgumentException("Unsupported config format. " + layersConfigFile);
     }
 
-    private static InputStream replacePlaceholders(InputStream inputStream) {
+    private static InputStream replacePlaceholders(Properties properties, InputStream inputStream) {
         // detect OS
         OsDetector detector = new OsDetector();
 
         Properties props = new Properties();
+        // 1. custom properties
+        props.putAll(properties);
+        // 2. system properties
         props.putAll(System.getProperties());
+        // 3. os properties
         props.putAll(detector.getProperties());
-        // special case for JavaFX OS classifier
+        // 4. special case for JavaFX OS classifier
         String javafxClassifier = resolveJavaFxClassifier(detector.get(Detector.DETECTED_NAME));
         if (null != javafxClassifier) {
             props.put(JAVAFX_OS_CLASSIFIER, javafxClassifier);
