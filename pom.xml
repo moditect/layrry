@@ -129,6 +129,43 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>1.6.0</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.1.2</version>
+          <configuration>
+            <archive>
+              <manifestEntries>
+                <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
+                <Build-Timestamp>${git.build.time}</Build-Timestamp>
+                <Build-Revision>${git.commit.id}</Build-Revision>
+                <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
+              </manifestEntries>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>pl.project13.maven</groupId>
+          <artifactId>git-commit-id-plugin</artifactId>
+          <version>3.0.1</version>
+          <executions>
+            <execution>
+              <id>get-the-git-infos</id>
+              <goals>
+                <goal>revision</goal>
+              </goals>
+              <phase>validate</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <verbose>false</verbose>
+            <failOnNoGitDirectory>false</failOnNoGitDirectory>
+            <generateGitPropertiesFile>true</generateGitPropertiesFile>
+            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+            </generateGitPropertiesFilename>
+            <dateFormat>yyyy-MM-dd'T'HH:mm:ss.SSSZ</dateFormat>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -153,6 +190,10 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
