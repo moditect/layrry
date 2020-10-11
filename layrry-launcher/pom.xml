@@ -30,6 +30,10 @@
   <packaging>jar</packaging>
   <name>Layrry Launcher</name>
 
+  <properties>
+    <application.main.class>org.moditect.layrry.launcher.LayrryLauncher</application.main.class>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -57,11 +61,13 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
         <configuration>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
+          <shadedClassifierName>all</shadedClassifierName>
           <transformers>
             <transformer
                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
               <manifestEntries>
-                <Main-Class>org.moditect.layrry.launcher.LayrryLauncher</Main-Class>
+                <Main-Class>${application.main.class}</Main-Class>
               </manifestEntries>
             </transformer>
             <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -72,6 +78,53 @@
             <phase>package</phase>
             <goals>
               <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>2.1.0</version>
+        <configuration>
+          <assembleDirectory>${project.build.directory}/binary</assembleDirectory>
+          <repositoryLayout>flat</repositoryLayout>
+          <repositoryName>lib</repositoryName>
+          <programs>
+            <program>
+              <mainClass>${application.main.class}</mainClass>
+              <id>layrry</id>
+            </program>
+          </programs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-distribution</id>
+            <phase>package</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <attach>false</attach>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+          <outputDirectory>${project.build.directory}/distributions</outputDirectory>
+          <workDirectory>${project.build.directory}/assembly/work</workDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-distribution</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
