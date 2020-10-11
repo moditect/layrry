@@ -44,7 +44,7 @@ public class LayersConfigLoader {
         try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
             properties.load(inputStream);
         } catch (IOException e) {
-            throw new IllegalArgumentException("Unexpected error reading properties file. " + propertiesFile, e);
+            throw new IllegalArgumentException("Unexpected error reading properties file: " + propertiesFile, e);
         }
 
         return loadConfig(layersConfigFile, properties);
