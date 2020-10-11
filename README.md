@@ -157,6 +157,12 @@ Be sure to use `.toml` as file extension to let Layrry know which format should 
 
 You can find the complete example in the tests of the Layrry project.
 
+The Layrry Launcher accepts the following arguments:
+
+ * --layers-config: Path to the layers config file. The file must use any of the supported config formats. REQUIRED.
+ * --properties: Path to additional properties in Java `.properties` format. These properties will be used to replace value
+ placeholders found in the layers config file. OPTIONAL.
+
 ## Using jbang
 
 [jbang](https://github.com/jbangdev/jbang) can launch self contained Java sources, JShell scripts, JARs. jbang has a feature
@@ -220,26 +226,28 @@ the content found in configuration files, regardless of their target format (YAM
 use a `{{property}}` expression to refer to value placeholders. Layrry makes all `System` properties available for value
 replacement, as well as an extra set of properties that are related to OS values; these include all properties exposed by
 the [os-maven-plugin](https://github.com/trustin/os-maven-plugin/) plus `javax.os.classifier` which is specific to JavaFX
-dependencies. This last property can have the following values: `linux`, `win`, `mac`.
+dependencies. This last property can have the following values: `linux`, `win`, `mac`. If the `--properties` command flag
+is passed to the Layrry Launcher then all properties found in the given properties file will also become available.
 
 The following example shows a parameterized TOML config file for a JavaFX application that can be run on any of the 3 platforms
 supported by JavaFX
 
+**layers.toml**
 ```toml
 [layers.javafx]
     modules = [
-        "org.openjfx:javafx-base:jar:{{javafx.os.classifier}}:11.0.2",
-        "org.openjfx:javafx-controls:jar:{{javafx.os.classifier}}:11.0.2",
-        "org.openjfx:javafx-graphics:jar:{{javafx.os.classifier}}:11.0.2",
-        "org.openjfx:javafx-web:jar:{{javafx.os.classifier}}:11.0.2",
-        "org.openjfx:javafx-media:jar:{{javafx.os.classifier}}:11.0.2"]
+        "org.openjfx:javafx-base:jar:{{javafx.os.classifier}}:{{javafx_version}}",
+        "org.openjfx:javafx-controls:jar:{{javafx.os.classifier}}:{{javafx_version}}",
+        "org.openjfx:javafx-graphics:jar:{{javafx.os.classifier}}:{{javafx_version}}",
+        "org.openjfx:javafx-web:jar:{{javafx.os.classifier}}:{{javafx_version}}",
+        "org.openjfx:javafx-media:jar:{{javafx.os.classifier}}:{{javafx_version}}"]
 [layers.core]
     modules = [
-        "org.kordamp.tiles:modular-tiles-model:1.0.0",
-        "org.kordamp.tiles:modular-tiles-core:1.0.0",
-        "org.kordamp.tiles:modular-tiles-app:1.0.0",
-        "org.moditect.layrry:layrry-platform:1.0-SNAPSHOT",
-        "eu.hansolo:tilesfx:11.44"]
+        "org.kordamp.tiles:modular-tiles-model:{{project_version}}",
+        "org.kordamp.tiles:modular-tiles-core:{{project_version}}",
+        "org.kordamp.tiles:modular-tiles-app:{{project_version}}",
+        "org.moditect.layrry:layrry-platform:{{layrry_version}}",
+        "eu.hansolo:tilesfx:{{tilesfx_version}}"]
     parents = ["javafx"]
 [layers.plugins]
     parents = ["core"]
@@ -247,6 +255,20 @@ supported by JavaFX
 [main]
   module = "org.kordamp.tiles.app"
   class = "org.kordamp.tiles.app.Main"
+```
+
+**versions.properties**
+```properties
+project_version = 1.0.0
+javafx_version = 11.0.2
+tilesfx_version = 11.44
+layrry_version = 1.0-SNAPSHOT
+```
+
+This application can be launched as
+
+```
+layrry-launcher-1.0-SNAPSHOT.jar --layers-config layers.toml --properties versions.properties
 ```
 
 ## Using the Layrry API
