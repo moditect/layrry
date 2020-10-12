@@ -45,13 +45,13 @@ The Layrry Launcher is a CLI tool which takes a configuration of a layered appli
 It's used like so:
 
 ```
-layrry-launcher-1.0-SNAPSHOT.jar --layers-config <path/to/layers.yml> [program arguments]
+layrry-launcher-1.0-SNAPSHOT-all.jar --layers-config <path/to/layers.yml> [program arguments]
 ```
 
 E.g. like so:
 
 ```
-layrry-launcher-1.0-SNAPSHOT.jar --layers-config hello-world.yml Alice Bob
+layrry-launcher-1.0-SNAPSHOT-all.jar --layers-config hello-world.yml Alice Bob
 ```
 
 The application layers configuration file is a YAML file which the following structure:
@@ -268,7 +268,7 @@ layrry_version = 1.0-SNAPSHOT
 This application can be launched as
 
 ```
-layrry-launcher-1.0-SNAPSHOT.jar --layers-config layers.toml --properties versions.properties
+layrry-launcher-1.0-SNAPSHOT-all.jar --layers-config layers.toml --properties versions.properties
 ```
 
 ## Using the Layrry API

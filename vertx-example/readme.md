@@ -12,7 +12,7 @@ mvn clean package
 # Run
 To run the example app, use the following command:
 ```
-java --enable-preview -jar ../layrry-launcher/target/layrry-launcher-*.jar --layers-config layrry-links-runner/src/test/resources/layers.yml
+java --enable-preview -jar ../layrry-launcher/target/layrry-launcher-*-all.jar --layers-config layrry-links-runner/src/test/resources/layers.yml
 ```
 
 Example output
