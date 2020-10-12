@@ -236,11 +236,11 @@ supported by JavaFX
 ```toml
 [layers.javafx]
     modules = [
-        "org.openjfx:javafx-base:jar:{{javafx.os.classifier}}:{{javafx_version}}",
-        "org.openjfx:javafx-controls:jar:{{javafx.os.classifier}}:{{javafx_version}}",
-        "org.openjfx:javafx-graphics:jar:{{javafx.os.classifier}}:{{javafx_version}}",
-        "org.openjfx:javafx-web:jar:{{javafx.os.classifier}}:{{javafx_version}}",
-        "org.openjfx:javafx-media:jar:{{javafx.os.classifier}}:{{javafx_version}}"]
+        "org.openjfx:javafx-base:jar:{{os.detected.jfxname}}:{{javafx_version}}",
+        "org.openjfx:javafx-controls:jar:{{os.detected.jfxname}}:{{javafx_version}}",
+        "org.openjfx:javafx-graphics:jar:{{os.detected.jfxname}}:{{javafx_version}}",
+        "org.openjfx:javafx-web:jar:{{os.detected.jfxname}}:{{javafx_version}}",
+        "org.openjfx:javafx-media:jar:{{os.detected.jfxname}}:{{javafx_version}}"]
 [layers.core]
     modules = [
         "org.kordamp.tiles:modular-tiles-model:{{project_version}}",

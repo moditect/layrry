@@ -32,7 +32,7 @@ import java.util.ServiceLoader;
 
 public class LayersConfigLoader {
 
-    private static final String JAVAFX_OS_CLASSIFIER = "javafx.os.classifier";
+    private static final String OS_DETECTED_JFXNAME = "os.detected.jfxname";
 
     public static LayersConfig loadConfig(Path layersConfigFile) {
         return loadConfig(layersConfigFile, new Properties());
@@ -79,7 +79,7 @@ public class LayersConfigLoader {
         // 4. special case for JavaFX OS classifier
         String javafxClassifier = resolveJavaFxClassifier(detector.get(Detector.DETECTED_NAME));
         if (null != javafxClassifier) {
-            props.put(JAVAFX_OS_CLASSIFIER, javafxClassifier);
+            props.put(OS_DETECTED_JFXNAME, javafxClassifier);
         }
 
         // evaluate expressions
