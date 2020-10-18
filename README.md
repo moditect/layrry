@@ -12,6 +12,7 @@ Learn more about Layrry in this series of blog posts:
 * [Part 1: "Introducing Layrry: A Launcher and API for Modularized Java Applications"](https://www.morling.dev/blog/introducing-layrry-runner-and-api-for-modularized-java-applications/)
 * [Part 2: "Plug-in Architectures With Layrry and the Java Module System"](https://www.morling.dev/blog/plugin-architectures-with-layrry-and-the-java-module-system/)
 * Part 3: Dynamically loading Java modules at application runtime with Layrry (coming soon)
+* [Part 4: "Class Unloading in Layered Java Applications"](https://www.morling.dev/blog/class-unloading-in-layered-java-applications/)
 
 ## Why Layrry?
 
