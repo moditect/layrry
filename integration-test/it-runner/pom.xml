@@ -151,47 +151,6 @@
           <outputDirectory>${project.build.directory}/repositories/flat</outputDirectory>
         </configuration>
       </plugin>
-      <!--
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.10</version>
-        <configuration>
-          <assembleDirectory>${project.build.directory}/repositories</assembleDirectory>
-          <artifactItems>
-            <artifactItem>
-              <groupId>com.example.it</groupId>
-              <artifactId>it-foooo</artifactId>
-              <version>1.0.0</version>
-            </artifactItem>
-          </artifactItems>
-        </configuration>
-        <executions>
-          <execution>
-            <id>flat-repo</id>
-            <phase>package</phase>
-            <goals>
-              <goal>create-repository</goal>
-            </goals>
-            <configuration>
-              <repositoryLayout>flat</repositoryLayout>
-              <repositoryName>flat</repositoryName>
-            </configuration>
-          </execution>
-          <execution>
-            <id>default-repo</id>
-            <phase>package</phase>
-            <goals>
-              <goal>create-repository</goal>
-            </goals>
-            <configuration>
-              <repositoryLayout>default</repositoryLayout>
-              <repositoryName>default</repositoryName>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      -->
     </plugins>
   </build>
 </project>
