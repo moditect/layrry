@@ -128,4 +128,22 @@ public class LayrryIntegrationIT {
 
         assertOutput();
     }
+
+    @Test
+    public void runLayersFromYamlWithFlatRepository() throws Exception {
+        LayrryLauncher.launch("--layers-config",
+            Path.of("src", "test", "resources", "layers-flat.yml").toAbsolutePath().toString(),
+            "Alice");
+
+        assertOutput();
+    }
+
+    @Test
+    public void runLayersFromTomlWithFlatRepository() throws Exception {
+        LayrryLauncher.launch("--layers-config",
+            Path.of("src", "test", "resources", "layers-flat.toml").toAbsolutePath().toString(),
+            "Alice");
+
+        assertOutput();
+    }
 }
