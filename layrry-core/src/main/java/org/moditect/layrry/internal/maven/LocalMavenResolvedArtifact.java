@@ -13,20 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry;
+package org.moditect.layrry.internal.maven;
 
-import org.moditect.layrry.internal.LayersBuilderImpl;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
+
+import java.io.File;
 
 /**
- * Builds a hierarchy of layers and executes them.
+ * Encapsulation of a resolved Maven-based artifact's metadata form a local repository.
  */
-public interface Layers {
-
-    static LayersBuilder builder() {
-        return new LayersBuilderImpl();
-    }
-
-    Maven maven();
-
-    void run(String main, String... args);
+public interface LocalMavenResolvedArtifact extends MavenArtifactInfo {
+    /**
+     * The file that's  associated with this artifact.
+     */
+    File getFile();
 }

@@ -13,20 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry;
+package org.moditect.layrry.internal.maven;
 
-import org.moditect.layrry.internal.LayersBuilderImpl;
+import org.moditect.layrry.LocalMaven;
 
 /**
- * Builds a hierarchy of layers and executes them.
+ * Entry point of a local Maven-based Resolver system which supports configuration
  */
-public interface Layers {
-
-    static LayersBuilder builder() {
-        return new LayersBuilderImpl();
-    }
-
-    Maven maven();
-
-    void run(String main, String... args);
+public interface ConfigurableLocalMavenResolverSystem extends LocalMaven, LocalMavenResolver {
 }

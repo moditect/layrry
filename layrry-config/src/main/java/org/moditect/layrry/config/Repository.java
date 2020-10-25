@@ -15,39 +15,28 @@
  */
 package org.moditect.layrry.config;
 
-import java.util.Map;
+public class Repository {
+    private String path;
+    private String layout;
 
-public class LayersConfig {
-
-    private Map<String, Layer> layers;
-    private Main main;
-    private Maven maven;
-
-    public Map<String, Layer> getLayers() {
-        return layers;
-    }
-    public void setLayers(Map<String, Layer> layers) {
-        this.layers = layers;
+    public String getPath() {
+        return path;
     }
 
-    public Main getMain() {
-        return main;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public void setMain(Main main) {
-        this.main = main;
+    public String getLayout() {
+        return layout;
     }
 
-    public Maven getMaven() {
-        return maven;
-    }
-
-    public void setMaven(Maven maven) {
-        this.maven = maven;
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 
     @Override
     public String toString() {
-        return "LayersConfig [layers=" + layers + ", main=" + main + ", maven=" + maven + "]";
+        return "Repository [path=" + path + ", layout=" + layout + "]";
     }
 }
