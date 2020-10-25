@@ -35,7 +35,7 @@ public interface RemoteMaven {
      * Configures this {@link RemoteMaven} from the specified file
      *
      * @param file The file the {@link RemoteMaven} should be configured from
-     * @return This configured {@link RemoteMaven}
+     * @return Modified instance of {@code RemoteMaven}
      * @throws IllegalArgumentException
      *             If the file is not specified, is a directory, or does not exist
      * @throws InvalidConfigurationFileException
