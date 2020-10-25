@@ -37,11 +37,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.moditect.layrry.Layers;
+import org.moditect.layrry.Maven;
 import org.moditect.layrry.internal.jfr.PluginLayerAddedEvent;
 import org.moditect.layrry.internal.jfr.PluginLayerRemovedEvent;
+import org.moditect.layrry.internal.maven.MavenImpl;
 import org.moditect.layrry.internal.util.FilesHelper;
 
 import io.methvin.watcher.DirectoryChangeEvent;
@@ -72,6 +72,8 @@ public class LayersImpl implements Layers {
      */
     private final Set<PluginsDirectory> pluginsDirectories;
 
+    private final MavenImpl maven = new MavenImpl();
+
     private int pluginIndex = 0;
 
     public LayersImpl(Set<PluginsDirectory> pluginsDirectories, Map<String, Component> components) {
@@ -88,8 +90,12 @@ public class LayersImpl implements Layers {
     }
 
     @Override
+    public Maven maven() {
+        return maven;
+    }
+
+    @Override
     public void run(String main, String... args) {
-        MavenResolverSystem resolver = Maven.resolver();
         Map<String, ModuleLayer> pluginLayersByName = new HashMap<>();
 
         for(Entry<String, Component> entry : components.entrySet()) {
@@ -98,7 +104,7 @@ public class LayersImpl implements Layers {
 
             Component component = entry.getValue();
 
-            List<Path> modulePathEntries = resolveModulePathEntries(resolver, component);
+            List<Path> modulePathEntries = resolveModulePathEntries(component);
 
             List<ModuleLayer> parentLayers = getParentLayers(entry.getKey(), component.getParents());
             ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
@@ -132,7 +138,7 @@ public class LayersImpl implements Layers {
         }
     }
 
-    private List<Path> resolveModulePathEntries(MavenResolverSystem resolver, Component component) {
+    private List<Path> resolveModulePathEntries(Component component) {
         if (component.isPlugin()) {
             Plugin plugin = (Plugin)component;
             Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + plugin.getName());
@@ -141,7 +147,7 @@ public class LayersImpl implements Layers {
             return List.of(pluginDir);
         }
         else {
-            return getModulePathEntries((Layer) component, resolver);
+            return getModulePathEntries((Layer) component);
         }
     }
 
@@ -166,9 +172,9 @@ public class LayersImpl implements Layers {
         return moduleLayer;
     }
 
-    private List<Path> getModulePathEntries(Layer layer, MavenResolverSystem resolver) {
+    private List<Path> getModulePathEntries(Layer layer) {
         List<String> moduleGavs = layer.getModuleGavs();
-        return Arrays.asList(resolver.resolve(moduleGavs).withoutTransitivity().as(Path.class));
+        return Arrays.asList(maven.resolve(moduleGavs).asPath());
     }
 
     private Class<?> getMainClass(String main) throws ClassNotFoundException {

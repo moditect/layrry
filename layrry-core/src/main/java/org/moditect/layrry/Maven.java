@@ -15,18 +15,17 @@
  */
 package org.moditect.layrry;
 
-import org.moditect.layrry.internal.LayersBuilderImpl;
-
 /**
- * Builds a hierarchy of layers and executes them.
+ * Configures Maven for artifact resolution.
  */
-public interface Layers {
+public interface Maven {
+    /**
+     * Maven configuration for local artifact resolution.
+     */
+    LocalMaven local();
 
-    static LayersBuilder builder() {
-        return new LayersBuilderImpl();
-    }
-
-    Maven maven();
-
-    void run(String main, String... args);
+    /**
+     * Maven configuration for remote artifact resolution.
+     */
+    RemoteMaven remote();
 }

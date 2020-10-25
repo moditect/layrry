@@ -21,6 +21,8 @@ import org.moditect.layrry.config.Layer;
 import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigParser;
 import org.moditect.layrry.config.Main;
+import org.moditect.layrry.config.Maven;
+import org.moditect.layrry.config.Repository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +46,7 @@ public class TomlLayersConfigParser implements LayersConfigParser {
 
         readLayers(config, (TomlTable) toml.get("layers"));
         readMain(config, (TomlTable) toml.get("main"));
+        readMaven(config, (TomlTable) toml.get("maven"));
 
         return config;
     }
@@ -63,6 +66,34 @@ public class TomlLayersConfigParser implements LayersConfigParser {
 
         main.setModule(String.valueOf(table.get("module")));
         main.setClazz(String.valueOf(table.get("class")));
+    }
+
+    private static void readMaven(LayersConfig config, TomlTable table) {
+        Maven maven = new Maven();
+        config.setMaven(maven);
+
+        if (table != null) {
+            maven.setRemote((Boolean) table.getOrDefault("remote", true));
+            maven.setOffline((Boolean) table.getOrDefault("offline", false));
+            maven.setUseMavenCentral((Boolean) table.getOrDefault("useMavenCentral", true));
+            maven.setConfigFile((String) table.get("configFile"));
+            readRepositories(maven, (TomlTable) table.get("repositories"));
+        }
+    }
+
+    private static void readRepositories(Maven maven, TomlTable table) {
+        Map<String, Repository> repositories = new LinkedHashMap<>();
+        maven.setRepositories(repositories);
+
+        if (table == null) return;
+
+        table.entrySet().forEach(entry -> {
+            Repository repository = new Repository();
+            TomlTable repositoryTable = (TomlTable) entry.getValue();
+            repository.setPath((String) repositoryTable.get("path"));
+            repository.setLayout((String) repositoryTable.get("layout"));
+            repositories.put(entry.getKey(), repository);
+        });
     }
 
     private static void readLayers(LayersConfig config, TomlTable table) {

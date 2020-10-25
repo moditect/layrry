@@ -13,20 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry;
+package org.moditect.layrry.internal.maven;
 
-import org.moditect.layrry.internal.LayersBuilderImpl;
+import java.nio.file.Path;
 
-/**
- * Builds a hierarchy of layers and executes them.
- */
-public interface Layers {
-
-    static LayersBuilder builder() {
-        return new LayersBuilderImpl();
+public class EmptyLocalMavenFormatStage implements LocalMavenFormatStage {
+    @Override
+    public Path[] asPath() {
+        return new Path[0];
     }
-
-    Maven maven();
-
-    void run(String main, String... args);
 }

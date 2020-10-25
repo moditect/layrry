@@ -24,10 +24,11 @@ import org.moditect.layrry.launcher.LayrryLauncher;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertTrue;
 
-public class LayrryIntegrationTest {
+public class LayrryIntegrationIT {
 
     private ByteArrayOutputStream sysOut;
     private PrintStream originalSysOut;
@@ -57,8 +58,8 @@ public class LayrryIntegrationTest {
     public void runLayersFromApi() {
         Layers layers = Layers.builder()
             .layer("log")
-                .withModule("org.apache.logging.log4j:log4j-api:jar:2.13.1")
-                .withModule("org.apache.logging.log4j:log4j-core:jar:2.13.1")
+                .withModule("org.apache.logging.log4j:log4j-api:2.13.1")
+                .withModule("org.apache.logging.log4j:log4j-core:2.13.1")
                 .withModule("com.example.it:it-logconfig:1.0.0")
             .layer("foo")
                 .withParent("log")
@@ -73,6 +74,37 @@ public class LayrryIntegrationTest {
                 .withParent("bar")
                 .withModule("com.example.it:it-app:1.0.0")
             .build();
+
+        layers.run("com.example.app/com.example.app.App", "Alice");
+
+        assertOutput();
+    }
+
+    @Test
+    public void runLayersFromApiWithFlatRepository() {
+        Layers layers = Layers.builder()
+            .layer("log")
+                .withModule("org.apache.logging.log4j:log4j-api:2.13.1")
+                .withModule("org.apache.logging.log4j:log4j-core:2.13.1")
+                .withModule("com.example.it:it-logconfig:1.0.0")
+            .layer("foo")
+                .withParent("log")
+                .withModule("com.example.it:it-greeter:1.0.0")
+                .withModule("com.example.it:it-foo:1.0.0")
+            .layer("bar")
+                .withParent("log")
+                .withModule("com.example.it:it-greeter:2.0.0")
+                .withModule("com.example.it:it-bar:1.0.0")
+            .layer("app")
+                .withParent("foo")
+                .withParent("bar")
+                .withModule("com.example.it:it-app:1.0.0")
+            .build();
+
+        layers.maven().remote()
+            .enabled(false);
+        layers.maven().local()
+            .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat");
 
         layers.run("com.example.app/com.example.app.App", "Alice");
 
