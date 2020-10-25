@@ -30,7 +30,7 @@ public interface LocalMaven {
      * @param id     a unique arbitrary ID such as "local1"
      * @param path   the repository Path, such as "/path/to/repository"
      * @param layout the repository layout. Should always be "default" (may be reused one day by Maven with other values).
-     * @return Modified instance of {@code ConfigurableLocalMavenResolverSystem}
+     * @return Modified instance of {@code LocalMaven}
      * @throws IllegalArgumentException if name or layout are null or if layout is not "default", or if no path protocol is
      *                                  specified, or an unknown path protocol is found, or path is null
      */
@@ -42,7 +42,7 @@ public interface LocalMaven {
      * @param id     a unique arbitrary ID such as "local1"
      * @param path   the repository Path, such as "/path/to/repository"
      * @param layout the repository layout. Should always be "default" (may be reused one day by Maven with other values).
-     * @return Modified instance of {@code ConfigurableLocalMavenResolverSystem}
+     * @return Modified instance of {@code LocalMaven}
      */
     LocalMaven withLocalRepo(String id, Path path, String layout);
 
@@ -51,7 +51,7 @@ public interface LocalMaven {
      * {@link MavenLocalRepositories#createLocalRepository(String, Path, String)}
      *
      * @param repository The local repository
-     * @return Modified instance of {@code ConfigurableLocalMavenResolverSystem}
+     * @return Modified instance of {@code LocalMaven}
      */
     LocalMaven withLocalRepo(MavenLocalRepository repository);
 }
