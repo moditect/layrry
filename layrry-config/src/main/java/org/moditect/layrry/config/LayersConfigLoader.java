@@ -33,6 +33,7 @@ import java.util.ServiceLoader;
 public class LayersConfigLoader {
 
     private static final String OS_DETECTED_JFXNAME = "os.detected.jfxname";
+    private static final String OS_DETECTED_LWJGLNAME = "os.detected.lwjglname";
 
     public static LayersConfig loadConfig(Path layersConfigFile) {
         return loadConfig(layersConfigFile, new Properties());
@@ -81,6 +82,11 @@ public class LayersConfigLoader {
         if (null != javafxClassifier) {
             props.put(OS_DETECTED_JFXNAME, javafxClassifier);
         }
+        // 5. special case for LWJGL OS classifier
+        String lwjglClassifier = resolveLwjglClassifier(detector.get(Detector.DETECTED_NAME), detector.get(Detector.DETECTED_ARCH));
+        if (null != javafxClassifier) {
+            props.put(OS_DETECTED_LWJGLNAME, lwjglClassifier);
+        }
 
         // evaluate expressions
         StringWriter input = new StringWriter();
@@ -100,6 +106,20 @@ public class LayersConfigLoader {
                 return "win";
             case "osx":
                 return "mac";
+            default:
+                // any other OS is not supported, leave classifier as null
+                return null;
+        }
+    }
+
+    private static String resolveLwjglClassifier(String os, String arch) {
+        switch (os) {
+            case "linux":
+                return "linux" + ("arm_32".equals(arch) ? "-arm32" : "");
+            case "windows":
+                return "windows" + ("x86_32".equals(arch) ? "-x86" : "");
+            case "osx":
+                return "macosx";
             default:
                 // any other OS is not supported, leave classifier as null
                 return null;
