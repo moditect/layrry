@@ -93,6 +93,7 @@ class UrlDownloader {
         String useSystemProxies = properties.getProperty(JAVA_NET_USE_SYSTEM_PROXIES);
         if (useSystemProxies != null && getBoolean(JAVA_NET_USE_SYSTEM_PROXIES, properties)) {
             // we're done here
+            System.setProperty(JAVA_NET_USE_SYSTEM_PROXIES, "true");
             return;
         }
 
