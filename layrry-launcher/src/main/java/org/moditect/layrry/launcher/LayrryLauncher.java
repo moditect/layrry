@@ -20,6 +20,10 @@ import org.moditect.layrry.Layrry;
 import org.moditect.layrry.launcher.internal.Args;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * The main entry point for using Layrry on the command line. Expects the layers config file to be passed in:
@@ -43,14 +47,46 @@ public final class LayrryLauncher {
             .build()
             .parse(args);
 
-        File layersConfigFile = arguments.getLayersConfig().getAbsoluteFile();
+
         File propertiesFile = arguments.getProperties();
         String[] parsedArgs = arguments.getMainArgs().toArray(new String[0]);
 
-        if (null == propertiesFile) {
-            Layrry.run(layersConfigFile.toPath(), parsedArgs);
+        File basedir = arguments.getBasedir();
+
+        String layersConfig = arguments.getLayersConfig();
+        URL layersConfigUrl = toURL(layersConfig);
+
+        if (null != layersConfigUrl) {
+            if (basedir == null) {
+                basedir = new File(System.getProperty("user.dir"));
+            }
+
+            if (null == propertiesFile) {
+                Layrry.run(layersConfigUrl, basedir.toPath(), parsedArgs);
+            } else {
+                Layrry.run(layersConfigUrl, basedir.toPath(), propertiesFile.getAbsoluteFile().toPath(), parsedArgs);
+            }
         } else {
-            Layrry.run(layersConfigFile.toPath(), propertiesFile.getAbsoluteFile().toPath(), parsedArgs);
+            Path layersConfigPath = Paths.get(layersConfig).toAbsolutePath();
+
+            Path basedirPath = layersConfigPath.getParent();
+            if (null != basedir) {
+                basedirPath = basedir.toPath();
+            }
+
+            if (null == propertiesFile) {
+                Layrry.run(layersConfigPath, basedirPath, parsedArgs);
+            } else {
+                Layrry.run(layersConfigPath, basedirPath, propertiesFile.getAbsoluteFile().toPath(), parsedArgs);
+            }
+        }
+    }
+
+    private static URL toURL(String input) {
+        try {
+            return new URL(input);
+        } catch (MalformedURLException e) {
+            return null;
         }
     }
 }

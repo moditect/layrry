@@ -21,10 +21,13 @@ import com.github.mustachejava.MustacheFactory;
 import kr.motd.maven.os.Detector;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Properties;
@@ -34,6 +37,22 @@ public class LayersConfigLoader {
 
     private static final String OS_DETECTED_JFXNAME = "os.detected.jfxname";
     private static final String OS_DETECTED_LWJGLNAME = "os.detected.lwjglname";
+
+    public static LayersConfig loadConfig(URL layersConfigUrl) {
+        return loadConfig(layersConfigUrl, new Properties());
+    }
+
+    public static LayersConfig loadConfig(URL layersConfigUrl, Path propertiesFile) {
+        Properties properties = new Properties();
+
+        try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            throw new IllegalStateException("Unexpected error reading properties file: " + propertiesFile, e);
+        }
+
+        return loadConfig(layersConfigUrl, properties);
+    }
 
     public static LayersConfig loadConfig(Path layersConfigFile) {
         return loadConfig(layersConfigFile, new Properties());
@@ -45,10 +64,18 @@ public class LayersConfigLoader {
         try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
             properties.load(inputStream);
         } catch (IOException e) {
-            throw new IllegalArgumentException("Unexpected error reading properties file: " + propertiesFile, e);
+            throw new IllegalStateException("Unexpected error reading properties file: " + propertiesFile, e);
         }
 
         return loadConfig(layersConfigFile, properties);
+    }
+
+    private static LayersConfig loadConfig(URL layersConfigUrl, Properties properties) {
+        if (isLocalUrl(layersConfigUrl)) {
+            return loadConfig(convertToPath(layersConfigUrl));
+        }
+
+        return loadConfig(UrlDownloader.download(layersConfigUrl, properties), properties);
     }
 
     private static LayersConfig loadConfig(Path layersConfigFile, Properties properties) {
@@ -150,6 +177,18 @@ public class LayersConfigLoader {
         @Override
         protected void logProperty(String name, String value) {
             // quiet
+        }
+    }
+
+    private static boolean isLocalUrl(URL url) {
+        return "file".equals(url.getProtocol());
+    }
+
+    private static Path convertToPath(URL url) {
+        try {
+            return new File(url.toURI()).toPath();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Unsupported error converting URL to Path. " + url);
         }
     }
 }

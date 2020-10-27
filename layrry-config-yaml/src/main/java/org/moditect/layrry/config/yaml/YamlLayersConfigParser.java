@@ -29,6 +29,21 @@ import java.nio.file.Path;
 public class YamlLayersConfigParser implements LayersConfigParser {
 
     @Override
+    public String[] getSupportedMimeTypes() {
+        return new String[] {
+            "text/yaml",
+            "text/x-yaml",
+            "application/yaml",
+            "application/x-yaml"
+        };
+    }
+
+    @Override
+    public String getPreferredFileExtension() {
+        return "yml";
+    }
+
+    @Override
     public boolean supports(Path layersConfigFile) {
         return layersConfigFile.getFileName().toString().endsWith(".yml");
     }
