@@ -34,6 +34,21 @@ import java.util.Map;
 public class TomlLayersConfigParser implements LayersConfigParser {
 
     @Override
+    public String[] getSupportedMimeTypes() {
+        return new String[] {
+            "text/toml",
+            "text/x-toml",
+            "application/toml",
+            "application/x-toml"
+        };
+    }
+
+    @Override
+    public String getPreferredFileExtension() {
+        return "toml";
+    }
+
+    @Override
     public boolean supports(Path layersConfigFile) {
         return layersConfigFile.getFileName().toString().endsWith(".toml");
     }

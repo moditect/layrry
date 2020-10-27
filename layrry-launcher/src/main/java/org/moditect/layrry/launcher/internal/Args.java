@@ -15,11 +15,11 @@
  */
 package org.moditect.layrry.launcher.internal;
 
+import com.beust.jcommander.Parameter;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.beust.jcommander.Parameter;
 
 public class Args {
 
@@ -27,16 +27,19 @@ public class Args {
     private List<String> mainArgs = new ArrayList<>();
 
     @Parameter(names = "--layers-config", required = true, description = "Layers configuration file")
-    private File layersConfig;
+    private String layersConfig;
 
     @Parameter(names = "--properties", description = "Additional config properties")
     private File properties;
+
+    @Parameter(names = "--basedir", description = "Base directory for resolving relative paths")
+    private File basedir;
 
     public List<String> getMainArgs() {
         return mainArgs;
     }
 
-    public File getLayersConfig() {
+    public String getLayersConfig() {
         return layersConfig;
     }
 
@@ -44,8 +47,12 @@ public class Args {
         return properties;
     }
 
+    public File getBasedir() {
+        return basedir;
+    }
+
     @Override
     public String toString() {
-        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + ", properties=" + properties+ "]";
+        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + ", properties=" + properties + ", basedir=" + basedir + "]";
     }
 }

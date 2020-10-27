@@ -25,6 +25,19 @@ import java.nio.file.Path;
 public interface LayersConfigParser {
 
     /**
+     * Returns the set of supported mime-types by this parser.
+     * Used to determine if the content of a given URL can be read by this parser.
+     * @return the set of supported mime-types by this parser, should never return {@code null}.
+     */
+    String[] getSupportedMimeTypes();
+
+    /**
+     * Returns the preferred file extension supported by this parser.
+     * @return the preferred file extension supported by this parser, should never return {@code null}.
+     */
+    String getPreferredFileExtension();
+
+    /**
      * Whether the given config file format is supported or not.</p>
      * Implementors would typically look at the file extension.
      *
@@ -36,7 +49,7 @@ public interface LayersConfigParser {
     /**
      * Reads and parses external configuration into a {@code LayersConfig} instance.
      * @param inputStream the configuration's input source
-     * @return a configured {@code LayersConfig} instance.
+     * @return a configured {@code LayersConfig} instance, should never return {@code null}.
      * @throws IOException if an error occurs while reading from the {@code InputStream}.
      */
     LayersConfig parse(InputStream inputStream) throws IOException;

@@ -19,6 +19,7 @@ import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigLoader;
 import org.moditect.layrry.internal.LayersFactory;
 
+import java.net.URL;
 import java.nio.file.Path;
 
 /**
@@ -31,15 +32,27 @@ import java.nio.file.Path;
  */
 public final class Layrry {
 
-    public static void run(Path layersConfigFile, String... args) {
+    public static void run(URL layersConfigUrl, Path basedir, String... args) {
+        launch(basedir, LayersConfigLoader.loadConfig(layersConfigUrl), args);
+    }
+
+    public static void run(URL layersConfigUrl, Path basedir, Path propertiesFile, String... args) {
+        if (!propertiesFile.toFile().exists()) {
+            throw new IllegalArgumentException("Specified properties config file doesn't exist: " + propertiesFile);
+        }
+
+        launch(basedir, LayersConfigLoader.loadConfig(layersConfigUrl, propertiesFile), args);
+    }
+
+    public static void run(Path layersConfigFile, Path basedir, String... args) {
         if (!layersConfigFile.toFile().exists()) {
             throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
         }
 
-        launch(layersConfigFile, LayersConfigLoader.loadConfig(layersConfigFile), args);
+        launch(basedir, LayersConfigLoader.loadConfig(layersConfigFile), args);
     }
 
-    public static void run(Path layersConfigFile, Path propertiesFile, String... args) {
+    public static void run(Path layersConfigFile, Path basedir, Path propertiesFile, String... args) {
         if (!layersConfigFile.toFile().exists()) {
             throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
         }
@@ -47,11 +60,11 @@ public final class Layrry {
             throw new IllegalArgumentException("Specified properties config file doesn't exist: " + propertiesFile);
         }
 
-        launch(layersConfigFile, LayersConfigLoader.loadConfig(layersConfigFile, propertiesFile), args);
+        launch(basedir, LayersConfigLoader.loadConfig(layersConfigFile, propertiesFile), args);
     }
 
-    private static void launch(Path layersConfigFile, LayersConfig layersConfig, String... args){
-        Layers layers = new LayersFactory().createLayers(layersConfig, layersConfigFile.getParent());
+    private static void launch(Path basedir, LayersConfig layersConfig, String... args) {
+        Layers layers = new LayersFactory().createLayers(layersConfig, basedir);
 
         layers.run(layersConfig.getMain().getModule() + "/" + layersConfig.getMain().getClazz(), args);
     }
