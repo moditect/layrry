@@ -181,7 +181,7 @@ public class LayersConfigLoader {
     }
 
     private static boolean isLocalUrl(URL url) {
-        return "file".equals(url.getProtocol());
+        return "file".equalsIgnoreCase(url.getProtocol());
     }
 
     private static Path convertToPath(URL url) {
