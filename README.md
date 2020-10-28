@@ -226,9 +226,13 @@ Layrry supports the [Mustache](https://github.com/spullara/mustache.java) templa
 the content found in configuration files, regardless of their target format (YAML, TOML, etc). To use this feature you must
 use a `{{property}}` expression to refer to value placeholders. Layrry makes all `System` properties available for value
 replacement, as well as an extra set of properties that are related to OS values; these include all properties exposed by
-the [os-maven-plugin](https://github.com/trustin/os-maven-plugin/) plus `javax.os.classifier` which is specific to JavaFX
-dependencies. This last property can have the following values: `linux`, `win`, `mac`. If the `--properties` command flag
-is passed to the Layrry Launcher then all properties found in the given properties file will also become available.
+the [os-maven-plugin](https://github.com/trustin/os-maven-plugin/). If the `--properties` command flag is passed to the 
+Layrry Launcher then all properties found in the given properties file will also become available.
+
+Additionally, Layrry resolves the following properties
+
+ * `os.detected.jfxname`: specific to JavaFX. Values may be one of `linux`, `win`, `mac`.
+ * `os.detected.lwjglname`: specific to LWJGL. Values may be one of `linux`, `linux-arm32`, `windows`, `windows-x86`, `macosx`.
 
 The following example shows a parameterized TOML config file for a JavaFX application that can be run on any of the 3 platforms
 supported by JavaFX
