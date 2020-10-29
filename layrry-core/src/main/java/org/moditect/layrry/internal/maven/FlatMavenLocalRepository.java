@@ -66,7 +66,7 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
     @Override
     public Collection<LocalMavenResolvedArtifact> resolve() throws IllegalStateException, ResolutionException {
         return getLocalMavenResolvedArtifacts()
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     @Override
@@ -75,7 +75,7 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
 
         return getLocalMavenResolvedArtifacts()
             .filter(a -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), mavenCoordinate))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     @Override
@@ -90,7 +90,7 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
 
         return getLocalMavenResolvedArtifacts()
             .filter(a -> mavenCoordinates.stream().anyMatch(m -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), m)))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     @Override
@@ -105,7 +105,7 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
 
         return getLocalMavenResolvedArtifacts()
             .filter(a -> mavenCoordinates.stream().anyMatch(m -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), m)))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     private Stream<LocalMavenResolvedArtifact> getLocalMavenResolvedArtifacts() {
