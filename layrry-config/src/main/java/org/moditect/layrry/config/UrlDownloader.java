@@ -16,43 +16,148 @@
 package org.moditect.layrry.config;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Authenticator;
+import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Properties;
 import java.util.ServiceLoader;
+
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 class UrlDownloader {
     private static final String JAVA_NET_USE_SYSTEM_PROXIES = "java.net.useSystemProxies";
 
     static Path download(URL url, Properties properties) {
-        setupProxy(properties);
+        HttpClient.Builder builder = HttpClient.newBuilder()
+            .connectTimeout(Duration.of(getLong("connection.timeout", properties, 30_000), ChronoUnit.MILLIS))
+            .followRedirects(HttpClient.Redirect.ALWAYS);
+
+        builder = setupProxy(builder, url, properties);
+        builder = setupAuthentication(builder, url, properties);
+
+        HttpClient client = builder.build();
+
+        HttpRequest request = createRequest(url);
 
         try {
-            URLConnection connection = url.openConnection();
-            // default timeout is 30 seconds
-            connection.setConnectTimeout(getInteger("connection.timeout", properties, 30_000));
-            connection.connect();
-            String fileName = resolveFileName(url);
-            String fileExtension = resolveFileExtension(fileName, connection);
-            if (fileExtension != null) {
-                fileName += fileExtension;
-            }
+            HttpResponse<Path> response = client.send(request, fileBodyHandler(url));
+            return response.body();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Unexpected error when downloading from " + url, e);
+        }
+    }
 
-            File layersConfigFile = File.createTempFile("layrry", fileName);
-            try (InputStream in = connection.getInputStream();
-                 OutputStream out = new FileOutputStream(layersConfigFile)) {
-                in.transferTo(out);
+    private static HttpRequest createRequest(URL url) {
+        try {
+            return HttpRequest.newBuilder()
+                .uri(url.toURI())
+                .build();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URL", e);
+        }
+    }
+
+    private static HttpResponse.BodyHandler<Path> fileBodyHandler(URL url) {
+        return responseInfo -> {
+            try {
+                // 1. see if 'Content-Disposition' is set, if so use BodyHandlers.ofFileDownload()
+                if (responseInfo.headers().firstValue("Content-Disposition").isPresent()) {
+                    Path layrryTmpDirPath = Files.createTempDirectory("layrry-download");
+                    return HttpResponse.BodyHandlers.ofFileDownload(layrryTmpDirPath, CREATE, WRITE).apply(responseInfo);
+                }
+
+                // 2. use BodyHandlers.ofFile() instead
+                // must compute file name
+                String fileName = resolveFileName(url);
+                String fileExtension = resolveFileExtension(fileName, responseInfo.headers());
+                if (fileExtension != null) {
+                    fileName += fileExtension;
+                }
+
+                Path layersConfigFilePath = File.createTempFile("layrry", fileName).toPath();
+                return HttpResponse.BodyHandlers.ofFile(layersConfigFilePath).apply(responseInfo);
+            } catch (IOException ioe) {
+                throw new IllegalStateException("Unexpected I/O error", ioe);
             }
-            return layersConfigFile.toPath();
-        } catch (IOException e) {
-            throw new IllegalStateException("Unexpected error downloading layers file from " + url, e);
+        };
+    }
+
+    private static HttpClient.Builder setupProxy(HttpClient.Builder builder, URL url, Properties properties) {
+        if (getBoolean("http.proxy", properties)) {
+            setIfUndefined("http.proxyHost", properties, "");
+            setIfUndefined("http.proxyPort", properties, "80");
+            setIfUndefined("http.nonProxyHosts", properties, "localhost|127.*|[::1]");
+        }
+        if (getBoolean("https.proxy", properties)) {
+            setIfUndefined("https.proxyHost", properties, "");
+            setIfUndefined("https.proxyPort", properties, "443");
+            setIfUndefined("http.nonProxyHosts", properties, "localhost|127.*|[::1]");
+        }
+        if (getBoolean("socks.proxy", properties)) {
+            setIfUndefined("socksProxyHost", properties.getProperty("socks.proxyHost", ""));
+            setIfUndefined("socksProxyPort", properties.getProperty("socks.proxyPort", "1080"));
+        }
+
+        return builder.proxy(ProxySelector.of(new InetSocketAddress(url.getHost(), url.getPort())));
+    }
+
+    private static HttpClient.Builder setupAuthentication(HttpClient.Builder builder, URL url, Properties properties) {
+        if (getBoolean("http.proxy", properties) || getBoolean("https.proxy", properties)) {
+            return builder.authenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    String protocol = url.getProtocol().toLowerCase();
+                    String username = properties.getProperty(protocol + ".proxyUser", "");
+                    String password = properties.getProperty(protocol + ".proxyPassword", "");
+                    return new PasswordAuthentication(username, password.toCharArray());
+                }
+            });
+        } else if (getBoolean("socks.proxy", properties) && getBoolean("socks.proxy.auth", properties)) {
+            String username = properties.getProperty("socks.proxyUser", "");
+            String password = properties.getProperty("socks.proxyPassword", "");
+            System.setProperty("java.net.socks.username", username);
+            System.setProperty("java.net.socks.password", password);
+            return builder.authenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password.toCharArray());
+                }
+            });
+
+        }
+
+        return builder;
+    }
+
+    /**
+     * Sets a System property if the given key is not defined.
+     */
+    private static void setIfUndefined(String key, Properties properties, String defaultValue) {
+        if (null == System.getProperty(key)) {
+            System.setProperty(key, properties.getProperty(key, defaultValue));
+        }
+    }
+
+    /**
+     * Sets a System property if the given key is not defined.
+     */
+    private static void setIfUndefined(String key, String value) {
+        if (null == System.getProperty(key)) {
+            System.setProperty(key, value);
         }
     }
 
@@ -70,7 +175,12 @@ class UrlDownloader {
         return path.substring(index + 1);
     }
 
-    private static String resolveFileExtension(String fileName, URLConnection connection) {
+    /**
+     * Resolves the filename extension.
+     * If the supplied {@code fileName} has an extension, i.e, a suffix matching {@code .\\w} then returns {@code null},
+     * else inspect the headers for "Content-Type" and find matching extension from the available {@code LayersConfigParser}s.
+     */
+    private static String resolveFileExtension(String fileName, HttpHeaders headers) {
         int dot = fileName.lastIndexOf('.');
         if (dot > -1) {
             // no need to guess the file extension
@@ -78,7 +188,7 @@ class UrlDownloader {
             return null;
         }
 
-        String contentType = connection.getContentType();
+        String contentType = headers.firstValue("Content-Type").orElse("text/plain");
         ServiceLoader<LayersConfigParser> parsers = ServiceLoader.load(LayersConfigParser.class, LayersConfigLoader.class.getClassLoader());
 
         for (LayersConfigParser parser : parsers) {
@@ -150,6 +260,15 @@ class UrlDownloader {
     static int getInteger(String name, Properties properties, int defaultValue) {
         try {
             return Integer.parseInt(properties.getProperty(name));
+        } catch (NumberFormatException | NullPointerException e) {
+            // ignored
+        }
+        return defaultValue;
+    }
+
+    static long getLong(String name, Properties properties, long defaultValue) {
+        try {
+            return Long.parseLong(properties.getProperty(name));
         } catch (NumberFormatException | NullPointerException e) {
             // ignored
         }
