@@ -37,6 +37,8 @@ public class TomlLayersConfigParser implements LayersConfigParser {
     @Override
     public Set<String> getSupportedMimeTypes() {
         return Set.of(
+            "text/vnd.toml",
+            "application/vnd.toml",
             "text/toml",
             "text/x-toml",
             "application/toml",

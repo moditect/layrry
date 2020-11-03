@@ -32,6 +32,8 @@ public class YamlLayersConfigParser implements LayersConfigParser {
     @Override
     public Set<String> getSupportedMimeTypes() {
         return Set.of(
+            "text/vnd.yaml",
+            "application/vnd.yaml",
             "text/yaml",
             "text/x-yaml",
             "application/yaml",
