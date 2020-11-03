@@ -15,46 +15,14 @@
  */
 package com.example.layrry.integrationtest;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.Resolvers;
 import org.moditect.layrry.launcher.LayrryLauncher;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static org.junit.Assert.assertTrue;
-
-public class LayrryIntegrationIT {
-
-    private ByteArrayOutputStream sysOut;
-    private PrintStream originalSysOut;
-
-    @Before
-    public void setupSysOut() {
-        sysOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(sysOut));
-
-        originalSysOut = System.out;
-    }
-
-    @After
-    public void restoreSysOut() {
-        System.setOut(originalSysOut);
-    }
-
-    private void assertOutput() {
-        String output = sysOut.toString();
-
-        assertTrue(output.contains("com.example.foo.Foo - Hello, Alice from Foo (Greeter 1.0.0)"));
-        assertTrue(output.contains("com.example.bar.Bar - Hello, Alice from Bar (Greeter 2.0.0)"));
-        assertTrue(output.contains("com.example.bar.Bar - Good bye, Alice from Bar (Greeter 2.0.0)"));
-    }
-
+public class LayrryIntegrationTest extends AbstractIntegrationTestCase {
     @Test
     public void runLayersFromApi() {
         Layers layers = Layers.builder()
@@ -80,33 +48,33 @@ public class LayrryIntegrationIT {
 
         assertOutput();
     }
-
+    
     @Test
     public void runLayersFromApiWithFlatRepository() {
         Layers layers = Layers.builder()
-            .resolve(Resolvers.remote().enabled(false))
-            .resolve(Resolvers.local()
-                .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat"))
-            .layer("log")
-                .withModule("org.apache.logging.log4j:log4j-api:2.13.1")
-                .withModule("org.apache.logging.log4j:log4j-core:2.13.1")
-                .withModule("com.example.it:it-logconfig:1.0.0")
-            .layer("foo")
-                .withParent("log")
-                .withModule("com.example.it:it-greeter:1.0.0")
-                .withModule("com.example.it:it-foo:1.0.0")
-            .layer("bar")
-                .withParent("log")
-                .withModule("com.example.it:it-greeter:2.0.0")
-                .withModule("com.example.it:it-bar:1.0.0")
-            .layer("app")
-                .withParent("foo")
-                .withParent("bar")
-                .withModule("com.example.it:it-app:1.0.0")
-            .build();
-
+        .resolve(Resolvers.remote().enabled(false))
+        .resolve(Resolvers.local()
+                 .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat"))
+        .layer("log")
+        .withModule("org.apache.logging.log4j:log4j-api:2.13.1")
+        .withModule("org.apache.logging.log4j:log4j-core:2.13.1")
+        .withModule("com.example.it:it-logconfig:1.0.0")
+        .layer("foo")
+        .withParent("log")
+        .withModule("com.example.it:it-greeter:1.0.0")
+        .withModule("com.example.it:it-foo:1.0.0")
+        .layer("bar")
+        .withParent("log")
+        .withModule("com.example.it:it-greeter:2.0.0")
+        .withModule("com.example.it:it-bar:1.0.0")
+        .layer("app")
+        .withParent("foo")
+        .withParent("bar")
+        .withModule("com.example.it:it-app:1.0.0")
+        .build();
+        
         layers.run("com.example.app/com.example.app.App", "Alice");
-
+        
         assertOutput();
     }
 
