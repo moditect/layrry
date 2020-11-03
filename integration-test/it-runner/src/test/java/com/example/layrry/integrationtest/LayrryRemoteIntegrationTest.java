@@ -15,81 +15,15 @@
  */
 package com.example.layrry.integrationtest;
 
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moditect.layrry.launcher.LayrryLauncher;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.file.Path;
-
-import static org.junit.Assert.assertTrue;
-
-public class LayrryRemoteIntegrationTest {
-
-    private static Server server;
-    private static String serverUri;
-    private ByteArrayOutputStream sysOut;
-    private PrintStream originalSysOut;
-
+public class LayrryRemoteIntegrationTest extends AbstractRemoteIntegrationTestCase{
     @BeforeClass
-    public static void startJetty() throws Exception {
-        server = new Server();
-        ServerConnector connector = new ServerConnector(server);
-        connector.setPort(0);
-        server.addConnector(connector);
-
-        ResourceHandler resource_handler = new ResourceHandler();
-        resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase(Path.of("src", "test", "resources").toAbsolutePath().toString());
-
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resource_handler, new DefaultHandler()});
-        server.setHandler(handlers);
-
-        server.start();
-
-        String host = connector.getHost();
-        if (host == null) {
-            host = "localhost";
-        }
-        int port = connector.getLocalPort();
-        serverUri = String.format("http://%s:%d/", host, port);
-    }
-
-    @AfterClass
-    public static void stopJetty() throws Exception {
-        server.stop();
-    }
-
-    @Before
-    public void setupSysOut() {
-        sysOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(sysOut));
-
-        originalSysOut = System.out;
-    }
-
-    @After
-    public void restoreSysOut() {
-        System.setOut(originalSysOut);
-    }
-
-    private void assertOutput() {
-        String output = sysOut.toString();
-
-        assertTrue(output.contains("com.example.foo.Foo - Hello, Alice from Foo (Greeter 1.0.0)"));
-        assertTrue(output.contains("com.example.bar.Bar - Hello, Alice from Bar (Greeter 2.0.0)"));
-        assertTrue(output.contains("com.example.bar.Bar - Good bye, Alice from Bar (Greeter 2.0.0)"));
+    public static void startServer() throws Exception {
+        startServer(new ResourceHandler());
     }
 
     @Test
