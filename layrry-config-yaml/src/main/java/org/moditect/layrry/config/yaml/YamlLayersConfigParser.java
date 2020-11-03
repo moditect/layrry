@@ -25,17 +25,18 @@ import org.yaml.snakeyaml.introspector.PropertyUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Set;
 
 public class YamlLayersConfigParser implements LayersConfigParser {
 
     @Override
-    public String[] getSupportedMimeTypes() {
-        return new String[] {
+    public Set<String> getSupportedMimeTypes() {
+        return Set.of(
             "text/yaml",
             "text/x-yaml",
             "application/yaml",
             "application/x-yaml"
-        };
+        );
     }
 
     @Override
