@@ -30,17 +30,18 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TomlLayersConfigParser implements LayersConfigParser {
 
     @Override
-    public String[] getSupportedMimeTypes() {
-        return new String[] {
+    public Set<String> getSupportedMimeTypes() {
+        return Set.of(
             "text/toml",
             "text/x-toml",
             "application/toml",
             "application/x-toml"
-        };
+        );
     }
 
     @Override

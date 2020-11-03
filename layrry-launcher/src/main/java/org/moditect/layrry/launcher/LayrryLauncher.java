@@ -54,7 +54,7 @@ public final class LayrryLauncher {
         File basedir = arguments.getBasedir();
 
         String layersConfig = arguments.getLayersConfig();
-        URL layersConfigUrl = toURL(layersConfig);
+        URL layersConfigUrl = toUrl(layersConfig);
 
         if (null != layersConfigUrl) {
             if (basedir == null) {
@@ -82,7 +82,7 @@ public final class LayrryLauncher {
         }
     }
 
-    private static URL toURL(String input) {
+    private static URL toUrl(String input) {
         try {
             return new URL(input);
         } catch (MalformedURLException e) {

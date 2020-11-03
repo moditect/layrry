@@ -46,7 +46,10 @@ class UrlDownloader {
             }
 
             File layersConfigFile = File.createTempFile("layrry", fileName);
-            transfer(connection.getInputStream(), new FileOutputStream(layersConfigFile), true);
+            try (InputStream in = connection.getInputStream();
+                 OutputStream out = new FileOutputStream(layersConfigFile)) {
+                in.transferTo(out);
+            }
             return layersConfigFile.toPath();
         } catch (IOException e) {
             throw new IllegalStateException("Unexpected error downloading layers file from " + url, e);
@@ -151,26 +154,5 @@ class UrlDownloader {
             // ignored
         }
         return defaultValue;
-    }
-
-    /**
-     * Transfers the contents of the {@link InputStream} into the {@link OutputStream}, optionally closing the stream.
-     *
-     * @param istream the input stream
-     * @param ostream the output stream
-     * @param close   whether or not to close the output stream
-     */
-    static void transfer(InputStream istream, OutputStream ostream, final boolean close) throws IOException {
-        try {
-            final byte[] bytes = new byte[2_048];
-            int read;
-            while ((read = istream.read(bytes)) != -1) {
-                ostream.write(bytes, 0, read);
-            }
-        } finally {
-            if (close) {
-                ostream.close();
-            }
-        }
     }
 }

@@ -18,6 +18,7 @@ package org.moditect.layrry.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Set;
 
 /**
  * This type allows external configuration to be expressed with a custom format.
@@ -29,7 +30,7 @@ public interface LayersConfigParser {
      * Used to determine if the content of a given URL can be read by this parser.
      * @return the set of supported mime-types by this parser, should never return {@code null}.
      */
-    String[] getSupportedMimeTypes();
+    Set<String> getSupportedMimeTypes();
 
     /**
      * Returns the preferred file extension supported by this parser.
