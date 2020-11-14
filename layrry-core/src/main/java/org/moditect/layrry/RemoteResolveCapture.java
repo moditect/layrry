@@ -15,17 +15,15 @@
  */
 package org.moditect.layrry;
 
-/**
- * Configures Maven for artifact resolution.
- */
-public interface Maven {
-    /**
-     * Maven configuration for local artifact resolution.
-     */
-    LocalMaven local();
+import java.nio.file.Path;
 
-    /**
-     * Maven configuration for remote artifact resolution.
-     */
-    RemoteMaven remote();
+public interface RemoteResolveCapture {
+
+    RemoteResolveCapture enabled(boolean enabled);
+
+    RemoteResolveCapture fromFile(Path file);
+
+    RemoteResolveCapture workOffline(boolean workOffline);
+
+    RemoteResolveCapture withMavenCentralRepo(boolean useMavenCentral);
 }

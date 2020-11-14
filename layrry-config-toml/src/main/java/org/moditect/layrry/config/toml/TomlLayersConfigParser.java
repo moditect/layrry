@@ -21,7 +21,7 @@ import org.moditect.layrry.config.Layer;
 import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigParser;
 import org.moditect.layrry.config.Main;
-import org.moditect.layrry.config.Maven;
+import org.moditect.layrry.config.Resolve;
 import org.moditect.layrry.config.Repository;
 
 import java.io.IOException;
@@ -69,21 +69,21 @@ public class TomlLayersConfigParser implements LayersConfigParser {
     }
 
     private static void readMaven(LayersConfig config, TomlTable table) {
-        Maven maven = new Maven();
-        config.setMaven(maven);
+        Resolve resolve = new Resolve();
+        config.setResolve(resolve);
 
         if (table != null) {
-            maven.setRemote((Boolean) table.getOrDefault("remote", true));
-            maven.setOffline((Boolean) table.getOrDefault("offline", false));
-            maven.setUseMavenCentral((Boolean) table.getOrDefault("useMavenCentral", true));
-            maven.setConfigFile((String) table.get("configFile"));
-            readRepositories(maven, (TomlTable) table.get("repositories"));
+            resolve.setRemote((Boolean) table.getOrDefault("remote", true));
+            resolve.setOffline((Boolean) table.getOrDefault("offline", false));
+            resolve.setUseMavenCentral((Boolean) table.getOrDefault("useMavenCentral", true));
+            resolve.setConfigFile((String) table.get("configFile"));
+            readRepositories(resolve, (TomlTable) table.get("localRepositories"));
         }
     }
 
-    private static void readRepositories(Maven maven, TomlTable table) {
+    private static void readRepositories(Resolve resolve, TomlTable table) {
         Map<String, Repository> repositories = new LinkedHashMap<>();
-        maven.setRepositories(repositories);
+        resolve.setLocalRepositories(repositories);
 
         if (table == null) return;
 

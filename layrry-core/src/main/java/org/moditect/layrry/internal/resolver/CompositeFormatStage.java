@@ -13,12 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
-import org.moditect.layrry.RemoteMaven;
+import java.nio.file.Path;
 
 /**
- * Entry point of a remote Maven-based Resolver system which supports configuration
+ * Represents the formatting stage of Maven-based resolution in which the resolved artifact is returned in the desired
+ * format.
  */
-public interface ConfigurableRemoteMavenResolverSystem extends RemoteMaven, RemoteMavenResolver {
+public interface CompositeFormatStage {
+    Path[] asPath();
 }

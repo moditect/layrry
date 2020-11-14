@@ -18,20 +18,20 @@ package org.moditect.layrry.config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Maven {
+public class Resolve {
 
-    private Map<String, Repository> repositories = new LinkedHashMap<>();
+    private Map<String, Repository> localRepositories = new LinkedHashMap<>();
     private boolean remote = true;
     private boolean offline = false;
     private boolean useMavenCentral = true;
     private String configFile;
 
-    public Map<String, Repository> getRepositories() {
-        return repositories;
+    public Map<String, Repository> getLocalRepositories() {
+        return localRepositories;
     }
 
-    public void setRepositories(Map<String, Repository> repositories) {
-        this.repositories = repositories;
+    public void setLocalRepositories(Map<String, Repository> localRepositories) {
+        this.localRepositories = localRepositories;
     }
 
     public boolean isRemote() {
@@ -68,6 +68,6 @@ public class Maven {
 
     @Override
     public String toString() {
-        return "Maven [remote=" + remote + ", offline=" + offline + ", useMavenCentral=" + useMavenCentral + ", repositories=" + repositories + "]";
+        return "Resolve [remote=" + remote + ", offline=" + offline + ", useMavenCentral=" + useMavenCentral + ", localRepositories=" + localRepositories + "]";
     }
 }

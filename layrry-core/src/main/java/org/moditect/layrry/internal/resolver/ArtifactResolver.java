@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
@@ -23,24 +23,24 @@ import java.util.Collection;
 /**
  * Resolves artifacts using local and remote repositories.
  */
-public interface MavenResolver {
+public interface ArtifactResolver {
     /**
      * Begins resolution of the prior-defined dependencies.
      *
-     * @return The {@link CompositeMavenFormatStage} for the user to define the artifact format to use.
+     * @return The {@link CompositeFormatStage} for the user to define the artifact format to use.
      * @throws IllegalStateException
      * If no dependencies have yet been added
      * @throws ResolutionException
      * If an error occurred in resolution
      */
-    CompositeMavenFormatStage resolve() throws IllegalStateException, ResolutionException;
+    CompositeFormatStage resolve() throws IllegalStateException, ResolutionException;
 
     /**
      * Begins resolution by defining the single desired dependency (in canonical form).
      * Previously-added dependencies will be included in resolution.
      *
      * @param canonicalForm The canonical form of the single desired dependency.
-     * @return The {@link CompositeMavenFormatStage} for the user to define the artifact format to use.
+     * @return The {@link CompositeFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinate is supplied
      * @throws ResolutionException
@@ -48,14 +48,14 @@ public interface MavenResolver {
      * @throws CoordinateParseException
      * If the specified canonical form is invalid
      */
-    CompositeMavenFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    CompositeFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
 
     /**
      * Begins resolution by defining a set of desired dependencies (in canonical form).
      * Previously-added dependencies will be included in resolution.
      *
      * @param canonicalForms The canonical forms of the set of desired dependencies.
-     * @return The {@link CompositeMavenFormatStage} for the user to define the artifact format to use.
+     * @return The {@link CompositeFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinates are supplied
      * @throws ResolutionException
@@ -63,14 +63,14 @@ public interface MavenResolver {
      * @throws CoordinateParseException
      * If one or more of the specified canonical forms is invalid
      */
-    CompositeMavenFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    CompositeFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
 
     /**
      * Begins resolution by defining a set of desired dependencies (in canonical form).
      * Previously-added dependencies will be included in resolution.
      *
      * @param canonicalForms The canonical forms of the set of desired dependencies.
-     * @return The {@link CompositeMavenFormatStage} for the user to define the artifact format to use.
+     * @return The {@link CompositeFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinates are supplied
      * @throws ResolutionException
@@ -78,5 +78,5 @@ public interface MavenResolver {
      * @throws CoordinateParseException
      * If one or more of the specified canonical forms is invalid
      */
-    CompositeMavenFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    CompositeFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
 }

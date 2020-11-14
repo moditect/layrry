@@ -13,14 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
-
-import java.nio.file.Path;
+package org.moditect.layrry;
 
 /**
- * Represents the formatting stage of Maven-based resolution in which the resolved artifact is returned in the desired
- * format.
+ * Configures artifact resolution.
  */
-public interface LocalMavenFormatStage {
-    Path[] asPath();
+public interface Resolve {
+    /**
+     * Configuration for local artifact resolution.
+     */
+    LocalResolve local();
+
+    /**
+     * Configuration for remote artifact resolution (with Maven).
+     */
+    RemoteResolve remote();
 }

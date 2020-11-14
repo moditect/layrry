@@ -53,25 +53,27 @@ public class LayersFactory {
     }
 
     private Layers configureMaven(LayersConfig layersConfig, Path layersConfigDir, Layers layers) {
-        if (layersConfig.getMaven() == null) {
+        if (layersConfig.getResolve() == null) {
             return layers;
         }
 
+        /*
         // configure remote
-        layers.maven().remote().enabled(layersConfig.getMaven().isRemote());
-        layers.maven().remote().workOffline(layersConfig.getMaven().isOffline());
-        layers.maven().remote().withMavenCentralRepo(layersConfig.getMaven().isUseMavenCentral());
+        layers.getResolution().remote().enabled(layersConfig.getMaven().isRemote());
+        layers.getResolution().remote().workOffline(layersConfig.getMaven().isOffline());
+        layers.getResolution().remote().withMavenCentralRepo(layersConfig.getMaven().isUseMavenCentral());
         String configFilePath = layersConfig.getMaven().getConfigFile();
         if (configFilePath != null && !configFilePath.isEmpty()) {
             layers.maven().remote().fromFile(layersConfigDir.resolve(configFilePath));
         }
 
         // configure local
-        layersConfig.getMaven().getRepositories().forEach((id, repository) -> {
+        layersConfig.getMaven().getLocalRepositories().forEach((id, repository) -> {
             layers.maven().local().withLocalRepo(id,
                 layersConfigDir.resolve(repository.getPath()),
                 repository.getLayout());
         });
+        */
 
         return layers;
     }

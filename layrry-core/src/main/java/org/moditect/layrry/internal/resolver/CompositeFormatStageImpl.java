@@ -13,19 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
 
 import java.nio.file.Path;
 
-public class CompositeMavenFormatStageImpl implements CompositeMavenFormatStage {
-    private final LocalMavenFormatStage local;
+public class CompositeFormatStageImpl implements CompositeFormatStage {
+    private final LocalFormatStage local;
     private final MavenFormatStage remote;
 
-    public CompositeMavenFormatStageImpl(LocalMavenFormatStage local, MavenFormatStage remote) {
-        this.local = local != null ? local : new EmptyLocalMavenFormatStage();
-        this.remote = remote != null ? remote : new EmptyMavenFormatStage();
+    public CompositeFormatStageImpl(LocalFormatStage local, MavenFormatStage remote) {
+        this.local = local != null ? local : new EmptyLocalFormatStage();
+        this.remote = remote != null ? remote : new EmptyFormatStage();
     }
 
     @Override

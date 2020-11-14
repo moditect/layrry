@@ -13,27 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
-public class LocalMavenFormatStageImpl implements LocalMavenFormatStage {
-    private final Collection<LocalMavenResolvedArtifact> artifacts;
-
-    public LocalMavenFormatStageImpl(final Collection<LocalMavenResolvedArtifact> artifacts) {
-        assert artifacts != null : "Artifacts are required";
-        this.artifacts = artifacts;
-    }
-
+public class EmptyLocalFormatStage implements LocalFormatStage {
     @Override
     public Path[] asPath() {
-        return artifacts.stream()
-            .map(LocalMavenResolvedArtifact::getFile)
-            .map(File::toPath)
-            .collect(Collectors.toSet())
-            .toArray(new Path[artifacts.size()]);
+        return new Path[0];
     }
 }

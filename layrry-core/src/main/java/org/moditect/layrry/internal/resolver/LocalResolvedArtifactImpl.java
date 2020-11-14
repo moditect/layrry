@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
 import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
@@ -21,13 +21,13 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
 
 import java.io.File;
 
-class LocalMavenResolvedArtifactImpl implements LocalMavenResolvedArtifact {
+class LocalResolvedArtifactImpl implements LocalResolvedArtifact {
     private static final MavenArtifactInfo[] NO_DEPENDENCIES = new MavenArtifactInfo[0];
 
     private final MavenCoordinate mavenCoordinate;
     private final File file;
 
-    LocalMavenResolvedArtifactImpl(MavenCoordinate mavenCoordinate, File file) {
+    LocalResolvedArtifactImpl(MavenCoordinate mavenCoordinate, File file) {
         this.mavenCoordinate = mavenCoordinate;
         this.file = file;
     }

@@ -13,12 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
-import org.moditect.layrry.LocalMaven;
+import org.moditect.layrry.LocalResolve;
 
 /**
  * Entry point of a local Maven-based Resolver system which supports configuration
  */
-public interface ConfigurableLocalMavenResolverSystem extends LocalMaven, LocalMavenResolver {
+public interface ConfigurableLocalArtifactResolverSystem extends LocalResolve, LocalArtifactResolver {
 }

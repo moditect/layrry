@@ -15,23 +15,14 @@
  */
 package org.moditect.layrry;
 
+import org.moditect.layrry.internal.resolver.LocalRepository;
+
 import java.nio.file.Path;
-import java.util.List;
 
-/**
- * Builds a hierarchy of layers.
- */
-public interface LayersBuilder {
+public interface LocalResolveCapture {
+    LocalResolveCapture withLocalRepo(String id, String path, String layout);
 
-    LayersBuilder pluginsDirectory(String name, Path directory, List<String> parents);
+    LocalResolveCapture withLocalRepo(String id, Path path, String layout);
 
-    LayerBuilder layer(String name);
-
-    LayerBuilder layer(String name, String derivedFrom);
-
-    LayersBuilder resolve(LocalResolveCapture resolve);
-
-    LayersBuilder resolve(RemoteResolveCapture resolve);
-
-    Layers build();
+    LocalResolveCapture withLocalRepo(LocalRepository repository);
 }

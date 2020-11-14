@@ -14,9 +14,9 @@
 #  limitations under the License.
 #
 
-[maven]
+[resolve]
   remote = false
-[maven.repositories.flat]
+[resolve.localRepositories.flat]
   layout = "flat"
   path   = "../../../target/repositories/flat"
 [layers.log]

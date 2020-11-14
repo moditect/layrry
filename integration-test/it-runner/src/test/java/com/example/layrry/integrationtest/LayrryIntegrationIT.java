@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moditect.layrry.Layers;
+import org.moditect.layrry.Resolvers;
 import org.moditect.layrry.launcher.LayrryLauncher;
 
 import java.io.ByteArrayOutputStream;
@@ -83,6 +84,9 @@ public class LayrryIntegrationIT {
     @Test
     public void runLayersFromApiWithFlatRepository() {
         Layers layers = Layers.builder()
+            .resolve(Resolvers.remote().enabled(false))
+            .resolve(Resolvers.local()
+                .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat"))
             .layer("log")
                 .withModule("org.apache.logging.log4j:log4j-api:2.13.1")
                 .withModule("org.apache.logging.log4j:log4j-core:2.13.1")
@@ -100,11 +104,6 @@ public class LayrryIntegrationIT {
                 .withParent("bar")
                 .withModule("com.example.it:it-app:1.0.0")
             .build();
-
-        layers.maven().remote()
-            .enabled(false);
-        layers.maven().local()
-            .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat");
 
         layers.run("com.example.app/com.example.app.App", "Alice");
 

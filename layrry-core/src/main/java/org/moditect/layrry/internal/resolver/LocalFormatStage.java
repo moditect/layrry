@@ -13,18 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
-import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
-
-import java.io.File;
+import java.nio.file.Path;
 
 /**
- * Encapsulation of a resolved Maven-based artifact's metadata form a local repository.
+ * Represents the formatting stage of Maven-based resolution in which the resolved artifact is returned in the desired
+ * format.
  */
-public interface LocalMavenResolvedArtifact extends MavenArtifactInfo {
-    /**
-     * The file that's  associated with this artifact.
-     */
-    File getFile();
+public interface LocalFormatStage {
+    Path[] asPath();
 }

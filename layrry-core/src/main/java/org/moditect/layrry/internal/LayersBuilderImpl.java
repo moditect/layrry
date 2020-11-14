@@ -15,22 +15,27 @@
  */
 package org.moditect.layrry.internal;
 
+import org.moditect.layrry.LayerBuilder;
+import org.moditect.layrry.Layers;
+import org.moditect.layrry.LayersBuilder;
+import org.moditect.layrry.LocalResolveCapture;
+import org.moditect.layrry.RemoteResolveCapture;
+
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.moditect.layrry.LayerBuilder;
-import org.moditect.layrry.Layers;
-import org.moditect.layrry.LayersBuilder;
-
 public class LayersBuilderImpl implements LayersBuilder {
 
     private LayerBuilderImpl currentLayer;
-    private Map<String, Component> layers = new LinkedHashMap<>();
-    private Set<PluginsDirectory> pluginsDirectories = new HashSet<>();
+    private final Map<String, Component> layers = new LinkedHashMap<>();
+    private final Set<PluginsDirectory> pluginsDirectories = new HashSet<>();
+    private final List<LocalResolveCapture> localResolvers = new ArrayList<>();
+    private final List<RemoteResolveCapture> remoteResolvers = new ArrayList<>();
 
     @Override
     public LayersBuilder pluginsDirectory(String name, Path directory, List<String> parents) {
@@ -58,11 +63,23 @@ public class LayersBuilderImpl implements LayersBuilder {
     }
 
     @Override
+    public LayersBuilder resolve(LocalResolveCapture resolve) {
+        if (null != resolve) localResolvers.add(resolve);
+        return this;
+    }
+
+    @Override
+    public LayersBuilder resolve(RemoteResolveCapture resolve) {
+        if (null != resolve) remoteResolvers.add(resolve);
+        return this;
+    }
+
+    @Override
     public Layers build() {
         if (currentLayer != null) {
             addLayer(currentLayer);
         }
 
-        return new LayersImpl(pluginsDirectories, layers);
+        return new LayersImpl(pluginsDirectories, layers, localResolvers, remoteResolvers);
     }
 }
