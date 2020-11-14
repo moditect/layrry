@@ -15,6 +15,17 @@
  */
 package org.moditect.layrry.internal;
 
+import io.methvin.watcher.DirectoryChangeEvent;
+import io.methvin.watcher.DirectoryChangeEvent.EventType;
+import io.methvin.watcher.DirectoryWatcher;
+import org.moditect.layrry.Layers;
+import org.moditect.layrry.LocalResolveCapture;
+import org.moditect.layrry.RemoteResolveCapture;
+import org.moditect.layrry.internal.jfr.PluginLayerAddedEvent;
+import org.moditect.layrry.internal.jfr.PluginLayerRemovedEvent;
+import org.moditect.layrry.internal.resolver.ResolveImpl;
+import org.moditect.layrry.internal.util.FilesHelper;
+
 import java.io.IOException;
 import java.lang.module.Configuration;
 import java.lang.module.ModuleFinder;
@@ -36,17 +47,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import org.moditect.layrry.Layers;
-import org.moditect.layrry.Maven;
-import org.moditect.layrry.internal.jfr.PluginLayerAddedEvent;
-import org.moditect.layrry.internal.jfr.PluginLayerRemovedEvent;
-import org.moditect.layrry.internal.maven.MavenImpl;
-import org.moditect.layrry.internal.util.FilesHelper;
-
-import io.methvin.watcher.DirectoryChangeEvent;
-import io.methvin.watcher.DirectoryChangeEvent.EventType;
-import io.methvin.watcher.DirectoryWatcher;
 
 public class LayersImpl implements Layers {
 
@@ -72,14 +72,28 @@ public class LayersImpl implements Layers {
      */
     private final Set<PluginsDirectory> pluginsDirectories;
 
-    private final MavenImpl maven = new MavenImpl();
+    private final ResolveImpl resolve = new ResolveImpl();
 
     private int pluginIndex = 0;
 
-    public LayersImpl(Set<PluginsDirectory> pluginsDirectories, Map<String, Component> components) {
+    public LayersImpl(Set<PluginsDirectory> pluginsDirectories, Map<String, Component> components,
+                      List<LocalResolveCapture> localResolveCaptures,
+                      List<RemoteResolveCapture> remoteResolveCaptures) {
         this.components = Collections.unmodifiableMap(components);
         this.moduleLayers = new ConcurrentHashMap<>();
         this.pluginsDirectories = Collections.unmodifiableSet(pluginsDirectories);
+
+        // apply captures
+        for (LocalResolveCapture capture : localResolveCaptures) {
+            ((LocalResolveCaptureImpl) capture).localRepositories().forEach(resolve.local()::withLocalRepo);
+        }
+        for (RemoteResolveCapture capture : remoteResolveCaptures) {
+            RemoteResolveCaptureImpl remote = (RemoteResolveCaptureImpl) capture;
+            resolve.remote().enabled(remote.enabled());
+            resolve.remote().workOffline(remote.workOffline());
+            resolve.remote().withMavenCentralRepo(remote.useMavenCentral());
+            if (null != remote.configFile()) resolve.remote().fromFile(remote.configFile());
+        }
 
         try {
             this.pluginsWorkingDir = Files.createTempDirectory("layrry-plugins");
@@ -87,11 +101,6 @@ public class LayersImpl implements Layers {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Maven maven() {
-        return maven;
     }
 
     @Override
@@ -174,7 +183,7 @@ public class LayersImpl implements Layers {
 
     private List<Path> getModulePathEntries(Layer layer) {
         List<String> moduleGavs = layer.getModuleGavs();
-        return Arrays.asList(maven.resolve(moduleGavs).asPath());
+        return Arrays.asList(resolve.resolve(moduleGavs).asPath());
     }
 
     private Class<?> getMainClass(String main) throws ClassNotFoundException {

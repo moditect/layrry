@@ -26,7 +26,5 @@ public interface Layers {
         return new LayersBuilderImpl();
     }
 
-    Maven maven();
-
     void run(String main, String... args);
 }

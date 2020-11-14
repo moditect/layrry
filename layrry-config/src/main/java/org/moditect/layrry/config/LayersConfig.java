@@ -21,7 +21,7 @@ public class LayersConfig {
 
     private Map<String, Layer> layers;
     private Main main;
-    private Maven maven;
+    private Resolve resolve;
 
     public Map<String, Layer> getLayers() {
         return layers;
@@ -38,16 +38,16 @@ public class LayersConfig {
         this.main = main;
     }
 
-    public Maven getMaven() {
-        return maven;
+    public Resolve getResolve() {
+        return resolve;
     }
 
-    public void setMaven(Maven maven) {
-        this.maven = maven;
+    public void setResolve(Resolve resolve) {
+        this.resolve = resolve;
     }
 
     @Override
     public String toString() {
-        return "LayersConfig [layers=" + layers + ", main=" + main + ", maven=" + maven + "]";
+        return "LayersConfig [layers=" + layers + ", main=" + main + ", resolve=" + resolve + "]";
     }
 }

@@ -22,26 +22,26 @@ import java.nio.file.Path;
 /**
  * Configures Maven for remote artifact resolution.
  */
-public interface RemoteMaven {
+public interface RemoteResolve {
     /**
      * Sets whether to consult any repositories Maven (Maven local and remote); defaults to true.
      *
      * @param enabled Whether to consult any repositories Maven (Maven local and remote); defaults to true.
      * @return Modified instance of {@code RemoteMaven}
      */
-    RemoteMaven enabled(boolean enabled);
+    RemoteResolve enabled(boolean enabled);
 
     /**
-     * Configures this {@link RemoteMaven} from the specified file
+     * Configures this {@link RemoteResolve} from the specified file
      *
-     * @param file The file the {@link RemoteMaven} should be configured from
+     * @param file The file the {@link RemoteResolve} should be configured from
      * @return Modified instance of {@code RemoteMaven}
      * @throws IllegalArgumentException
      *             If the file is not specified, is a directory, or does not exist
      * @throws InvalidConfigurationFileException
      *             If the file is not in correct format
      */
-    RemoteMaven fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException;
+    RemoteResolve fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException;
 
     /**
      * Sets whether to consult any remote Maven Repository in resolution; defaults to false.
@@ -50,7 +50,7 @@ public interface RemoteMaven {
      * @param workOffline Whether to consult any remote Maven Repository in resolution; defaults to false.
      * @return Modified instance of {@code RemoteMaven}
      */
-    RemoteMaven workOffline(boolean workOffline);
+    RemoteResolve workOffline(boolean workOffline);
 
     /**
      * Sets whether to consult the Maven Central Repository in resolution; defaults to true.
@@ -58,5 +58,5 @@ public interface RemoteMaven {
      * @param useMavenCentral Whether to consult the Maven Central Repository in resolution; defaults to true.
      * @return Modified instance of {@code RemoteMaven}
      */
-    RemoteMaven withMavenCentralRepo(boolean useMavenCentral);
+    RemoteResolve withMavenCentralRepo(boolean useMavenCentral);
 }

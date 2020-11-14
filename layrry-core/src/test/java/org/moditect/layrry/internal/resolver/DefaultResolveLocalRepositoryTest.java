@@ -13,24 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.w3c.dom.ls.LSOutput;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertTrue;
 
-public class DefaultMavenLocalRepositoryTest {
+public class DefaultResolveLocalRepositoryTest {
     @Rule
     public TemporaryFolder repository = new TemporaryFolder();
 
@@ -44,10 +42,10 @@ public class DefaultMavenLocalRepositoryTest {
     @Test
     public void sanityCheck() {
         // given:
-        MavenLocalRepository localRepository = MavenLocalRepositories.createLocalRepository("test", repository.getRoot().toPath(), "default");
+        LocalRepository localRepository = LocalRepositories.createLocalRepository("test", repository.getRoot().toPath(), "default");
 
         // when:
-        Collection<LocalMavenResolvedArtifact> artifacts = localRepository.resolve();
+        Collection<LocalResolvedArtifact> artifacts = localRepository.resolve();
 
         // then:
         assertThat(artifacts, hasSize(3));

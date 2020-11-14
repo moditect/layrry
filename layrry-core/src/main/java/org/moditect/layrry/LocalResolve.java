@@ -15,15 +15,15 @@
  */
 package org.moditect.layrry;
 
-import org.moditect.layrry.internal.maven.MavenLocalRepositories;
-import org.moditect.layrry.internal.maven.MavenLocalRepository;
+import org.moditect.layrry.internal.resolver.LocalRepositories;
+import org.moditect.layrry.internal.resolver.LocalRepository;
 
 import java.nio.file.Path;
 
 /**
  * Configures Maven for local artifact resolution.
  */
-public interface LocalMaven {
+public interface LocalResolve {
     /**
      * Adds a local repository to use in resolution.
      *
@@ -34,7 +34,7 @@ public interface LocalMaven {
      * @throws IllegalArgumentException if name or layout are null or if layout is not "default", or if no path protocol is
      *                                  specified, or an unknown path protocol is found, or path is null
      */
-    LocalMaven withLocalRepo(String id, String path, String layout);
+    LocalResolve withLocalRepo(String id, String path, String layout);
 
     /**
      * See {@link #withLocalRepo(String, String, String)}
@@ -44,14 +44,14 @@ public interface LocalMaven {
      * @param layout the repository layout. Should always be "default" (may be reused one day by Maven with other values).
      * @return Modified instance of {@code LocalMaven}
      */
-    LocalMaven withLocalRepo(String id, Path path, String layout);
+    LocalResolve withLocalRepo(String id, Path path, String layout);
 
     /**
      * Adds a local repository to use in resolution. This repository should be built with
-     * {@link MavenLocalRepositories#createLocalRepository(String, Path, String)}
+     * {@link LocalRepositories#createLocalRepository(String, Path, String)}
      *
      * @param repository The local repository
      * @return Modified instance of {@code LocalMaven}
      */
-    LocalMaven withLocalRepo(MavenLocalRepository repository);
+    LocalResolve withLocalRepo(LocalRepository repository);
 }

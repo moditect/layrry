@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.NoResolvedResultException;
 import org.jboss.shrinkwrap.resolver.api.NonUniqueResultException;
@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
 
-public class EmptyMavenFormatStage implements MavenFormatStage {
+public class EmptyFormatStage implements MavenFormatStage {
     @Override
     public File[] asFile() {
         return new File[0];

@@ -13,71 +13,71 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
 import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
-import org.moditect.layrry.RemoteMaven;
+import org.moditect.layrry.RemoteResolve;
 
 import java.nio.file.Path;
 import java.util.Collection;
 
-public class ConfigurableRemoteMavenResolverSystemImpl implements ConfigurableRemoteMavenResolverSystem {
+public class ConfigurableRemoteArtifactResolverSystemImpl implements ConfigurableRemoteArtifactResolverSystem {
     private final ConfigurableMavenResolverSystem delegate;
     private boolean enabled = true;
 
-    public ConfigurableRemoteMavenResolverSystemImpl(ConfigurableMavenResolverSystem delegate) {
+    public ConfigurableRemoteArtifactResolverSystemImpl(ConfigurableMavenResolverSystem delegate) {
         this.delegate = delegate;
     }
 
     @Override
-    public RemoteMaven enabled(boolean enabled) {
+    public RemoteResolve enabled(boolean enabled) {
         this.enabled = enabled;
         return this;
     }
 
     @Override
-    public RemoteMaven fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException {
+    public RemoteResolve fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException {
         delegate.fromFile(file.toFile());
         return this;
     }
 
     @Override
-    public RemoteMaven workOffline(boolean workOffline) {
+    public RemoteResolve workOffline(boolean workOffline) {
         delegate.workOffline(workOffline);
         return this;
     }
 
     @Override
-    public RemoteMaven withMavenCentralRepo(boolean useMavenCentral) {
+    public RemoteResolve withMavenCentralRepo(boolean useMavenCentral) {
         delegate.withMavenCentralRepo(useMavenCentral);
         return this;
     }
 
     @Override
     public MavenFormatStage resolve() throws IllegalStateException, ResolutionException {
-        if (!enabled) return new EmptyMavenFormatStage();
+        if (!enabled) return new EmptyFormatStage();
         return delegate.resolve().withoutTransitivity();
     }
 
     @Override
     public MavenFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
-        if (!enabled) return new EmptyMavenFormatStage();
+        if (!enabled) return new EmptyFormatStage();
         return delegate.resolve(canonicalForm).withoutTransitivity();
     }
 
     @Override
     public MavenFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
-        if (!enabled) return new EmptyMavenFormatStage();
+        if (!enabled) return new EmptyFormatStage();
         return delegate.resolve(canonicalForms).withoutTransitivity();
     }
 
     @Override
     public MavenFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
-        if (!enabled) return new EmptyMavenFormatStage();
+        if (!enabled) return new EmptyFormatStage();
         return delegate.resolve(canonicalForms).withoutTransitivity();
     }
 }

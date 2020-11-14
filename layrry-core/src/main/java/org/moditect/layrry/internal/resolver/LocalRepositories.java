@@ -13,15 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import java.nio.file.Path;
 
-public final class MavenLocalRepositories {
+public final class LocalRepositories {
     /**
      * No instances
      */
-    private MavenLocalRepositories() {
+    private LocalRepositories() {
         throw new UnsupportedOperationException("No instances permitted");
     }
 
@@ -35,12 +35,12 @@ public final class MavenLocalRepositories {
      * @throws IllegalArgumentException for null or empty id
      * @throws RuntimeException         if an error occurred during <code>MavenLocalRepository</code> instance creation
      */
-    public static MavenLocalRepository createLocalRepository(final String id, final Path path, final String layout) {
+    public static LocalRepository createLocalRepository(final String id, final Path path, final String layout) {
         // Argument tests are inside the impl constructor
         if ("flat".equals(layout)) {
-            return new FlatMavenLocalRepository(id, path);
+            return new FlatLocalRepository(id, path);
         } else if ("default".equals(layout)) {
-            return new DefaultMavenLocalRepository(id, path);
+            return new DefaultLocalRepository(id, path);
         }
         throw new IllegalArgumentException("layout must be 'default' or 'flat.");
     }
@@ -54,12 +54,12 @@ public final class MavenLocalRepositories {
      * @return A new <code>MavenLocalRepository</code> with the given ID and Path.
      * @throws IllegalArgumentException for null or empty id or if the Path is technically wrong or null
      */
-    public static MavenLocalRepository createLocalRepository(final String id, final String path, final String layout)
+    public static LocalRepository createLocalRepository(final String id, final String path, final String layout)
         throws IllegalArgumentException {
         if ("flat".equals(layout)) {
-            return new FlatMavenLocalRepository(id, path);
+            return new FlatLocalRepository(id, path);
         } else if ("default".equals(layout)) {
-            return new DefaultMavenLocalRepository(id, path);
+            return new DefaultLocalRepository(id, path);
         }
         throw new IllegalArgumentException("layout must be 'default' or 'flat.");
     }

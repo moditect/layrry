@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.maven.PackagingType;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
@@ -35,7 +35,7 @@ class ArtifactUtils {
     private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(.*?)\\-(\\d[\\d+\\.]*?)\\.jar");
     private static final Pattern ARTIFACT_PATTERN2 = Pattern.compile("(.*?)\\-(\\d[\\d+\\-_A-Za-z\\.]*?)\\.jar");
 
-    static LocalMavenResolvedArtifact fromPaths(Path basedir, Path file) {
+    static LocalResolvedArtifact fromPaths(Path basedir, Path file) {
         String version = file.getParent().toFile().getName();
         String artifactId = file.getParent().getParent().toFile().getName();
 
@@ -58,17 +58,17 @@ class ArtifactUtils {
         }
 
         MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate(groupId, artifactId, version, PackagingType.JAR, classifier);
-        return new LocalMavenResolvedArtifactImpl(mavenCoordinate, file.toFile());
+        return new LocalResolvedArtifactImpl(mavenCoordinate, file.toFile());
     }
 
-    static LocalMavenResolvedArtifact fromFile(File file) {
+    static LocalResolvedArtifact fromFile(File file) {
         Matcher matcher = ARTIFACT_PATTERN.matcher(file.getName());
         if (matcher.matches()) {
             String artifactId = matcher.group(1);
             String version = matcher.group(2);
 
             MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate("*", artifactId, version, PackagingType.JAR, null);
-            return new LocalMavenResolvedArtifactImpl(mavenCoordinate, file);
+            return new LocalResolvedArtifactImpl(mavenCoordinate, file);
         }
 
         matcher = ARTIFACT_PATTERN2.matcher(file.getName());
@@ -79,20 +79,20 @@ class ArtifactUtils {
 
             // try to read /META-INF/maven/${groupId}/pom.properties
             // and match props.artifactId and props.version with file.name
-            LocalMavenResolvedArtifact artifact = resolveFromPomProperties(file, artifactId, version);
+            LocalResolvedArtifact artifact = resolveFromPomProperties(file, artifactId, version);
             if (artifact != null) {
                 return artifact;
             }
 
             // can't tell if version has classifier or not
             MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate("*", artifactId, version, PackagingType.JAR, null);
-            return new LocalMavenResolvedArtifactImpl(mavenCoordinate, file);
+            return new LocalResolvedArtifactImpl(mavenCoordinate, file);
         }
 
         return null;
     }
 
-    private static LocalMavenResolvedArtifact resolveFromPomProperties(File file, String artifactId, String version) {
+    private static LocalResolvedArtifact resolveFromPomProperties(File file, String artifactId, String version) {
         try (JarFile jarFile = new JarFile(file)) {
             for (JarEntry entry : Collections.list(jarFile.entries())) {
                 if (entry.getName().endsWith("pom.properties")) {
@@ -118,7 +118,7 @@ class ArtifactUtils {
                     }
 
                     MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate(props.getProperty("groupId"), artifactId, v, PackagingType.JAR, classifier);
-                    return new LocalMavenResolvedArtifactImpl(mavenCoordinate, file);
+                    return new LocalResolvedArtifactImpl(mavenCoordinate, file);
                 }
             }
         } catch (IOException ignored) {

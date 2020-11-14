@@ -13,12 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry.internal.maven;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -28,15 +30,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FlatMavenLocalRepository implements MavenLocalRepository {
+public class DefaultLocalRepository implements LocalRepository {
     private String id;
     private Path path;
 
-    FlatMavenLocalRepository(String id, String path) {
+    DefaultLocalRepository(String id, String path) {
         this(id, Paths.get(path));
     }
 
-    FlatMavenLocalRepository(String id, Path path) {
+    DefaultLocalRepository(String id, Path path) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
@@ -55,7 +57,7 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
 
     @Override
     public String getType() {
-        return "flat";
+        return "default";
     }
 
     @Override
@@ -64,13 +66,13 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
     }
 
     @Override
-    public Collection<LocalMavenResolvedArtifact> resolve() throws IllegalStateException, ResolutionException {
+    public Collection<LocalResolvedArtifact> resolve() throws IllegalStateException, ResolutionException {
         return getLocalMavenResolvedArtifacts()
             .collect(Collectors.toSet());
     }
 
     @Override
-    public Collection<LocalMavenResolvedArtifact> resolve(String canonicalForm) throws IllegalStateException, ResolutionException {
+    public Collection<LocalResolvedArtifact> resolve(String canonicalForm) throws IllegalStateException, ResolutionException {
         MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate(canonicalForm);
 
         return getLocalMavenResolvedArtifacts()
@@ -79,7 +81,7 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
     }
 
     @Override
-    public Collection<LocalMavenResolvedArtifact> resolve(String... canonicalForms) throws IllegalStateException, ResolutionException {
+    public Collection<LocalResolvedArtifact> resolve(String... canonicalForms) throws IllegalStateException, ResolutionException {
         if (canonicalForms == null || canonicalForms.length == 0) {
             return Collections.emptySet();
         }
@@ -94,7 +96,7 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
     }
 
     @Override
-    public Collection<LocalMavenResolvedArtifact> resolve(Collection<String> canonicalForms) throws IllegalStateException, ResolutionException {
+    public Collection<LocalResolvedArtifact> resolve(Collection<String> canonicalForms) throws IllegalStateException, ResolutionException {
         if (canonicalForms == null || canonicalForms.isEmpty()) {
             return Collections.emptySet();
         }
@@ -108,9 +110,18 @@ public class FlatMavenLocalRepository implements MavenLocalRepository {
             .collect(Collectors.toSet());
     }
 
-    private Stream<LocalMavenResolvedArtifact> getLocalMavenResolvedArtifacts() {
-        return Arrays.stream(path.toFile()
-            .listFiles(file -> file.isFile() && file.getName().endsWith(".jar")))
-            .map(ArtifactUtils::fromFile);
+    private Stream<LocalResolvedArtifact> getLocalMavenResolvedArtifacts() {
+        try {
+            return Files.walk(path)
+                .filter(Files::isRegularFile)
+                .filter(p -> p.toFile().getName().endsWith(".jar"))
+                .map(this::toLocalMavenResolvedArtifact);
+        } catch (IOException e) {
+            return Collections.<LocalResolvedArtifact>emptySet().stream();
+        }
+    }
+
+    private LocalResolvedArtifact toLocalMavenResolvedArtifact(Path file) {
+        return ArtifactUtils.fromPaths(path, file);
     }
 }
