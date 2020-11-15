@@ -20,7 +20,6 @@ import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
-import org.moditect.layrry.RemoteResolve;
 
 import java.nio.file.Path;
 import java.util.Collection;

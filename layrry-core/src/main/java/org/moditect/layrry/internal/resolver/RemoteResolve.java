@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.moditect.layrry;
+package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
 
@@ -32,16 +32,16 @@ public interface RemoteResolve {
     RemoteResolve enabled(boolean enabled);
 
     /**
-     * Configures this {@link org.moditect.layrry.internal.resolver.RemoteResolve} from the specified file
+     * Configures this {@link RemoteResolve} from the specified file
      *
-     * @param file The file the {@link org.moditect.layrry.internal.resolver.RemoteResolve} should be configured from
+     * @param file The file the {@link RemoteResolve} should be configured from
      * @return Modified instance of {@code RemoteMaven}
      * @throws IllegalArgumentException
      *             If the file is not specified, is a directory, or does not exist
      * @throws InvalidConfigurationFileException
      *             If the file is not in correct format
      */
-    RemoteResolve fromFile(Path file);
+    RemoteResolve fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException;
 
     /**
      * Sets whether to consult any remote Maven Repository in resolution; defaults to false.

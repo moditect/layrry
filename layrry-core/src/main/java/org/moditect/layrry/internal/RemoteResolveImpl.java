@@ -16,11 +16,11 @@
 package org.moditect.layrry.internal;
 
 import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
-import org.moditect.layrry.RemoteResolveCapture;
+import org.moditect.layrry.RemoteResolve;
 
 import java.nio.file.Path;
 
-public class RemoteResolveCaptureImpl implements RemoteResolveCapture {
+public class RemoteResolveImpl implements RemoteResolve {
     private boolean enabled = true;
     private boolean workOffline;
     private boolean useMavenCentral = true;
@@ -43,25 +43,25 @@ public class RemoteResolveCaptureImpl implements RemoteResolveCapture {
     }
 
     @Override
-    public RemoteResolveCaptureImpl enabled(boolean enabled) {
+    public RemoteResolveImpl enabled(boolean enabled) {
         this.enabled = enabled;
         return this;
     }
 
     @Override
-    public RemoteResolveCaptureImpl fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException {
+    public RemoteResolveImpl fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException {
         this.configFile = file;
         return this;
     }
 
     @Override
-    public RemoteResolveCaptureImpl workOffline(boolean workOffline) {
+    public RemoteResolveImpl workOffline(boolean workOffline) {
         this.workOffline = workOffline;
         return this;
     }
 
     @Override
-    public RemoteResolveCaptureImpl withMavenCentralRepo(boolean useMavenCentral) {
+    public RemoteResolveImpl withMavenCentralRepo(boolean useMavenCentral) {
         this.useMavenCentral = useMavenCentral;
         return this;
     }
