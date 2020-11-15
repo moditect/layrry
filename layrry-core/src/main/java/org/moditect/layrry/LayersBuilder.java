@@ -29,9 +29,9 @@ public interface LayersBuilder {
 
     LayerBuilder layer(String name, String derivedFrom);
 
-    LayersBuilder resolve(LocalResolveCapture resolve);
+    LayersBuilder resolve(LocalResolve resolve);
 
-    LayersBuilder resolve(RemoteResolveCapture resolve);
+    LayersBuilder resolve(RemoteResolve resolve);
 
     Layers build();
 }

@@ -15,7 +15,7 @@
  */
 package org.moditect.layrry.internal;
 
-import org.moditect.layrry.LocalResolveCapture;
+import org.moditect.layrry.LocalResolve;
 import org.moditect.layrry.internal.resolver.LocalRepositories;
 import org.moditect.layrry.internal.resolver.LocalRepository;
 
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LocalResolveCaptureImpl implements LocalResolveCapture {
+public class LocalResolveImpl implements LocalResolve {
     private final List<LocalRepository> localRepositories = new ArrayList<>();
 
     final List<LocalRepository> localRepositories() {
@@ -32,19 +32,19 @@ public class LocalResolveCaptureImpl implements LocalResolveCapture {
     }
 
     @Override
-    public LocalResolveCaptureImpl withLocalRepo(String id, String path, String layout) {
+    public LocalResolveImpl withLocalRepo(String id, String path, String layout) {
         localRepositories.add(LocalRepositories.createLocalRepository(id, path, layout));
         return this;
     }
 
     @Override
-    public LocalResolveCaptureImpl withLocalRepo(String id, Path path, String layout) {
+    public LocalResolveImpl withLocalRepo(String id, Path path, String layout) {
         localRepositories.add(LocalRepositories.createLocalRepository(id, path, layout));
         return this;
     }
 
     @Override
-    public LocalResolveCaptureImpl withLocalRepo(LocalRepository repository) {
+    public LocalResolveImpl withLocalRepo(LocalRepository repository) {
         localRepositories.add(repository);
         return this;
     }

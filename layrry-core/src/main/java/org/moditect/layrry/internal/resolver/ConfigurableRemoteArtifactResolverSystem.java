@@ -15,8 +15,6 @@
  */
 package org.moditect.layrry.internal.resolver;
 
-import org.moditect.layrry.RemoteResolve;
-
 /**
  * Entry point of a remote Maven-based Resolver system which supports configuration
  */

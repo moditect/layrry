@@ -15,12 +15,12 @@
  */
 package org.moditect.layrry.internal;
 
+import org.moditect.layrry.LayerBuilder;
+import org.moditect.layrry.Layers;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.moditect.layrry.LayerBuilder;
-import org.moditect.layrry.Layers;
 
 public class LayerBuilderImpl implements LayerBuilder {
 

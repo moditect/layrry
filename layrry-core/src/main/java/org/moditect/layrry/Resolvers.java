@@ -15,15 +15,15 @@
  */
 package org.moditect.layrry;
 
-import org.moditect.layrry.internal.LocalResolveCaptureImpl;
-import org.moditect.layrry.internal.RemoteResolveCaptureImpl;
+import org.moditect.layrry.internal.LocalResolveImpl;
+import org.moditect.layrry.internal.RemoteResolveImpl;
 
 public class Resolvers {
-    public static LocalResolveCapture local() {
-        return new LocalResolveCaptureImpl();
+    public static LocalResolve local() {
+        return new LocalResolveImpl();
     }
 
-    public static RemoteResolveCapture remote() {
-        return new RemoteResolveCaptureImpl();
+    public static RemoteResolve remote() {
+        return new RemoteResolveImpl();
     }
 }

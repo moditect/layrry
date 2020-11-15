@@ -18,8 +18,8 @@ package org.moditect.layrry.internal;
 import org.moditect.layrry.LayerBuilder;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.LayersBuilder;
-import org.moditect.layrry.LocalResolveCapture;
-import org.moditect.layrry.RemoteResolveCapture;
+import org.moditect.layrry.LocalResolve;
+import org.moditect.layrry.RemoteResolve;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ public class LayersBuilderImpl implements LayersBuilder {
     private LayerBuilderImpl currentLayer;
     private final Map<String, Component> layers = new LinkedHashMap<>();
     private final Set<PluginsDirectory> pluginsDirectories = new HashSet<>();
-    private final List<LocalResolveCapture> localResolvers = new ArrayList<>();
-    private final List<RemoteResolveCapture> remoteResolvers = new ArrayList<>();
+    private final List<LocalResolve> localResolvers = new ArrayList<>();
+    private final List<RemoteResolve> remoteResolvers = new ArrayList<>();
 
     @Override
     public LayersBuilder pluginsDirectory(String name, Path directory, List<String> parents) {
@@ -63,13 +63,13 @@ public class LayersBuilderImpl implements LayersBuilder {
     }
 
     @Override
-    public LayersBuilder resolve(LocalResolveCapture resolve) {
+    public LayersBuilder resolve(LocalResolve resolve) {
         if (null != resolve) localResolvers.add(resolve);
         return this;
     }
 
     @Override
-    public LayersBuilder resolve(RemoteResolveCapture resolve) {
+    public LayersBuilder resolve(RemoteResolve resolve) {
         if (null != resolve) remoteResolvers.add(resolve);
         return this;
     }

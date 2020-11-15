@@ -17,9 +17,6 @@ package org.moditect.layrry.internal.resolver;
 
 import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-import org.moditect.layrry.LocalResolve;
-import org.moditect.layrry.Resolve;
-import org.moditect.layrry.RemoteResolve;
 
 import java.util.Collection;
 

@@ -15,8 +15,6 @@
  */
 package org.moditect.layrry.internal.resolver;
 
-import org.moditect.layrry.LocalResolve;
-
 /**
  * Entry point of a local Maven-based Resolver system which supports configuration
  */

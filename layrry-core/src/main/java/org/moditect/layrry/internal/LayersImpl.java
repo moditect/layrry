@@ -19,8 +19,8 @@ import io.methvin.watcher.DirectoryChangeEvent;
 import io.methvin.watcher.DirectoryChangeEvent.EventType;
 import io.methvin.watcher.DirectoryWatcher;
 import org.moditect.layrry.Layers;
-import org.moditect.layrry.LocalResolveCapture;
-import org.moditect.layrry.RemoteResolveCapture;
+import org.moditect.layrry.LocalResolve;
+import org.moditect.layrry.RemoteResolve;
 import org.moditect.layrry.internal.jfr.PluginLayerAddedEvent;
 import org.moditect.layrry.internal.jfr.PluginLayerRemovedEvent;
 import org.moditect.layrry.internal.resolver.ResolveImpl;
@@ -77,18 +77,18 @@ public class LayersImpl implements Layers {
     private int pluginIndex = 0;
 
     public LayersImpl(Set<PluginsDirectory> pluginsDirectories, Map<String, Component> components,
-                      List<LocalResolveCapture> localResolveCaptures,
-                      List<RemoteResolveCapture> remoteResolveCaptures) {
+                      List<LocalResolve> localResolves,
+                      List<RemoteResolve> remoteResolves) {
         this.components = Collections.unmodifiableMap(components);
         this.moduleLayers = new ConcurrentHashMap<>();
         this.pluginsDirectories = Collections.unmodifiableSet(pluginsDirectories);
 
-        // apply captures
-        for (LocalResolveCapture capture : localResolveCaptures) {
-            ((LocalResolveCaptureImpl) capture).localRepositories().forEach(resolve.local()::withLocalRepo);
+        // apply resolvers
+        for (LocalResolve capture : localResolves) {
+            ((LocalResolveImpl) capture).localRepositories().forEach(resolve.local()::withLocalRepo);
         }
-        for (RemoteResolveCapture capture : remoteResolveCaptures) {
-            RemoteResolveCaptureImpl remote = (RemoteResolveCaptureImpl) capture;
+        for (RemoteResolve capture : remoteResolves) {
+            RemoteResolveImpl remote = (RemoteResolveImpl) capture;
             resolve.remote().enabled(remote.enabled());
             resolve.remote().workOffline(remote.workOffline());
             resolve.remote().withMavenCentralRepo(remote.useMavenCentral());
