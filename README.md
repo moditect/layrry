@@ -167,7 +167,7 @@ The Layrry Launcher accepts the following arguments:
 ## Using jbang
 
 [jbang](https://github.com/jbangdev/jbang) can launch self contained Java sources, JShell scripts, JARs. jbang has a feature
-that allows you to tey out Layrry withlut having to install or build Layrry yourself. You only need a JDK (11+ is preferred)
+that allows you to try out Layrry without having to install or build Layrry yourself. You only need a JDK (11+ is preferred)
 and jbang installed. Once you do, you may invoke the previous example with
 
 ```sh
