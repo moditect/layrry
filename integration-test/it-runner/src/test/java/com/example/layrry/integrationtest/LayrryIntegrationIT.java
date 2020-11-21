@@ -21,8 +21,9 @@ import org.moditect.layrry.Resolvers;
 import org.moditect.layrry.launcher.LayrryLauncher;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class LayrryIntegrationTest extends AbstractIntegrationTestCase {
+public class LayrryIntegrationIT extends AbstractIntegrationTestCase {
     @Test
     public void runLayersFromApi() {
         Layers layers = Layers.builder()
