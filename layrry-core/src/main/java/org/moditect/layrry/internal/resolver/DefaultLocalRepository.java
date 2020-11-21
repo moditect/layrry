@@ -30,6 +30,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Organizes artifacts in a directory tree that follows he Maven coordinate conventions.
+ *
+ * <pre>
+ *  repodir
+ *   |-- com
+ *   |    \-- acme
+ *   |        \-- foo
+ *   |            \-- 1.0.0
+ *   |                \-- foo-1.0.0.jar
+ *   \-- org
+ *        \-- random
+ *            \-- bar
+ *                \-- 1.0.0
+ *                    \-- bar-2.0.0.jar
+ * </pre>
+ */
 public class DefaultLocalRepository implements LocalRepository {
     private String id;
     private Path path;
