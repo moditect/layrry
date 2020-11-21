@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Organizes artifacts in a directory tree that follows he Maven coordinate conventions.
+ * Organizes artifacts in a directory tree that follows the Maven coordinate conventions.
  *
  * <pre>
  *  repodir
