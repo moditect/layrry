@@ -321,7 +321,7 @@ layers.run("com.example.app/com.example.app.App", "Alice");
 
 Layrry relies on Maven's API to resolve artifacts. By default, Maven Local, Maven Central and every other setting configured
 at `~/.m2/settings.xml` are available to Layrry. You can tweak and configure those settings by editing the `~/.m2/settings.xml`
-file. Alternatively you may instruct larry to use a different configuration file, skip querying Maven Central, or stop
+file. Alternatively you may instruct Layrry to use a different configuration file, skip querying Maven Central, or stop
 all resolutions via remote repositories.
 
 ### Disable All Remote Maven Repositories
