@@ -317,6 +317,143 @@ Layers layers = Layers.builder()
 layers.run("com.example.app/com.example.app.App", "Alice");
 ```
 
+## Configuring Artifact Resolution
+
+Layrry relies on Maven's API to resolve artifacts. By default, Maven Local, Maven Central and every other setting configured
+at `~/.m2/settings.xml` are available to Layrry. You can tweak and configure those settings by editing the `~/.m2/settings.xml`
+file. Alternatively you may instruct larry to use a different configuration file, skip querying Maven Central, or stop
+all resolutions via remote repositories.
+
+### Disable All Remote Maven Repositories
+
+Java
+```java
+Layers layers = Layers.builder()
+    .resolve(Resolvers.remote().workOffline(true))
+    .layer(...)
+```
+
+Yaml
+```yaml
+resolve:
+  workOffline: true
+  ...
+```
+
+Toml
+```toml
+[resolve]
+  workOffline = true
+  ...
+```
+
+### Disable All Remote and Local Maven Repositories
+
+Java
+```java
+Layers layers = Layers.builder()
+    .resolve(Resolvers.remote().enabled(false))
+    .layer(...)
+```
+
+Yaml
+```yaml
+resolve:
+  remote: false
+  ...
+```
+
+Toml
+```toml
+[resolve]
+  remote = false
+  ...
+```
+
+### Use Alternate Maven Settings File
+
+Java
+```java
+Layers layers = Layers.builder()
+    .resolve(Resolvers.remote()
+         .fromFile(Paths.get("/path/to/settings.xml")))
+    .layer(...)
+```
+
+Yaml
+```yaml
+resolve:
+  fromFile: "/path/to/settings.xml"
+  ...
+```
+
+Toml
+```toml
+[resolve]
+  fromFile = "/path/to/settings.xml"
+  ...
+```
+
+## Local Artifact Resolution
+Layrry can resolve artifacts from additional local sources. These sources must follow specific layouts for organizing artifacts.
+Currently `flat` and `default` layouts are supported, which are provided by Maven and Gradle plugins. Local repositories will
+always be queried first, then any remote repositories if available.
+
+### Flat Layout
+This layout organizes all artifacts in a single directory, for example
+
+```sh
+repodir
+ |-- foo-1.0.0.jar
+ \-- bar-2.0.0.jar
+```
+
+### Default Layout
+This layout organizes all artifacts following the Maven coordinates conventions, for example
+
+```sh
+repodir
+  |-- com
+  |    \-- acme
+  |        \-- foo
+  |            \-- 1.0.0
+  |                \-- foo-1.0.0.jar
+  \-- org
+       \-- random
+           \-- bar
+               \-- 1.0.0
+                   \-- bar-2.0.0.jar
+```
+
+### Use Local Repositories
+
+Java
+```java
+Layers layers = Layers.builder()
+    .resolve(Resolvers.local()
+        .withLocalRepo("repoName", Paths.get("/path/to/repository/directory").toAbsolutePath(), "flat"))
+    ...
+```
+
+Yaml
+```yaml
+resolve:
+  localRepositories:
+    repoName:
+      layout: "flat"
+      path: "/path/to/repository/directory"
+```
+
+Toml
+```toml
+[resolve.localRepositories.repoName]
+  layout = "flat"
+  path   = "/path/to/repository/directory"
+```
+
+The path may be absolute as shown in the examples or relative, in which it will be resolved relative to the
+config file path.
+
 ## Building Layrry
 
 Layrry is not available on Maven Central yet.

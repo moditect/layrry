@@ -28,6 +28,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Organizes artifacts in a single directory.
+ *
+ * <pre>
+ *  repodir
+ *   |-- foo-1.0.0.jar
+ *   \-- bar-2.0.0.jar
+ * </pre>
+ */
 public class FlatLocalRepository implements LocalRepository {
     private String id;
     private Path path;
