@@ -30,7 +30,7 @@ public class Args {
     private String layersConfig;
 
     @Parameter(names = "--properties", description = "Additional config properties")
-    private File properties;
+    private String properties;
 
     @Parameter(names = "--basedir", description = "Base directory for resolving relative paths")
     private File basedir;
@@ -43,7 +43,7 @@ public class Args {
         return layersConfig;
     }
 
-    public File getProperties() {
+    public String getProperties() {
         return properties;
     }
 

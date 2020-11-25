@@ -28,7 +28,7 @@
     <fileSets>
         <fileSet>
             <!--
-            Apparently this variable is not availabel during assembly
+            Apparently this variable is not available during assembly
             <directory>${session.executionRootDirectory}</directory>
             -->
             <directory>${project.basedir}/../</directory>

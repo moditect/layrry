@@ -456,7 +456,7 @@ repodir
   \-- org
        \-- random
            \-- bar
-               \-- 1.0.0
+               \-- 2.0.0
                    \-- bar-2.0.0.jar
 ```
 

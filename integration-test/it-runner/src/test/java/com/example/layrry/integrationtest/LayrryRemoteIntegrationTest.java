@@ -43,4 +43,15 @@ public class LayrryRemoteIntegrationTest extends AbstractRemoteIntegrationTestCa
 
         assertOutput();
     }
+
+    @Test
+    public void runVersionedLayersFromYaml() throws Exception {
+        LayrryLauncher.launch("--layers-config",
+            serverUri + "layers-versioned.yml",
+            "--properties",
+            serverUri + "versions.properties",
+            "Alice");
+
+        assertOutput();
+    }
 }
