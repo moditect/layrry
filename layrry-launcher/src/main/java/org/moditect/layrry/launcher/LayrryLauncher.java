@@ -31,6 +31,8 @@ import java.nio.file.Paths;
  * <code>
  * LayrryLauncher --layers-config &lt;path/to/layrry.yml&gt;
  * LayrryLauncher --layers-config &lt;path/to/layrry.yml&gt; --properties &lt;path/to/layrry.properties&gt;
+ * LayrryLauncher --layers-config https://host/path/to/layrry.yml --properties &lt;path/to/layrry.properties&gt;
+ * LayrryLauncher --layers-config https://host/path/to/layrry.yml --properties https://host/path/to/layrry.properties
  * </code>
  */
 public final class LayrryLauncher {
@@ -47,11 +49,12 @@ public final class LayrryLauncher {
             .build()
             .parse(args);
 
-
-        File propertiesFile = arguments.getProperties();
         String[] parsedArgs = arguments.getMainArgs().toArray(new String[0]);
 
         File basedir = arguments.getBasedir();
+
+        String propertiesFile = arguments.getProperties();
+        URL propertiesFileUrl = toUrl(propertiesFile);
 
         String layersConfig = arguments.getLayersConfig();
         URL layersConfigUrl = toUrl(layersConfig);
@@ -63,8 +66,10 @@ public final class LayrryLauncher {
 
             if (null == propertiesFile) {
                 Layrry.run(layersConfigUrl, basedir.toPath(), parsedArgs);
+            } else if (null != propertiesFileUrl) {
+                Layrry.run(layersConfigUrl, basedir.toPath(), propertiesFileUrl, parsedArgs);
             } else {
-                Layrry.run(layersConfigUrl, basedir.toPath(), propertiesFile.getAbsoluteFile().toPath(), parsedArgs);
+                Layrry.run(layersConfigUrl, basedir.toPath(), Paths.get(propertiesFile).toAbsolutePath(), parsedArgs);
             }
         } else {
             Path layersConfigPath = Paths.get(layersConfig).toAbsolutePath();
@@ -76,8 +81,10 @@ public final class LayrryLauncher {
 
             if (null == propertiesFile) {
                 Layrry.run(layersConfigPath, basedirPath, parsedArgs);
+            } else if (null != propertiesFileUrl) {
+                Layrry.run(layersConfigPath, basedir.toPath(), propertiesFileUrl, parsedArgs);
             } else {
-                Layrry.run(layersConfigPath, basedirPath, propertiesFile.getAbsoluteFile().toPath(), parsedArgs);
+                Layrry.run(layersConfigPath, basedir.toPath(), Paths.get(propertiesFile).toAbsolutePath(), parsedArgs);
             }
         }
     }

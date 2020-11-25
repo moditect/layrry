@@ -44,6 +44,10 @@ public final class Layrry {
         launch(basedir, LayersConfigLoader.loadConfig(layersConfigUrl, propertiesFile), args);
     }
 
+    public static void run(URL layersConfigUrl, Path basedir, URL propertiesFileUrl, String... args) {
+        launch(basedir, LayersConfigLoader.loadConfig(layersConfigUrl, propertiesFileUrl), args);
+    }
+
     public static void run(Path layersConfigFile, Path basedir, String... args) {
         if (!layersConfigFile.toFile().exists()) {
             throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
@@ -61,6 +65,14 @@ public final class Layrry {
         }
 
         launch(basedir, LayersConfigLoader.loadConfig(layersConfigFile, propertiesFile), args);
+    }
+
+    public static void run(Path layersConfigFile, Path basedir, URL propertiesFileUrl, String... args) {
+        if (!layersConfigFile.toFile().exists()) {
+            throw new IllegalArgumentException("Specified layers config file doesn't exist: " + layersConfigFile);
+        }
+
+        launch(basedir, LayersConfigLoader.loadConfig(layersConfigFile, propertiesFileUrl), args);
     }
 
     private static void launch(Path basedir, LayersConfig layersConfig, String... args) {

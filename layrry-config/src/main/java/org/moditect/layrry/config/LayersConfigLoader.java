@@ -54,6 +54,18 @@ public class LayersConfigLoader {
         return loadConfig(layersConfigUrl, properties);
     }
 
+    public static LayersConfig loadConfig(URL layersConfigUrl, URL propertiesFileUrl) {
+        Properties properties = new Properties();
+
+        try (InputStream inputStream = propertiesFileUrl.openStream()) {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            throw new IllegalStateException("Unexpected error reading properties from: " + propertiesFileUrl, e);
+        }
+
+        return loadConfig(layersConfigUrl, properties);
+    }
+
     public static LayersConfig loadConfig(Path layersConfigFile) {
         return loadConfig(layersConfigFile, new Properties());
     }
@@ -65,6 +77,18 @@ public class LayersConfigLoader {
             properties.load(inputStream);
         } catch (IOException e) {
             throw new IllegalStateException("Unexpected error reading properties file: " + propertiesFile, e);
+        }
+
+        return loadConfig(layersConfigFile, properties);
+    }
+
+    public static LayersConfig loadConfig(Path layersConfigFile, URL propertiesFileUrl) {
+        Properties properties = new Properties();
+
+        try (InputStream inputStream = propertiesFileUrl.openStream()) {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            throw new IllegalStateException("Unexpected error reading properties from: " + propertiesFileUrl, e);
         }
 
         return loadConfig(layersConfigFile, properties);
