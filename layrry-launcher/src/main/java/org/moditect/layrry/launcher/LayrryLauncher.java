@@ -82,9 +82,9 @@ public final class LayrryLauncher {
             if (null == propertiesFile) {
                 Layrry.run(layersConfigPath, basedirPath, parsedArgs);
             } else if (null != propertiesFileUrl) {
-                Layrry.run(layersConfigPath, basedir.toPath(), propertiesFileUrl, parsedArgs);
+                Layrry.run(layersConfigPath, basedirPath, propertiesFileUrl, parsedArgs);
             } else {
-                Layrry.run(layersConfigPath, basedir.toPath(), Paths.get(propertiesFile).toAbsolutePath(), parsedArgs);
+                Layrry.run(layersConfigPath, basedirPath, Paths.get(propertiesFile).toAbsolutePath(), parsedArgs);
             }
         }
     }
