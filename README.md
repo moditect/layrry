@@ -160,6 +160,8 @@ You can find the complete example in the tests of the Layrry project.
 
 The Layrry Launcher accepts the following arguments:
 
+ * --basedir: The base directory from which plugin directories will be resolved. Layrry will use the parent directory of 
+ the layers config file if this value is not set.
  * --layers-config: Path to the layers config file. The file must use any of the supported config formats. REQUIRED.
  * --properties: Path to additional properties in Java `.properties` format. These properties will be used to replace value
  placeholders found in the layers config file. OPTIONAL.
@@ -187,7 +189,6 @@ In order to do so, the module _org.moditect.layrry:layrry-platform_  must be add
 
 ```java
 public interface PluginLifecycleListener {
-
     void pluginAdded(PluginDescriptor plugin);
 
     void pluginRemoved(PluginDescriptor plugin);
@@ -309,6 +310,57 @@ This application can be launched as
 
 ```
 layrry-launcher-1.0-SNAPSHOT-all.jar --layers-config layers.toml --properties versions.properties
+```
+
+## Remote Configuration
+
+Layrry supports loading external configuration files (inputs to `--layers-config` and `--properties`) both from local and
+remote sources. For example, the previous `layers.toml` and `versions.properties` files could be accessed from a remote server
+that exposes those resources via HTTPS, such as
+
+```sh
+layrry-launcher-1.0-SNAPSHOT-all.jar \
+  --basedir /home/user/joe \
+  --layers-config https://server:port/path/to/layers.toml \
+  --properties https://server:port/path/to/versions.properties
+```
+
+It's important to note that setting the `--basedir` config flag is more important when remote layer configuration is in use,
+as that ensures plugin directories will be resolved from the same location, otherwise the basedir location will be inferred
+as `System.getProperty("user.dir")` which may produce unexpected results when invoked from different locations.
+
+Plugin directories are always local, even if defined in remote layer configuration files. You may mix remote and local
+resources as you deem necessary, that is, the following combinations are valid:
+
+**All remote**
+```sh
+layrry-launcher-1.0-SNAPSHOT-all.jar \
+  --basedir /home/user/joe \
+  --layers-config https://server:port/path/to/layers.toml \
+  --properties https://server:port/path/to/versions.properties
+```
+
+**All local**
+```sh
+layrry-launcher-1.0-SNAPSHOT-all.jar \
+  --basedir /home/user/joe \
+  --layers-config layers.toml \
+  --properties versions.properties
+```
+
+**Mixed**
+```sh
+layrry-launcher-1.0-SNAPSHOT-all.jar \
+  --basedir /home/user/joe \
+  --layers-config https://server:port/path/to/layers.toml \
+  --properties versions.properties
+```
+
+```sh
+layrry-launcher-1.0-SNAPSHOT-all.jar \
+  --basedir /home/user/joe \
+  --layers-config layers.toml \
+  --properties https://server:port/path/to/versions.properties
 ```
 
 ## Using the Layrry API
