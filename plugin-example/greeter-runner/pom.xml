@@ -79,28 +79,9 @@
                   <groupId>com.example.greeter</groupId>
                   <artifactId>greeter-en</artifactId>
                   <version>1.0.0</version>
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/layers/greeter-en</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-date-util-en</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>com.example.greeter</groupId>
-                  <artifactId>greeter-date-util</artifactId>
-                  <version>2.0.0</version>
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/layers/greeter-en</outputDirectory>
+                  <type>zip</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/layers</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -117,28 +98,9 @@
                   <groupId>com.example.greeter</groupId>
                   <artifactId>greeter-de</artifactId>
                   <version>1.0.0</version>
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/layers/greeter-de</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-date-util-de</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>com.example.greeter</groupId>
-                  <artifactId>greeter-date-util</artifactId>
-                  <version>1.0.0</version>
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/layers/greeter-de</outputDirectory>
+                  <type>zip</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/layers</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -155,28 +117,9 @@
                   <groupId>com.example.greeter</groupId>
                   <artifactId>greeter-fr</artifactId>
                   <version>1.0.0</version>
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/layers/greeter-fr</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-date-util-fr</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>com.example.greeter</groupId>
-                  <artifactId>greeter-date-util</artifactId>
-                  <version>2.0.0</version>
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/layers/greeter-fr</outputDirectory>
+                  <type>zip</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/layers</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>

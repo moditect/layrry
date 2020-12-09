@@ -20,15 +20,9 @@ import org.moditect.layrry.Layers;
 import org.moditect.layrry.LayersBuilder;
 import org.moditect.layrry.config.LayersConfig;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 /**
  * Creates a {@link Layers} instance based on a given configuration.
@@ -36,16 +30,12 @@ import java.util.stream.Collectors;
 public class LayersFactory {
 
     public Layers createLayers(LayersConfig layersConfig, Path layersConfigDir) {
-        Map<String, List<String>> layerDirsByName = new HashMap<>();
-
         LayersBuilder builder = Layers.builder();
-        for(Entry<String, org.moditect.layrry.config.Layer> layer : layersConfig.getLayers().entrySet()) {
+        for (Entry<String, org.moditect.layrry.config.Layer> layer : layersConfig.getLayers().entrySet()) {
             if (layer.getValue().getDirectory() != null) {
-                List<String> layerNames = handleDirectoryOfLayers(layer, layersConfigDir, builder);
-                layerDirsByName.put(layer.getKey(), layerNames);
-            }
-            else {
-                handleLayer(layer, layerDirsByName, builder);
+                handlePluginLayer(layer, layersConfigDir, builder);
+            } else {
+                handleLayer(layer, builder);
             }
         }
 
@@ -78,8 +68,8 @@ public class LayersFactory {
         return layers;
     }
 
-    private void handleLayer(Entry<String, org.moditect.layrry.config.Layer> layer, Map<String, List<String>> layerDirsByName,
-            LayersBuilder builder) {
+    private void handleLayer(Entry<String, org.moditect.layrry.config.Layer> layer,
+                             LayersBuilder builder) {
         LayerBuilder layerBuilder = builder.layer(layer.getKey());
 
         for (String module : layer.getValue().getModules()) {
@@ -87,59 +77,27 @@ public class LayersFactory {
         }
 
         for (String parent : layer.getValue().getParents()) {
-            List<String> layersFromDirectory = layerDirsByName.get(parent);
-
-            // if the parent is a plug-ins directory, add each contained plug-in as a parent
-            if (layersFromDirectory != null && !layersFromDirectory.isEmpty()) {
-                for (String layerFromDirectory : layersFromDirectory) {
-                    layerBuilder.withParent(layerFromDirectory);
-                }
-            }
-            else {
-                layerBuilder.withParent(parent);
-            }
+            layerBuilder.withParent(parent);
         }
     }
 
     /**
      * Processes a directory of layers, i.e. plug-ins.
      */
-    private List<String> handleDirectoryOfLayers(Entry<String, org.moditect.layrry.config.Layer> layer,
-            Path layersConfigDir, LayersBuilder builder) {
-        Path layersDir = layersConfigDir.resolve(layer.getValue().getDirectory()).normalize();
-        if (!Files.isDirectory(layersDir)) {
-            throw new IllegalArgumentException("Specified layer directory doesn't exist: " + layersDir);
+    private void handlePluginLayer(Entry<String, org.moditect.layrry.config.Layer> layer,
+                                   Path layersConfigDir, LayersBuilder builder) {
+        Path pluginDirectory = layersConfigDir.resolve(layer.getValue().getDirectory()).normalize();
+        if (!Files.isDirectory(pluginDirectory)) {
+            throw new IllegalArgumentException("Specified layer directory doesn't exist: " + pluginDirectory);
         }
 
-        builder.pluginsDirectory(layer.getKey(), layersDir, layer.getValue().getParents());
+        builder.pluginsDirectory(layer.getKey(), pluginDirectory, layer.getValue().getParents());
 
-        ArrayList<String> layerNames = new ArrayList<String>();
-        List<Path> layerDirs = getLayerDirs(layersDir);
-        for (Path layerDir : layerDirs) {
-            LayerBuilder layerBuilder = builder.layer(layerDir.getFileName().toString(), layer.getKey());
+        LayerBuilder layerBuilder = builder.layer(layer.getKey());
+        layerBuilder.withModulesIn(pluginDirectory);
 
-            layerBuilder.withModulesIn(layerDir);
-            layerNames.add(layerDir.getFileName().toString());
-            for (String parent : layer.getValue().getParents()) {
-                layerBuilder.withParent(parent);
-            }
-        }
-
-        return layerNames;
-    }
-
-    private List<Path> getLayerDirs(Path layersDir) {
-        List<Path> layers;
-        try {
-            layers = Files.walk(layersDir, 1)
-                         .filter(Files::isDirectory)
-                         .collect(Collectors.toList());
-            layers.remove(0);
-
-            return layers;
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+        for (String parent : layer.getValue().getParents()) {
+            layerBuilder.withParent(parent);
         }
     }
 }

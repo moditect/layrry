@@ -30,7 +30,7 @@ public abstract class Component {
 
     public static Component fromLayer(LayerBuilderImpl layer) {
         if (layer.getLayerDir() != null) {
-            return new Plugin(layer.getName(), layer.getDerivedFrom(), layer.getLayerDir(), layer.getParents());
+            return new Plugin(layer.getName(), layer.getLayerDir(), layer.getParents());
         }
         else {
             return new Layer(layer.getName(), layer.getModuleGavs(), layer.getParents());

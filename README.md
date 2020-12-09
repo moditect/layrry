@@ -220,6 +220,41 @@ You can find a complete example for the usage of dynamic plug-ins in the _vertx-
 Routes of the web application (_/members_, _/tournaments_) are contributed by plug-ins which can be added to or removed from the application at runtime.
 The _routes_ path shows all routes available at a given time.
 
+Plugins may be packaged in 3 ways:
+
+1. As a single JAR file. No nested JARs are allowed.
+2. As a Zip file. Multiple JARs may be packaged.
+3. As a Tar(.gz) file. Multiple JARs may be packaged.
+
+For Zip and Tar packages, the use of a root entry matching the name of containing file is permited, however it's preffered
+if said root entry were omitted. Some examples
+
+**Single JAR**
+```sh
+plugin-1.0.jar
+ |- com
+ |- com/acme
+ |- com/acme/Plugin.class
+ \- module-info.class
+```
+
+**Plain Zip (or Tar)**
+```sh
+plugin-1.0.zip
+ |- plugin-1.0.jar
+ |- dependency-foo-1.0.0.jar
+ \- dependency-bar-1.0.0.jar
+```
+
+**Root Zip (or Tar)**
+```sh
+plugin-1.0.zip
+ |- plugin-1.0
+ |- plugin-1.0/plugin-1.0.jar
+ |- plugin-1.0/dependency-foo-1.0.0.jar
+ \- plugin-1.0/dependency-bar-1.0.0.jar
+```
+
 ## Parameterized Layer Configuration
 
 Layrry supports the [Mustache](https://github.com/spullara/mustache.java) template syntax, enabling parameterization of
