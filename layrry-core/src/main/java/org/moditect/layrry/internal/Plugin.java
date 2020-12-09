@@ -26,8 +26,8 @@ public class Plugin extends Component {
 
     private final Path layerDir;
 
-    public Plugin(String name, String derivedFrom, Path layerDir, List<String> parents) {
-        super(derivedFrom + "-" + name, parents);
+    public Plugin(String name, Path layerDir, List<String> parents) {
+        super(name, parents);
         this.layerDir = layerDir;
     }
 
