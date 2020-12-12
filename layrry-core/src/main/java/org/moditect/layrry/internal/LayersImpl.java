@@ -120,7 +120,7 @@ public class LayersImpl implements Layers {
                 }
             }
 
-            if (!pluginLayersByName.isEmpty()) {
+            if (!pluginsDirectories.isEmpty()) {
                 Deployer deployer = new Deployer(pluginsDirectories);
                 for (Entry<String, ModuleLayer> plugin : pluginLayersByName.entrySet()) {
                     deployer.deploy(plugin.getKey(), plugin.getValue());
