@@ -30,6 +30,10 @@
   <packaging>jar</packaging>
   <name>Layrry Plugin Example Runner</name>
 
+  <properties>
+    <layers.dir>${project.build.directory}/layers</layers.dir>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.moditect.layrry</groupId>
@@ -81,7 +85,7 @@
                   <version>1.0.0</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/layers</outputDirectory>
+                  <outputDirectory>${layers.dir}</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -100,7 +104,7 @@
                   <version>1.0.0</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/layers</outputDirectory>
+                  <outputDirectory>${layers.dir}</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -119,7 +123,7 @@
                   <version>1.0.0</version>
                   <type>zip</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/layers</outputDirectory>
+                  <outputDirectory>${layers.dir}</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
