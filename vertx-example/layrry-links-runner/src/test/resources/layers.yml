@@ -1,0 +1,52 @@
+#
+#  Copyright 2020 The ModiTect authors
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+layers:
+  vertx:
+    modules:
+      - "io.vertx:vertx-core:4.0.0"
+      - "io.vertx:vertx-web:4.0.0"
+      - "io.vertx:vertx-web-common:4.0.0"
+      - "io.vertx:vertx-bridge-common:4.0.0"
+      - "io.netty:netty-all:4.1.49.Final"
+      - "com.fasterxml.jackson.core:jackson-core:2.11.3"
+      - "com.fasterxml.jackson.core:jackson-databind:2.11.3"
+      - "com.fasterxml.jackson.core:jackson-annotations:2.11.3"
+  log:
+    modules:
+      - "org.apache.logging.log4j:log4j-api:jar:2.13.1"
+      - "org.apache.logging.log4j:log4j-core:jar:2.13.1"
+      - "com.example.layrry.links:layrry-links-logconfig:1.0.0"
+  platform:
+    modules:
+      - "org.moditect.layrry:layrry-platform:1.0-SNAPSHOT"
+      - "com.example.layrry.links:layrry-links-core:1.0.0"
+    parents:
+      - "log"
+      - "vertx"
+  plugins1:
+    parents:
+      - "platform"
+      - "log"
+    directory: ../../../target/route-plugins1
+  plugins2:
+    parents:
+      - "platform"
+      - "log"
+    directory: ../../../target/route-plugins2
+main:
+  module: com.example.layrry.links.core
+  class: com.example.layrry.links.core.LayrryLinks
