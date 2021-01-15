@@ -68,6 +68,16 @@ public class DefaultLocalRepository implements LocalRepository {
     }
 
     @Override
+    public String toString() {
+        return new StringBuilder("DefaultLocalRepository[id=")
+            .append(id)
+            .append(", path=")
+            .append(path)
+            .append("]")
+            .toString();
+    }
+
+    @Override
     public String getId() {
         return id;
     }

@@ -24,7 +24,7 @@ public class RemoteResolveImpl implements RemoteResolve {
     private boolean enabled = true;
     private boolean workOffline;
     private boolean useMavenCentral = true;
-    private Path configFile;
+    private Path fromFile;
 
     boolean enabled() {
         return enabled;
@@ -38,8 +38,22 @@ public class RemoteResolveImpl implements RemoteResolve {
         return useMavenCentral;
     }
 
-    Path configFile() {
-        return configFile;
+    Path fromFile() {
+        return fromFile;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("RemoteResolve[enabled=")
+            .append(enabled)
+            .append(", workOffline=")
+            .append(workOffline)
+            .append(", useMavenCentral=")
+            .append(useMavenCentral)
+            .append(", fromFile=")
+            .append(fromFile)
+            .append("]")
+            .toString();
     }
 
     @Override
@@ -50,7 +64,7 @@ public class RemoteResolveImpl implements RemoteResolve {
 
     @Override
     public RemoteResolveImpl fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException {
-        this.configFile = file;
+        this.fromFile = file;
         return this;
     }
 
