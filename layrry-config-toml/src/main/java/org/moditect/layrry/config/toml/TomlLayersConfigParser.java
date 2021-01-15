@@ -58,20 +58,13 @@ public class TomlLayersConfigParser implements LayersConfigParser {
 
     @Override
     public LayersConfig parse(InputStream inputStream) throws IOException {
-        TomlTable toml = Toml.from(inputStream);
-
-        LayersConfig config = new LayersConfig();
-
-        readLayers(config, (TomlTable) toml.get("layers"));
-        readMain(config, (TomlTable) toml.get("main"));
-        readMaven(config, (TomlTable) toml.get("maven"));
-
-        return config;
+        return readFromToml(Toml.from(inputStream));
     }
 
     private static LayersConfig readFromToml(TomlTable toml) {
         LayersConfig config = new LayersConfig();
 
+        readResolve(config, (TomlTable) toml.get("resolve"));
         readLayers(config, (TomlTable) toml.get("layers"));
         readMain(config, (TomlTable) toml.get("main"));
 
@@ -86,15 +79,15 @@ public class TomlLayersConfigParser implements LayersConfigParser {
         main.setClazz(String.valueOf(table.get("class")));
     }
 
-    private static void readMaven(LayersConfig config, TomlTable table) {
+    private static void readResolve(LayersConfig config, TomlTable table) {
         Resolve resolve = new Resolve();
         config.setResolve(resolve);
 
         if (table != null) {
             resolve.setRemote((Boolean) table.getOrDefault("remote", true));
-            resolve.setOffline((Boolean) table.getOrDefault("offline", false));
+            resolve.setWorkOffline((Boolean) table.getOrDefault("workOffline", false));
             resolve.setUseMavenCentral((Boolean) table.getOrDefault("useMavenCentral", true));
-            resolve.setConfigFile((String) table.get("configFile"));
+            resolve.setFromFile((String) table.get("fromFile"));
             readRepositories(resolve, (TomlTable) table.get("localRepositories"));
         }
     }

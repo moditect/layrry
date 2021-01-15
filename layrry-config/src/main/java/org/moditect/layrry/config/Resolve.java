@@ -22,9 +22,9 @@ public class Resolve {
 
     private Map<String, Repository> localRepositories = new LinkedHashMap<>();
     private boolean remote = true;
-    private boolean offline = false;
+    private boolean workOffline = false;
     private boolean useMavenCentral = true;
-    private String configFile;
+    private String fromFile;
 
     public Map<String, Repository> getLocalRepositories() {
         return localRepositories;
@@ -42,12 +42,12 @@ public class Resolve {
         this.remote = remote;
     }
 
-    public boolean isOffline() {
-        return offline;
+    public boolean isWorkOffline() {
+        return workOffline;
     }
 
-    public void setOffline(boolean offline) {
-        this.offline = offline;
+    public void setWorkOffline(boolean workOffline) {
+        this.workOffline = workOffline;
     }
 
     public boolean isUseMavenCentral() {
@@ -58,16 +58,20 @@ public class Resolve {
         this.useMavenCentral = useMavenCentral;
     }
 
-    public String getConfigFile() {
-        return configFile;
+    public String getFromFile() {
+        return fromFile;
     }
 
-    public void setConfigFile(String configFile) {
-        this.configFile = configFile;
+    public void setFromFile(String fromFile) {
+        this.fromFile = fromFile;
     }
 
     @Override
     public String toString() {
-        return "Resolve [remote=" + remote + ", offline=" + offline + ", useMavenCentral=" + useMavenCentral + ", localRepositories=" + localRepositories + "]";
+        return "Resolve [remote=" + remote +
+            ", workOffline=" + workOffline +
+            ", useMavenCentral=" + useMavenCentral +
+            ", fromFile=" + fromFile +
+            ", localRepositories=" + localRepositories + "]";
     }
 }

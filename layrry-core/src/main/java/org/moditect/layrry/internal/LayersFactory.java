@@ -18,7 +18,11 @@ package org.moditect.layrry.internal;
 import org.moditect.layrry.LayerBuilder;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.LayersBuilder;
+import org.moditect.layrry.LocalResolve;
+import org.moditect.layrry.RemoteResolve;
+import org.moditect.layrry.Resolvers;
 import org.moditect.layrry.config.LayersConfig;
+import org.moditect.layrry.config.Resolve;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +42,31 @@ public class LayersFactory {
                 handleLayer(layer, builder);
             }
         }
+
+        return configureResolve(layersConfig, layersConfigDir, builder);
+    }
+
+    private Layers configureResolve(LayersConfig layersConfig, Path layersConfigDir, LayersBuilder builder) {
+        Resolve resolve = layersConfig.getResolve();
+        if (resolve == null) {
+            return builder.build();
+        }
+
+        RemoteResolve remote = Resolvers.remote();
+        remote.enabled(resolve.isRemote());
+        remote.workOffline(resolve.isWorkOffline());
+        remote.withMavenCentralRepo(resolve.isUseMavenCentral());
+        String fromFilePath = resolve.getFromFile();
+        if (fromFilePath != null && !fromFilePath.isEmpty()) {
+            remote.fromFile(layersConfigDir.resolve(resolve.getFromFile()).toAbsolutePath());
+        }
+        builder.resolve(remote);
+
+        LocalResolve local = Resolvers.local();
+        resolve.getLocalRepositories().forEach((id, repository) -> local.withLocalRepo(id,
+            layersConfigDir.resolve(repository.getPath()),
+            repository.getLayout()));
+        builder.resolve(local);
 
         return builder.build();
     }

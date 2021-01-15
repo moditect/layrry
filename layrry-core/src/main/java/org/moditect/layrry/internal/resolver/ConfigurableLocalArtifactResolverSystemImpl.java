@@ -28,6 +28,14 @@ public class ConfigurableLocalArtifactResolverSystemImpl implements Configurable
     private final Map<String, LocalRepository> localRepositories = new LinkedHashMap<>();
 
     @Override
+    public String toString() {
+        return new StringBuilder("ConfigurableLocalArtifactResolverSystem[repositories=")
+            .append(localRepositories)
+            .append("]")
+            .toString();
+    }
+
+    @Override
     public ConfigurableLocalArtifactResolverSystem withLocalRepo(String id, String path, String layout) {
         withLocalRepo(LocalRepositories.createLocalRepository(id, path, layout));
         return this;

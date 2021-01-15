@@ -128,13 +128,30 @@ class ArtifactUtils {
     }
 
     static boolean coordinatesMatch(MavenCoordinate a, MavenCoordinate b) {
+        // Do we have an exact match?
         if (a.equals(b) && a.getVersion().equals(b.getVersion())) return true;
+
+        // Is the group missing?
         if ("*".equals(a.getGroupId()) || "*".equals(b.getGroupId())) {
-            MavenCoordinate a1 = MavenCoordinates.createCoordinate("*", a.getArtifactId(), a.getVersion(), a.getPackaging(), a.getClassifier());
-            MavenCoordinate b1 = MavenCoordinates.createCoordinate("*", b.getArtifactId(), b.getVersion(), b.getPackaging(), b.getClassifier());
-            return a1.equals(b1) && a1.getVersion().equals(b1.getVersion());
+            a = MavenCoordinates.createCoordinate("*", a.getArtifactId(), a.getVersion(), a.getPackaging(), a.getClassifier());
+            b = MavenCoordinates.createCoordinate("*", b.getArtifactId(), b.getVersion(), b.getPackaging(), b.getClassifier());
+        }
+        if (a.equals(b) && a.getVersion().equals(b.getVersion())) return true;
+
+        // We may have failed to detect a classifier on 'a' but 'b' may have it
+        String ac = a.getClassifier();
+        String bc = b.getClassifier();
+
+        if (!isBlank(bc) && isBlank(ac)) {
+            // let b.version += " " + b.classifier
+            // b.classifier = null
+            b = MavenCoordinates.createCoordinate(b.getGroupId(), b.getArtifactId(), b.getVersion() +"-"+ bc, b.getPackaging(), null);
         }
 
-        return false;
+        return a.equals(b) && a.getVersion().equals(b.getVersion());
+    }
+
+    private static boolean isBlank(String s) {
+        return s == null || s.isBlank();
     }
 }
