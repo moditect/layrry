@@ -95,7 +95,7 @@ public class LayersImpl implements Layers {
             resolve.remote().enabled(remote.enabled());
             resolve.remote().workOffline(remote.workOffline());
             resolve.remote().withMavenCentralRepo(remote.useMavenCentral());
-            if (null != remote.configFile()) resolve.remote().fromFile(remote.configFile());
+            if (null != remote.fromFile()) resolve.remote().fromFile(remote.fromFile());
         }
 
         try {

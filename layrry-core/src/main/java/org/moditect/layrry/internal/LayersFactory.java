@@ -18,7 +18,11 @@ package org.moditect.layrry.internal;
 import org.moditect.layrry.LayerBuilder;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.LayersBuilder;
+import org.moditect.layrry.LocalResolve;
+import org.moditect.layrry.RemoteResolve;
+import org.moditect.layrry.Resolvers;
 import org.moditect.layrry.config.LayersConfig;
+import org.moditect.layrry.config.Resolve;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,33 +43,32 @@ public class LayersFactory {
             }
         }
 
-        return configureMaven(layersConfig, layersConfigDir, builder.build());
+        return configureResolve(layersConfig, layersConfigDir, builder);
     }
 
-    private Layers configureMaven(LayersConfig layersConfig, Path layersConfigDir, Layers layers) {
-        if (layersConfig.getResolve() == null) {
-            return layers;
+    private Layers configureResolve(LayersConfig layersConfig, Path layersConfigDir, LayersBuilder builder) {
+        Resolve resolve = layersConfig.getResolve();
+        if (resolve == null) {
+            return builder.build();
         }
 
-        /*
-        // configure remote
-        layers.getResolution().remote().enabled(layersConfig.getMaven().isRemote());
-        layers.getResolution().remote().workOffline(layersConfig.getMaven().isOffline());
-        layers.getResolution().remote().withMavenCentralRepo(layersConfig.getMaven().isUseMavenCentral());
-        String configFilePath = layersConfig.getMaven().getConfigFile();
-        if (configFilePath != null && !configFilePath.isEmpty()) {
-            layers.maven().remote().fromFile(layersConfigDir.resolve(configFilePath));
+        RemoteResolve remote = Resolvers.remote();
+        remote.enabled(resolve.isRemote());
+        remote.workOffline(resolve.isWorkOffline());
+        remote.withMavenCentralRepo(resolve.isUseMavenCentral());
+        String fromFilePath = resolve.getFromFile();
+        if (fromFilePath != null && !fromFilePath.isEmpty()) {
+            remote.fromFile(layersConfigDir.resolve(resolve.getFromFile()).toAbsolutePath());
         }
+        builder.resolve(remote);
 
-        // configure local
-        layersConfig.getMaven().getLocalRepositories().forEach((id, repository) -> {
-            layers.maven().local().withLocalRepo(id,
-                layersConfigDir.resolve(repository.getPath()),
-                repository.getLayout());
-        });
-        */
+        LocalResolve local = Resolvers.local();
+        resolve.getLocalRepositories().forEach((id, repository) -> local.withLocalRepo(id,
+            layersConfigDir.resolve(repository.getPath()),
+            repository.getLayout()));
+        builder.resolve(local);
 
-        return layers;
+        return builder.build();
     }
 
     private void handleLayer(Entry<String, org.moditect.layrry.config.Layer> layer,

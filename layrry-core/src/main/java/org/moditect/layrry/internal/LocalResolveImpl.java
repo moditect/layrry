@@ -32,6 +32,14 @@ public class LocalResolveImpl implements LocalResolve {
     }
 
     @Override
+    public String toString() {
+        return new StringBuilder("LocalResolve[repositories=")
+            .append(localRepositories)
+            .append("]")
+            .toString();
+    }
+
+    @Override
     public LocalResolveImpl withLocalRepo(String id, String path, String layout) {
         localRepositories.add(LocalRepositories.createLocalRepository(id, path, layout));
         return this;

@@ -58,6 +58,16 @@ public class FlatLocalRepository implements LocalRepository {
     }
 
     @Override
+    public String toString() {
+        return new StringBuilder("FlatLocalRepository[id=")
+            .append(id)
+            .append(", path=")
+            .append(path)
+            .append("]")
+            .toString();
+    }
+
+    @Override
     public String getId() {
         return id;
     }
