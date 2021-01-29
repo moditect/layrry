@@ -8,7 +8,7 @@ Layrry utilizes the Java Module System's notion of link:https://docs.oracle.com/
 allowing multiple versions of one module to be used within an application at the same time, as well as dynamically adding
 and removing modules at application runtime.
 
-The module graph is built either declaratively (using YAML descriptors) or programmatically (using a fluent API).
+The module graph is built either declaratively (using YAML or TOML descriptors) or programmatically (using a fluent API).
 
 Learn more about Layrry in this series of blog posts:
 
@@ -16,6 +16,8 @@ Learn more about Layrry in this series of blog posts:
 * link:https://www.morling.dev/blog/plugin-architectures-with-layrry-and-the-java-module-system/[Part 2: "Plug-in Architectures With Layrry and the Java Module System"]
 * Part 3: Dynamically loading Java modules at application runtime with Layrry (coming soon)
 * link:https://www.morling.dev/blog/class-unloading-in-layered-java-applications/[Part 4: "Class Unloading in Layered Java Applications"]
+
+Layrry also was presented at different (online) conferences and meet-ups, for example at vJUG (https://speakerdeck.com/gunnarmorling/plug-in-architectures-with-layrry-and-the-java-module-system-vjug[slides], https://www.youtube.com/watch?v=iJyys_LgG-U[recording]).
 
 == Why Layrry?
 
