@@ -1,5 +1,5 @@
 = Layrry - A Launcher and API for Modularized Java Applications
-:layrry-version: 1.0-SNAPSHOT
+:layrry-version: 1.0.0.Alpha1
 
 Layrry is a launcher and Java API for executing modularized Java applications.
 
