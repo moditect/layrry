@@ -392,6 +392,24 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.coderplus.maven.plugins</groupId>
+        <artifactId>copy-rename-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>copy-license-file</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <sourceFile>${session.executionRootDirectory}/LICENSE.txt</sourceFile>
+              <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-layrry</destinationFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
