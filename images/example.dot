@@ -9,7 +9,7 @@ digraph "package dependencies"
     subgraph cluster_log {
         node [style=filled];
     	"org.apache.logging.log4j:log4j-api@2.13.1"
-    	"org.apache.logging.log4j:log4j-core:jar:2.13.1"
+    	"org.apache.logging.log4j:log4j-core:jar:2.14.0"
         "com.example:logconfig:1.0.0"
     	label = "log";
     }
