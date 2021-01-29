@@ -166,9 +166,9 @@
             <verbose>false</verbose>
             <failOnNoGitDirectory>false</failOnNoGitDirectory>
             <generateGitPropertiesFile>true</generateGitPropertiesFile>
-            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+            <generateGitPropertiesFilename>${project.build.directory}/git.properties
             </generateGitPropertiesFilename>
-            <dateFormat>yyyy-MM-dd'T'HH:mm:ss.SSSZ</dateFormat>
+            <dateFormat>yyyy-MM-dd'T'HH:mm:ssXXX</dateFormat>
           </configuration>
         </plugin>
         <plugin>
