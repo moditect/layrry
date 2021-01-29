@@ -1,63 +1,69 @@
-# Layrry - A Launcher and API for Modularized Java Applications
+= Layrry - A Launcher and API for Modularized Java Applications
+:layrry-version: 1.0-SNAPSHOT
 
 Layrry is a launcher and Java API for executing modularized Java applications.
 
 It allows to assemble modularized applications based on Maven artifact coordinates of the (modular) JARs to include.
-Layrry utilizes the Java Module System's notion of [module layers](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ModuleLayer.html), allowing multiple versions of one module to be used within an application at the same time, as well as dynamically adding and removing modules at application runtime.
+Layrry utilizes the Java Module System's notion of link:https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ModuleLayer.html[module layers],
+allowing multiple versions of one module to be used within an application at the same time, as well as dynamically adding
+and removing modules at application runtime.
 
 The module graph is built either declaratively (using YAML descriptors) or programmatically (using a fluent API).
 
 Learn more about Layrry in this series of blog posts:
 
-* [Part 1: "Introducing Layrry: A Launcher and API for Modularized Java Applications"](https://www.morling.dev/blog/introducing-layrry-runner-and-api-for-modularized-java-applications/)
-* [Part 2: "Plug-in Architectures With Layrry and the Java Module System"](https://www.morling.dev/blog/plugin-architectures-with-layrry-and-the-java-module-system/)
+* link:https://www.morling.dev/blog/introducing-layrry-runner-and-api-for-modularized-java-applications/[Part 1: "Introducing Layrry: A Launcher and API for Modularized Java Applications"]
+* link:https://www.morling.dev/blog/plugin-architectures-with-layrry-and-the-java-module-system/[Part 2: "Plug-in Architectures With Layrry and the Java Module System"]
 * Part 3: Dynamically loading Java modules at application runtime with Layrry (coming soon)
-* [Part 4: "Class Unloading in Layered Java Applications"](https://www.morling.dev/blog/class-unloading-in-layered-java-applications/)
+* link:https://www.morling.dev/blog/class-unloading-in-layered-java-applications/[Part 4: "Class Unloading in Layered Java Applications"]
 
-## Why Layrry?
+== Why Layrry?
 
 The Java Module System doesn't define any means of mapping between modules (e.g. _com.acme.crm_) and JARs providing such module
-(e.g. _acme-crm-1.0.0.Final.jar_) or retrieving modules from remote repositories using unique identifiers (e.g. _com.acme:acme-crm:1.0.0.Final_).
-Instead, it's the responsibility of the user to obtain all required JARs of a modularized application and provide them via `--module-path`.
+(e.g. _acme-crm-1.0.0.Final.jar_) or retrieving modules from remote repositories using unique identifiers
+(e.g. _com.acme:acme-crm:1.0.0.Final_). Instead, it's the responsibility of the user to obtain all required JARs of a modularized
+application and provide them via `--module-path`.
 
-Furthermore, the module system doesn't define any means of module versioning;
-i.e. it's the responsibility of the user to obtain all modules in the right version.
-Using the `--module-path` option, it's not possible, though, to assemble an application that uses multiple versions of one and the same module.
-This may be desirable for transitive dependencies of an application,
-which might be required in different versions by two separate direct dependencies.
+Furthermore, the module system doesn't define any means of module versioning; i.e. it's the responsibility of the user to
+obtain all modules in the right version. Using the `--module-path` option, it's not possible, though, to assemble an
+application that uses multiple versions of one and the same module. This may be desirable for transitive dependencies of
+an application, which might be required in different versions by two separate direct dependencies.
 
-This is where Layrry comes in:
-utilizing the notion of module layers,
-it provides a declarative approach as well as an API for assembling modularized applications, organized in module layers.
-The JARs to be included are described using Maven GAV (group id, artifact id, version) coordinates,
-solving the issue of retrieving all required JARs in the right version.
+This is where Layrry comes in: utilizing the notion of module layers, it provides a declarative approach as well as an API
+for assembling modularized applications, organized in module layers. The JARs to be included are described using Maven GAV
+(group id, artifact id, version) coordinates, solving the issue of retrieving all required JARs in the right version.
 
-Module layers allow to use different versions of one and the same module in different layers of an application
-(as long as they are not exposed in a conflicting way on module API boundaries).
+Module layers allow to use different versions of one and the same module in different layers of an application (as long as
+they are not exposed in a conflicting way on module API boundaries).
 
-Module layers and thus Layrry also allow application extensions to be added and removed dynamically at runtime.
-Here's [an example](https://github.com/moditect/layrry-examples/tree/master/modular-tiles) for using the Layrry plug-in API to dynamically modify a JavaFX application:
+Module layers and thus Layrry also allow application extensions to be added and removed dynamically at runtime. Here's
+link:https://github.com/moditect/layrry-examples/tree/master/modular-tiles[an example] for using the Layrry plug-in API
+to dynamically modify a JavaFX application:
 
-![JavaFX app based on Layrry](images/javafx-layrry.gif)
+image:images/javafx-layrry.gif[JavaFX app based on Layrry]
 
-## Using the Layrry Launcher
+== Using the Layrry Launcher
 
-The Layrry Launcher is a CLI tool which takes a configuration of a layered application and executes it.
-It's used like so:
+The Layrry Launcher is a CLI tool which takes a configuration of a layered application and executes it. It's used like so:
 
-```
-layrry-launcher-1.0-SNAPSHOT-all.jar --layers-config <path/to/layers.yml> [program arguments]
-```
+[source]
+[subs="attributes"]
+----
+layrry-launcher-{layrry-version}-all.jar --layers-config <path/to/layers.yml> [program arguments]
+----
 
 E.g. like so:
 
-```
-layrry-launcher-1.0-SNAPSHOT-all.jar --layers-config hello-world.yml Alice Bob
-```
+[source]
+[subs="attributes"]
+----
+layrry-launcher-{layrry-version}-all.jar --layers-config hello-world.yml Alice Bob
+----
 
 The application layers configuration file is a YAML file which the following structure:
 
-```yaml
+[source,yaml]
+----
 layers:
   <name 1>:
     modules:
@@ -78,7 +84,7 @@ layers:
 main:
   module: <main module>
   class: <main class>
-```
+----
 
 Each layer comprises:
 
@@ -87,23 +93,22 @@ Each layer comprises:
 * The list of contained modules given via Maven GAV coordinates OR
 * A directory which contains one or more sub-directories, each of which represent one layer made up of the modular JARs 
 within that sub-directory; the directory path is resolved relatively to the location of the _layrry.yml_ file. Alternatively
-the directory may be an absolute path however **be very careful** as this may cause a non portable configuration.
+the directory may be an absolute path however *be very careful* as this may cause a non portable configuration.
 
 As an example, consider the following application whose modules `foo` and `bar` depend on two different versions of the `greeter` module:
 
-![Layrry Example](images/example.png)
+image:images/example.png[Layrry Example]
 
-Running this application wouldn't be possible with the default module path,
-which only allows for one version of a given module.
-Here is how the application can be executed via Layrry,
-organizing all the modules in multiple layers:
+Running this application wouldn't be possible with the default module path, which only allows for one version of a given
+module. Here is how the application can be executed via Layrry, organizing all the modules in multiple layers:
 
-```yaml
+[source,yaml]
+----
 layers:
   log:
     modules:
-      - "org.apache.logging.log4j:log4j-api:jar:2.14.0"
-      - "org.apache.logging.log4j:log4j-core:jar:2.14.0"
+      - "org.apache.logging.log4j:log4j-api:2.14.0"
+      - "org.apache.logging.log4j:log4j-core:2.14.0"
       - "com.example:logconfig:1.0.0"
   foo:
     parents:
@@ -126,15 +131,16 @@ layers:
 main:
   module: com.example.app
   class: com.example.app.App
-```
+----
 
 Alternatively you may use TOML instead of YAML
 
-```toml
+[source,toml]
+----
 [layers.log]
   modules = [
-    "org.apache.logging.log4j:log4j-api:jar:2.14.0",
-    "org.apache.logging.log4j:log4j-core:jar:2.14.0",
+    "org.apache.logging.log4j:log4j-api:2.14.0",
+    "org.apache.logging.log4j:log4j-core:2.14.0",
     "com.example.it:it-logconfig:1.0.0"]
 [layers.foo]
   parents = ["log"]
@@ -152,7 +158,7 @@ Alternatively you may use TOML instead of YAML
 [main]
   module = "com.example.app"
   class = "com.example.app.App"
-```
+----
 
 Be sure to use `.toml` as file extension to let Layrry know which format should be parsed.
 
@@ -166,38 +172,42 @@ The Layrry Launcher accepts the following arguments:
  * --properties: Path to additional properties in Java `.properties` format. These properties will be used to replace value
  placeholders found in the layers config file. OPTIONAL.
 
-## Using jbang
+== Using JBang
 
-[jbang](https://github.com/jbangdev/jbang) can launch self contained Java sources, JShell scripts, JARs. jbang has a feature
+link:https://github.com/jbangdev/jbang[JBang] can launch self contained Java sources, JShell scripts, JARs. jbang has a feature
 that allows you to try out Layrry without having to install or build Layrry yourself. You only need a JDK (11+ is preferred)
 and jbang installed. Once you do, you may invoke the previous example with
 
-```sh
+[source]
+----
 jbang layrry@moditect --layers-config layers.yml
-```
+----
 
-jbang will resolve and download the appropriate Layrry bootstrap binary, then Layrry resolves the modules described in
+JBang will resolve and download the appropriate Layrry bootstrap binary, then Layrry resolves the modules described in
 the input configuration file, finally the application is launched.
 
-## Dynamic Plug-Ins
+== Dynamic Plug-Ins
 
-Layrry also supports the dynamic addition and removal of plug-ins at runtime.
-For that, simply add or remove plug-in sub-directories to the `directory` of a layer configuration.
-Layrry watches the given plug-ins directory and will add or remove the corresponding module layer to/from the application in case a new plug-in is added or removed.
-The core of an application can react to added or removed module layers.
-In order to do so, the module _org.moditect.layrry:layrry-platform_  must be added to the application core layer and an implementation of the `PluginLifecycleListener` interface must be created and registered as service:
+Layrry also supports the dynamic addition and removal of plug-ins at runtime. For that, simply add or remove plug-in
+sub-directories to the `directory` of a layer configuration. Layrry watches the given plug-ins directory and will add or
+remove the corresponding module layer to/from the application in case a new plug-in is added or removed. The core of an
+application can react to added or removed module layers. In order to do so, the module _org.moditect.layrry:layrry-platform_
+must be added to the application core layer and an implementation of the `PluginLifecycleListener` interface must be
+created and registered as service:
 
-```java
+[source]
+----
 public interface PluginLifecycleListener {
     void pluginAdded(PluginDescriptor plugin);
 
     void pluginRemoved(PluginDescriptor plugin);
 }
-```
+----
 
 Typically, an application will retrieve application-specific services from newly added module layers:
 
-```java
+[source,java]
+----
 @Override
 public void pluginAdded(PluginDescriptor plugin) {
   ServiceLoader<MyService> services = ServiceLoader.load(
@@ -211,15 +221,15 @@ public void pluginAdded(PluginDescriptor plugin) {
       }
     });
 }
-```
+----
 
-To avoid class-loader leaks, it's vital that all references to plug-in contribued classes are released upon `pluginRemoved()`.
+To avoid class-loader leaks, it's vital that all references to plug-in contributed classes are released upon `pluginRemoved()`.
 Note that classes typically will not instantly be unloaded, but only upon the next full GC (when using G1).
 
-You can find a complete example for the usage of dynamic plug-ins in the _vertx-example_ directory:
-"Layrry Links" is an example application for managing golf courses, centered around a web application core built using Vert.x.
-Routes of the web application (_/members_, _/tournaments_) are contributed by plug-ins which can be added to or removed from the application at runtime.
-The _routes_ path shows all routes available at a given time.
+You can find a complete example for the usage of dynamic plug-ins in the _vertx-example_ directory: "Layrry Links" is an
+example application for managing golf courses, centered around a web application core built using Vert.x. Routes of the
+web application (_/members_, _/tournaments_) are contributed by plug-ins which can be added to or removed from the
+application at runtime. The _routes_ path shows all routes available at a given time.
 
 Plugins may be packaged in 3 ways:
 
@@ -227,42 +237,45 @@ Plugins may be packaged in 3 ways:
 2. As a Zip file. Multiple JARs may be packaged.
 3. As a Tar(.gz) file. Multiple JARs may be packaged.
 
-For Zip and Tar packages, the use of a root entry matching the name of containing file is permited, however it's preffered
-if said root entry were omitted. Some examples
+For Zip and Tar packages, the use of a root entry matching the name of containing file is permited, however it's preferred
+if said root entry were omitted. Some examples:
 
-**Single JAR**
-```sh
+[source]
+.Single JAR
+----
 plugin-1.0.jar
  |- com
  |- com/acme
  |- com/acme/Plugin.class
  \- module-info.class
-```
+----
 
-**Plain Zip (or Tar)**
-```sh
+[source]
+.Plain Zip (or Tar)
+----
 plugin-1.0.zip
  |- plugin-1.0.jar
  |- dependency-foo-1.0.0.jar
  \- dependency-bar-1.0.0.jar
-```
+----
 
-**Root Zip (or Tar)**
-```sh
+[source]
+.Root Zip (or Tar)
+----
 plugin-1.0.zip
  |- plugin-1.0
  |- plugin-1.0/plugin-1.0.jar
  |- plugin-1.0/dependency-foo-1.0.0.jar
  \- plugin-1.0/dependency-bar-1.0.0.jar
-```
+----
 
-## Parameterized Layer Configuration
+== Parameterized Layer Configuration
 
-Layrry supports the [Mustache](https://github.com/spullara/mustache.java) template syntax, enabling parameterization of
+Layrry supports the link:https://github.com/spullara/mustache.java[Mustache] template syntax, enabling parameterization of
 the content found in configuration files, regardless of their target format (YAML, TOML, etc). To use this feature you must
 use a `{{property}}` expression to refer to value placeholders. Layrry makes all `System` properties available for value
 replacement, as well as an extra set of properties that are related to OS values; these include all properties exposed by
-the [os-maven-plugin](https://github.com/trustin/os-maven-plugin/). If the `--properties` command flag is passed to the 
+the link:https://github.com/trustin/os-maven-plugin/[os-maven-plugin]. If the `--properties` command flag is passed to the
 Layrry Launcher then all properties found in the given properties file will also become available.
 
 Additionally, Layrry resolves the following properties
@@ -273,8 +286,9 @@ Additionally, Layrry resolves the following properties
 The following example shows a parameterized TOML config file for a JavaFX application that can be run on any of the 3 platforms
 supported by JavaFX
 
-**layers.toml**
-```toml
+[source,toml]
+----
+.layers.toml
 [layers.javafx]
     modules = [
         "org.openjfx:javafx-base:jar:{{os.detected.jfxname}}:{{javafx_version}}",
@@ -296,34 +310,40 @@ supported by JavaFX
 [main]
   module = "org.kordamp.tiles.app"
   class = "org.kordamp.tiles.app.Main"
-```
+----
 
-**versions.properties**
-```properties
+[source,java]
+[subs="attributes"]
+.versions.properties
+----
 project_version = 1.0.0
 javafx_version = 11.0.2
 tilesfx_version = 11.44
-layrry_version = 1.0-SNAPSHOT
-```
+layrry_version = {layrry-version}
+----
 
 This application can be launched as
 
-```
-layrry-launcher-1.0-SNAPSHOT-all.jar --layers-config layers.toml --properties versions.properties
-```
+[source]
+[subs="attributes"]
+----
+layrry-launcher-{layrry-version}-all.jar --layers-config layers.toml --properties versions.properties
+----
 
-## Remote Configuration
+== Remote Configuration
 
 Layrry supports loading external configuration files (inputs to `--layers-config` and `--properties`) both from local and
 remote sources. For example, the previous `layers.toml` and `versions.properties` files could be accessed from a remote server
 that exposes those resources via HTTPS, such as
 
-```sh
-layrry-launcher-1.0-SNAPSHOT-all.jar \
+[source]
+[subs="attributes"]
+----
+layrry-launcher-{layrry-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config https://server:port/path/to/layers.toml \
   --properties https://server:port/path/to/versions.properties
-```
+----
 
 It's important to note that setting the `--basedir` config flag is more important when remote layer configuration is in use,
 as that ensures plugin directories will be resolved from the same location, otherwise the basedir location will be inferred
@@ -332,60 +352,70 @@ as `System.getProperty("user.dir")` which may produce unexpected results when in
 Plugin directories are always local, even if defined in remote layer configuration files. You may mix remote and local
 resources as you deem necessary, that is, the following combinations are valid:
 
-**All remote**
-```sh
-layrry-launcher-1.0-SNAPSHOT-all.jar \
+[source]
+[subs="attributes"]
+.All remote
+----
+layrry-launcher-{layrry-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config https://server:port/path/to/layers.toml \
   --properties https://server:port/path/to/versions.properties
-```
+----
 
-**All local**
-```sh
-layrry-launcher-1.0-SNAPSHOT-all.jar \
+[source]
+[subs="attributes"]
+.All local
+----
+layrry-launcher-{layrry-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config layers.toml \
   --properties versions.properties
-```
+----
 
-**Mixed**
-```sh
-layrry-launcher-1.0-SNAPSHOT-all.jar \
+[source]
+[subs="attributes"]
+.Mixed
+----
+layrry-launcher-{layrry-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config https://server:port/path/to/layers.toml \
   --properties versions.properties
-```
+----
 
-```sh
-layrry-launcher-1.0-SNAPSHOT-all.jar \
+[source]
+[subs="attributes"]
+----
+layrry-launcher-{layrry-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config layers.toml \
   --properties https://server:port/path/to/versions.properties
-```
+----
 
-## Using the Layrry API
+== Using the Layrry API
 
 In addition to the YAML-based/TOML-based launcher, Layrry provides also a Java API for assembling and running layered applications.
-This can be used in cases where the structure of layers is only known at runtime,
-or for implementing plug-in architectures.
+This can be used in cases where the structure of layers is only known at runtime, or for implementing plug-in architectures.
 
 In order to use Layrry programmatically, add the following dependency to your _pom.xml_:
 
-```xml
+[source,xml]
+[subs="attributes,verbatim"]
+----
 <dependency>
     <groupId>org.moditect.layrry</groupId>
     <artifactId>layrry</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>{layrry-version}</version>
 </dependency>
-```
+----
 
 Then, the Layrry Java API can be used like this (showing the same example as above):
 
-```java
+[source,java]
+----
 Layers layers = Layers.builder()
     .layer("log")
-        .withModule("org.apache.logging.log4j:log4j-api:jar:2.14.0")
-        .withModule("org.apache.logging.log4j:log4j-core:jar:2.14.0")
+        .withModule("org.apache.logging.log4j:log4j-api:2.14.0")
+        .withModule("org.apache.logging.log4j:log4j-core:2.14.0")
         .withModule("com.example:logconfig:1.0.0")
     .layer("foo")
         .withParent("log")
@@ -402,103 +432,117 @@ Layers layers = Layers.builder()
     .build();
 
 layers.run("com.example.app/com.example.app.App", "Alice");
-```
+----
 
-## Configuring Artifact Resolution
+== Configuring Artifact Resolution
 
 Layrry relies on Maven's API to resolve artifacts. By default, Maven Local, Maven Central and every other setting configured
 at `~/.m2/settings.xml` are available to Layrry. You can tweak and configure those settings by editing the `~/.m2/settings.xml`
 file. Alternatively you may instruct Layrry to use a different configuration file, skip querying Maven Central, or stop
 all resolutions via remote repositories.
 
-### Disable All Remote Maven Repositories
+=== Disable All Remote Maven Repositories
 
-Java
-```java
+[source,java]
+.Java
+----
 Layers layers = Layers.builder()
     .resolve(Resolvers.remote().workOffline(true))
     .layer(...)
-```
+----
 
-Yaml
-```yaml
+[source,yaml]
+.Yaml
+----
 resolve:
   workOffline: true
   ...
-```
+----
 
-Toml
-```toml
+[source,toml]
+.Toml
+----
 [resolve]
   workOffline = true
   ...
-```
+----
 
-### Disable All Remote and Local Maven Repositories
+=== Disable All Remote and Local Maven Repositories
 
-Java
-```java
+[source,java]
+.Java
+----
 Layers layers = Layers.builder()
     .resolve(Resolvers.remote().enabled(false))
     .layer(...)
-```
+----
 
-Yaml
-```yaml
+[source,yaml]
+.Yaml
+----
 resolve:
   remote: false
   ...
-```
+----
 
-Toml
-```toml
+[source,toml]
+.Toml
+----
 [resolve]
   remote = false
   ...
-```
+----
 
-### Use Alternate Maven Settings File
+=== Use Alternate Maven Settings File
 
-Java
-```java
+[source,java]
+.Java
+----
 Layers layers = Layers.builder()
     .resolve(Resolvers.remote()
          .fromFile(Paths.get("/path/to/settings.xml")))
     .layer(...)
-```
+----
 
-Yaml
-```yaml
+[source,yaml]
+.Yaml
+----
 resolve:
   fromFile: "/path/to/settings.xml"
   ...
-```
+----
 
-Toml
-```toml
+[source,toml]
+.Toml
+----
 [resolve]
   fromFile = "/path/to/settings.xml"
   ...
-```
+----
 
-## Local Artifact Resolution
+== Local Artifact Resolution
+
 Layrry can resolve artifacts from additional local sources. These sources must follow specific layouts for organizing artifacts.
 Currently `flat` and `default` layouts are supported, which are provided by Maven and Gradle plugins. Local repositories will
 always be queried first, then any remote repositories if available.
 
-### Flat Layout
+=== Flat Layout
+
 This layout organizes all artifacts in a single directory, for example
 
-```sh
+[source]
+----
 repodir
  |-- foo-1.0.0.jar
  \-- bar-2.0.0.jar
-```
+----
 
-### Default Layout
+=== Default Layout
+
 This layout organizes all artifacts following the Maven coordinates conventions, for example
 
-```sh
+[source]
+----
 repodir
   |-- com
   |    \-- acme
@@ -510,55 +554,56 @@ repodir
            \-- bar
                \-- 2.0.0
                    \-- bar-2.0.0.jar
-```
+----
 
-### Use Local Repositories
+=== Use Local Repositories
 
-Java
-```java
+[source,java]
+.Java
+----
 Layers layers = Layers.builder()
     .resolve(Resolvers.local()
         .withLocalRepo("repoName", Paths.get("/path/to/repository/directory").toAbsolutePath(), "flat"))
     ...
-```
+----
 
-Yaml
-```yaml
+[source,yaml]
+.Yaml
+----
 resolve:
   localRepositories:
     repoName:
       layout: "flat"
       path: "/path/to/repository/directory"
-```
+----
 
-Toml
-```toml
+[source,toml]
+.Toml
+----
 [resolve.localRepositories.repoName]
   layout = "flat"
   path   = "/path/to/repository/directory"
-```
+----
 
 The path may be absolute as shown in the examples or relative, in which it will be resolved relative to the
 config file path.
 
-## Building Layrry
+== Building Layrry
 
-Layrry is not available on Maven Central yet.
-In order to use it, build it from source like so:
+Layrry can be built from source by running the following command
 
-```
-mvn install
-```
+[source]
+----
+$ mvn install
+----
 
-Java 15 or later is needed in order to do so.
+Java 11 or later is needed in order to do so.
 
-## Contributing
+== Contributing
 
-Your contributions to Layrry are very welcomed.
-Please open issues with your feature suggestions as well as pull requests.
-Before working on larger pull requests,
-it's suggested to reach out to [@gunnarmorling](https://twitter.com/gunnarmorling).
+Your contributions to Layrry are very welcomed. Please open issues with your feature suggestions as well as pull requests.
+Before working on larger pull requests, it's suggested to reach out to link:https://twitter.com/gunnarmorling[@gunnarmorling].
 
-## License
+== License
 
 Layrry is licensed under the Apache License version 2.0.
