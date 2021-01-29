@@ -25,7 +25,9 @@
   <packaging>pom</packaging>
 
   <name>Layrry Aggregator</name>
+  <description>A Launcher and API for Modularized Java Applications</description>
   <url>https://github.com/moditect/layrry</url>
+  <inceptionYear>2020</inceptionYear>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -50,6 +52,39 @@
     <version.versions.plugin>2.8.1</version.versions.plugin>
     <version.log4j>2.14.0</version.log4j>
   </properties>
+
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://spdx.org/licenses/Apache-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>gunnarmorling</id>
+      <name>Gunnar Morling</name>
+      <url>https://www.morling.dev/</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>aalmiray</id>
+      <name>Andres Almiray</name>
+      <url>http://andresalmiray.com/</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/moditect/layrry.git</connection>
+    <developerConnection>scm:git:git@github.com:moditect/layrry.git</developerConnection>
+    <url>https://github.com/moditect/layrry</url>
+  </scm>
 
   <modules>
     <module>layrry-platform</module>
