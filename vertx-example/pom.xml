@@ -57,11 +57,6 @@
         <artifactId>vertx-bridge-common</artifactId>
         <version>${vertx.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-        <version>2.13.1</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -80,7 +75,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>${version.assembly.plugin}</version>
           <configuration>
             <appendAssemblyId>false</appendAssemblyId>
             <outputDirectory>${project.build.directory}/plugins</outputDirectory>

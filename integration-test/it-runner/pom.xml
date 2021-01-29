@@ -53,7 +53,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.0.0-M5</version>
         <executions>
           <execution>
             <goals>
@@ -100,7 +99,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.2</version>
         <executions>
           <execution>
             <id>copy</id>
@@ -145,12 +143,12 @@
             <artifactItem>
               <groupId>org.apache.logging.log4j</groupId>
               <artifactId>log4j-api</artifactId>
-              <version>2.13.1</version>
+              <version>${version.log4j}</version>
             </artifactItem>
             <artifactItem>
               <groupId>org.apache.logging.log4j</groupId>
               <artifactId>log4j-core</artifactId>
-              <version>2.13.1</version>
+              <version>${version.log4j}</version>
             </artifactItem>
           </artifactItems>
           <outputDirectory>${project.build.directory}/repositories/flat</outputDirectory>

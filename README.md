@@ -102,8 +102,8 @@ organizing all the modules in multiple layers:
 layers:
   log:
     modules:
-      - "org.apache.logging.log4j:log4j-api:jar:2.13.1"
-      - "org.apache.logging.log4j:log4j-core:jar:2.13.1"
+      - "org.apache.logging.log4j:log4j-api:jar:2.14.0"
+      - "org.apache.logging.log4j:log4j-core:jar:2.14.0"
       - "com.example:logconfig:1.0.0"
   foo:
     parents:
@@ -133,8 +133,8 @@ Alternatively you may use TOML instead of YAML
 ```toml
 [layers.log]
   modules = [
-    "org.apache.logging.log4j:log4j-api:jar:2.13.1",
-    "org.apache.logging.log4j:log4j-core:jar:2.13.1",
+    "org.apache.logging.log4j:log4j-api:jar:2.14.0",
+    "org.apache.logging.log4j:log4j-core:jar:2.14.0",
     "com.example.it:it-logconfig:1.0.0"]
 [layers.foo]
   parents = ["log"]
@@ -384,8 +384,8 @@ Then, the Layrry Java API can be used like this (showing the same example as abo
 ```java
 Layers layers = Layers.builder()
     .layer("log")
-        .withModule("org.apache.logging.log4j:log4j-api:jar:2.13.1")
-        .withModule("org.apache.logging.log4j:log4j-core:jar:2.13.1")
+        .withModule("org.apache.logging.log4j:log4j-api:jar:2.14.0")
+        .withModule("org.apache.logging.log4j:log4j-core:jar:2.14.0")
         .withModule("com.example:logconfig:1.0.0")
     .layer("foo")
         .withParent("log")
