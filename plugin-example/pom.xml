@@ -29,6 +29,11 @@
   <packaging>pom</packaging>
   <name>Layrry Plug-in Example</name>
 
+  <properties>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.source.skip>true</maven.source.skip>
+  </properties>
+
   <modules>
     <module>greeter-core</module>
     <module>greeter-date-util-1.0.0</module>

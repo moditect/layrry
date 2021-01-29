@@ -40,10 +40,12 @@
     <version.failsafe.plugin>3.0.0-M5</version.failsafe.plugin>
     <version.git.plugin>3.0.1</version.git.plugin>
     <version.install.plugin>3.0.0-M1</version.install.plugin>
+    <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
     <version.jar.plugin>3.1.2</version.jar.plugin>
     <version.license.plugin>3.0</version.license.plugin>
     <version.resources.plugin>3.1.0</version.resources.plugin>
     <version.shade.plugin>3.2.4</version.shade.plugin>
+    <version.source.plugin>3.2.1</version.source.plugin>
     <version.surefire.plugin>3.0.0-M4</version.surefire.plugin>
     <version.versions.plugin>2.8.1</version.versions.plugin>
     <version.log4j>2.14.0</version.log4j>
@@ -129,6 +131,11 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${version.log4j}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.11</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -260,7 +267,7 @@
                     <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
                   </enforceBytecodeVersion>
                   <dependencyConvergence/>
-                  <!--requireUpperBoundDeps/-->
+                  <requireUpperBoundDeps/>
                 </rules>
               </configuration>
             </execution>
@@ -272,6 +279,16 @@
               <version>1.3</version>
             </dependency>
           </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${version.source.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${version.javadoc.plugin}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -309,6 +326,36 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <attach>true</attach>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <attach>true</attach>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

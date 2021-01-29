@@ -33,6 +33,8 @@
 
   <properties>
     <vertx.version>4.0.0</vertx.version>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.source.skip>true</maven.source.skip>
   </properties>
 
   <dependencyManagement>

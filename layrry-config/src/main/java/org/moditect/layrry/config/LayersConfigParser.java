@@ -39,7 +39,7 @@ public interface LayersConfigParser {
     String getPreferredFileExtension();
 
     /**
-     * Whether the given config file format is supported or not.</p>
+     * Whether the given config file format is supported or not.
      * Implementors would typically look at the file extension.
      *
      * @param layersConfigFile the configuration file to inspect
