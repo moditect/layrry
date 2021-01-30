@@ -65,7 +65,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./layrry-launcher/target/distributions/layrry-launcher-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_path: ./layrry-launcher/target/distributions/layrry-launcher-${{ steps.get_version.outputs.VERSION }}-dist.zip
           asset_name: layrry-launcher-${{ steps.get_version.outputs.VERSION }}.zip
           asset_content_type: application/zip
 
@@ -76,6 +76,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./layrry-launcher/target/distributions/layrry-launcher-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          asset_path: ./layrry-launcher/target/distributions/layrry-launcher-${{ steps.get_version.outputs.VERSION }}-dist.tar.gz
           asset_name: layrry-launcher-${{ steps.get_version.outputs.VERSION }}.tar.gz
           asset_content_type: application/gzip
