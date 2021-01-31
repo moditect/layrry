@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.layrry.links.core.internal;
+package org.moditect.layrry.example.links.core.internal;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 import org.moditect.layrry.platform.PluginDescriptor;
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
-import com.example.layrry.links.core.spi.RouterContributor;
+import org.moditect.layrry.example.links.core.spi.RouterContributor;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;

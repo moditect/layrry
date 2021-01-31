@@ -16,19 +16,19 @@
 
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
-import com.example.layrry.links.core.internal.LayrryLinksVerticle.RoutesOverviewRouterContributor;
-import com.example.layrry.links.core.internal.LayrryLinksVerticle.RoutesPluginLifecycleListener;
-import com.example.layrry.links.core.spi.RouterContributor;
+import org.moditect.layrry.example.links.core.internal.LayrryLinksVerticle.RoutesOverviewRouterContributor;
+import org.moditect.layrry.example.links.core.internal.LayrryLinksVerticle.RoutesPluginLifecycleListener;
+import org.moditect.layrry.example.links.core.spi.RouterContributor;
 
-module com.example.layrry.links.core {
+module org.moditect.layrry.example.links.core {
     requires org.moditect.layrry.platform;
     requires org.apache.logging.log4j;
     requires transitive io.vertx.core;
     requires transitive io.vertx.web;
     requires transitive io.vertx.eventbusbridge.common;
 
-    exports com.example.layrry.links.core;
-    exports com.example.layrry.links.core.spi;
+    exports org.moditect.layrry.example.links.core;
+    exports org.moditect.layrry.example.links.core.spi;
 
     uses RouterContributor;
     provides PluginLifecycleListener with RoutesPluginLifecycleListener;

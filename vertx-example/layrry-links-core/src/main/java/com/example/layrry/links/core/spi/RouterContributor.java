@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.layrry.links.core.spi;
+package org.moditect.layrry.example.links.core.spi;
 
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;

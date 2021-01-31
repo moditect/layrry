@@ -13,6 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-module com.example.greeter.dateutil {
-    exports com.example.greeter.dateutil;
+module org.moditect.layrry.example.greeter.dateutil {
+    exports org.moditect.layrry.example.greeter.dateutil;
 }

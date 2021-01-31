@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.layrry.links.integrationtest;
+package org.moditect.layrry.example.links.integrationtest;
 
 import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;

@@ -1,5 +1,5 @@
-import com.example.layrry.links.core.spi.RouterContributor;
-import com.example.layrry.links.tournament.internal.TournamentsRouterContributor;
+import org.moditect.layrry.example.links.core.spi.RouterContributor;
+import org.moditect.layrry.example.links.tournament.internal.TournamentsRouterContributor;
 
 /**
  *  Copyright 2020 The ModiTect authors
@@ -17,9 +17,9 @@ import com.example.layrry.links.tournament.internal.TournamentsRouterContributor
  *  limitations under the License.
  */
 
-module com.example.layrry.links.tournament {
+module org.moditect.layrry.example.links.tournament {
     requires org.moditect.layrry.platform;
-    requires com.example.layrry.links.core;
+    requires org.moditect.layrry.example.links.core;
     requires io.vertx.core;
     requires io.vertx.web;
     provides RouterContributor with TournamentsRouterContributor;

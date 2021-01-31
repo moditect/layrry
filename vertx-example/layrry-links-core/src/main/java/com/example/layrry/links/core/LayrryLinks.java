@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.layrry.links.core;
+package org.moditect.layrry.example.links.core;
 
-import com.example.layrry.links.core.internal.LayrryLinksVerticle;
+import org.moditect.layrry.example.links.core.internal.LayrryLinksVerticle;
 
 import io.vertx.core.Vertx;
 

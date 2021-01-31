@@ -16,13 +16,13 @@
 
 import org.moditect.layrry.platform.PluginLifecycleListener;
 
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.app.internal.GreeterPluginLifecycleListener;
+import org.moditect.layrry.example.greeter.api.GreeterFactory;
+import org.moditect.layrry.example.greeter.app.internal.GreeterPluginLifecycleListener;
 
-module com.example.greeter.core {
+module org.moditect.layrry.example.greeter.core {
     requires org.moditect.layrry.platform;
-    exports com.example.greeter.api;
-    exports com.example.greeter.app;
+    exports org.moditect.layrry.example.greeter.api;
+    exports org.moditect.layrry.example.greeter.app;
     provides PluginLifecycleListener with GreeterPluginLifecycleListener;
     uses GreeterFactory;
 }

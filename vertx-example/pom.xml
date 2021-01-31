@@ -40,7 +40,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.example.layrry.links</groupId>
+        <groupId>org.moditect.layrry.example.links</groupId>
         <artifactId>layrry-links-core</artifactId>
         <version>1.0.0</version>
       </dependency>

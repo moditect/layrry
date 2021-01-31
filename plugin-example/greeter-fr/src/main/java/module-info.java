@@ -13,11 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.fr.FrenchGreeterFactory;
+import org.moditect.layrry.example.greeter.api.GreeterFactory;
+import org.moditect.layrry.example.greeter.fr.FrenchGreeterFactory;
 
-module com.example.greeter.fr {
-    requires com.example.greeter.core;
-    requires com.example.greeter.dateutil;
+module org.moditect.layrry.example.greeter.fr {
+    requires org.moditect.layrry.example.greeter.core;
+    requires org.moditect.layrry.example.greeter.dateutil;
     provides GreeterFactory with FrenchGreeterFactory;
 }

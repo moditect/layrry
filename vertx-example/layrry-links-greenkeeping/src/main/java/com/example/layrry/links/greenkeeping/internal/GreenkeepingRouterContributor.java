@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.layrry.links.greenkeeping.internal;
+package org.moditect.layrry.example.links.greenkeeping.internal;
 
-import com.example.layrry.links.core.spi.RouterContributor;
+import org.moditect.layrry.example.links.core.spi.RouterContributor;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerResponse;

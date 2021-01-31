@@ -13,13 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.greeter.en;
+package org.moditect.layrry.example.greeter.en;
 
 import java.time.Instant;
 
-import com.example.greeter.api.Greeter;
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.dateutil.DateUtil;
+import org.moditect.layrry.example.greeter.api.Greeter;
+import org.moditect.layrry.example.greeter.api.GreeterFactory;
+import org.moditect.layrry.example.greeter.dateutil.DateUtil;
 
 public class EnglishGreeterFactory implements GreeterFactory {
 

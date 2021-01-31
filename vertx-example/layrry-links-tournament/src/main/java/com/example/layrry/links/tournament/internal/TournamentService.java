@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.layrry.links.tournament.internal;
+package org.moditect.layrry.example.links.tournament.internal;
 
 import java.util.HashMap;
 import java.util.Map;

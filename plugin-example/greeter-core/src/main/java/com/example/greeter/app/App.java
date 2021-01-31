@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.example.greeter.app;
+package org.moditect.layrry.example.greeter.app;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
-import com.example.greeter.api.GreeterFactory;
-import com.example.greeter.app.internal.GreeterPluginLifecycleListener;
+import org.moditect.layrry.example.greeter.api.GreeterFactory;
+import org.moditect.layrry.example.greeter.app.internal.GreeterPluginLifecycleListener;
 
 /**
  * Hello world!

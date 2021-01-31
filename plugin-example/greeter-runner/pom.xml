@@ -86,7 +86,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>com.example.greeter</groupId>
+                  <groupId>org.moditect.layrry.example.greeter</groupId>
                   <artifactId>greeter-en</artifactId>
                   <version>1.0.0</version>
                   <type>zip</type>
@@ -105,7 +105,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>com.example.greeter</groupId>
+                  <groupId>org.moditect.layrry.example.greeter</groupId>
                   <artifactId>greeter-de</artifactId>
                   <version>1.0.0</version>
                   <type>zip</type>
@@ -124,7 +124,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>com.example.greeter</groupId>
+                  <groupId>org.moditect.layrry.example.greeter</groupId>
                   <artifactId>greeter-fr</artifactId>
                   <version>1.0.0</version>
                   <type>zip</type>
