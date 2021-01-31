@@ -35,6 +35,12 @@ public class Args {
     @Parameter(names = "--basedir", description = "Base directory for resolving relative paths")
     private File basedir;
 
+    @Parameter(names = "--help", description = "Show usage", help = true)
+    private boolean help;
+
+    @Parameter(names = "--version", description = "Show version", help = true)
+    private boolean version;
+
     public List<String> getMainArgs() {
         return mainArgs;
     }
@@ -51,8 +57,16 @@ public class Args {
         return basedir;
     }
 
+    public boolean isHelp() {
+        return help;
+    }
+
+    public boolean isVersion() {
+        return version;
+    }
+
     @Override
     public String toString() {
-        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + ", properties=" + properties + ", basedir=" + basedir + "]";
+        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + ", properties=" + properties + ", basedir=" + basedir + ", help=" + help + ", version=" + version + "]";
     }
 }
