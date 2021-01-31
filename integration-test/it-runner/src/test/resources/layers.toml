@@ -18,20 +18,20 @@
   modules = [
     "org.apache.logging.log4j:log4j-api:jar:2.14.0",
     "org.apache.logging.log4j:log4j-core:jar:2.14.0",
-    "com.example.it:it-logconfig:1.0.0"]
+    "org.moditect.layrry.it:it-logconfig:1.0.0"]
 [layers.foo]
   parents = ["log"]
   modules = [
-    "com.example.it:it-greeter:1.0.0",
-    "com.example.it:it-foo:1.0.0"]
+    "org.moditect.layrry.it:it-greeter:1.0.0",
+    "org.moditect.layrry.it:it-foo:1.0.0"]
 [layers.bar]
   parents = ["log"]
   modules = [
-    "com.example.it:it-greeter:2.0.0",
-    "com.example.it:it-bar:1.0.0"]
+    "org.moditect.layrry.it:it-greeter:2.0.0",
+    "org.moditect.layrry.it:it-bar:1.0.0"]
 [layers.app]
   parents = ["foo", "bar"]
-  modules = ["com.example.it:it-app:1.0.0"]
+  modules = ["org.moditect.layrry.it:it-app:1.0.0"]
 [main]
   module = "com.example.app"
   class = "com.example.app.App"

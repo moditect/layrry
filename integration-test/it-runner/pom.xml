@@ -18,13 +18,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <groupId>org.moditect.layrry</groupId>
+    <groupId>org.moditect.layrry.it</groupId>
     <artifactId>layrry-integrationtest</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
-
-  <modelVersion>4.0.0</modelVersion>
 
   <artifactId>layrry-integrationtest-runner</artifactId>
   <packaging>jar</packaging>
@@ -111,32 +111,32 @@
         <configuration>
           <artifactItems>
             <artifactItem>
-              <groupId>com.example.it</groupId>
+              <groupId>${project.groupId}</groupId>
               <artifactId>it-app</artifactId>
               <version>1.0.0</version>
             </artifactItem>
             <artifactItem>
-              <groupId>com.example.it</groupId>
+              <groupId>${project.groupId}</groupId>
               <artifactId>it-bar</artifactId>
               <version>1.0.0</version>
             </artifactItem>
             <artifactItem>
-              <groupId>com.example.it</groupId>
+              <groupId>${project.groupId}</groupId>
               <artifactId>it-foo</artifactId>
               <version>1.0.0</version>
             </artifactItem>
             <artifactItem>
-              <groupId>com.example.it</groupId>
+              <groupId>${project.groupId}</groupId>
               <artifactId>it-logconfig</artifactId>
               <version>1.0.0</version>
             </artifactItem>
             <artifactItem>
-              <groupId>com.example.it</groupId>
+              <groupId>${project.groupId}</groupId>
               <artifactId>it-greeter</artifactId>
               <version>1.0.0</version>
             </artifactItem>
             <artifactItem>
-              <groupId>com.example.it</groupId>
+              <groupId>${project.groupId}</groupId>
               <artifactId>it-greeter</artifactId>
               <version>2.0.0</version>
             </artifactItem>
