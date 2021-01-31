@@ -14,10 +14,10 @@ To run the example app, use the following command:
 
 With **YAML** configuration
 ```
-java -jar ../layrry-launcher/target/layrry-launcher-1.0.0.Alpha1-all.jar --layers-config greeter-runner/src/test/resources/layers.yml
+java -jar ../layrry-launcher/target/layrry-launcher-1.0.0-SNAPSHOT-all.jar --layers-config greeter-runner/src/test/resources/layers.yml
 ```
 
 With **TOML** configuration
 ```
-java -jar ../layrry-launcher/target/layrry-launcher-1.0.0.Alpha1-all.jar --layers-config greeter-runner/src/test/resources/layers.toml
+java -jar ../layrry-launcher/target/layrry-launcher-1.0.0-SNAPSHOT-all.jar --layers-config greeter-runner/src/test/resources/layers.toml
 ```
