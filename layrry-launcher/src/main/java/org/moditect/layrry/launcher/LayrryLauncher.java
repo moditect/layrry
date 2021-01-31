@@ -44,10 +44,20 @@ public final class LayrryLauncher {
     public static void launch(String... args) throws Exception {
         Args arguments = new Args();
 
-        JCommander.newBuilder()
-            .addObject(arguments)
-            .build()
-            .parse(args);
+        JCommander jCommander = JCommander.newBuilder()
+                .addObject(arguments)
+                .build();
+        jCommander.parse(args);
+
+        if (arguments.isHelp()) {
+            jCommander.usage();
+            return;
+        }
+
+        if (arguments.isVersion()) {
+            System.out.println(LayrryLauncher.class.getPackage().getImplementationVersion());
+            return;
+        }
 
         String[] parsedArgs = arguments.getMainArgs().toArray(new String[0]);
 

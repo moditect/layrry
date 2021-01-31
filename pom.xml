@@ -254,6 +254,9 @@
                 <Build-Revision>${git.commit.id}</Build-Revision>
                 <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
               </manifestEntries>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
             </archive>
           </configuration>
         </plugin>
