@@ -103,7 +103,7 @@ public class LayrryLinksTest {
                 .extract().statusCode() == 404;
         });
     }
-/*
+
     @Test
     public void canAddPluginToEmptyPluginsDirectory() throws Exception {
         FilesHelper.deleteFolder(preparedPluginDir.resolve(GREENKEEPING_PLUGIN_NAME), pluginDir1);
@@ -128,5 +128,4 @@ public class LayrryLinksTest {
                 .statusCode(200)
                 .body("name", equalTo("Sand Front 9"));
     }
- */
 }

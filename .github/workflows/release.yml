@@ -45,7 +45,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build Maven
-        run: mvn -B install --file pom.xml -DskipTests
+        run: mvn install --file pom.xml -DskipTests
 
       - name: Create release
         id: create_release
