@@ -38,5 +38,5 @@
   parents = ["foo", "bar"]
   modules = ["org.moditect.layrry.it:it-app:1.0.0"]
 [main]
-  module = "com.example.app"
-  class = "com.example.app.App"
+  module = "org.moditect.layrry.it.app"
+  class = "org.moditect.layrry.it.app.App"

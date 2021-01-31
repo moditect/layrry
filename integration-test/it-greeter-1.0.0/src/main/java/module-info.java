@@ -13,6 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-module com.example.greeter {
-    exports com.example.greeter;
+module org.moditect.layrry.it.greeter {
+    exports org.moditect.layrry.it.greeter;
 }

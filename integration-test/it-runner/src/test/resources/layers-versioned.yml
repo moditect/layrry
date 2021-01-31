@@ -39,5 +39,5 @@ layers:
     modules:
       - "org.moditect.layrry.it:it-app:{{appVersion}}"
 main:
-  module: com.example.app
-  class: com.example.app.App
+  module: org.moditect.layrry.it.app
+  class: org.moditect.layrry.it.app.App

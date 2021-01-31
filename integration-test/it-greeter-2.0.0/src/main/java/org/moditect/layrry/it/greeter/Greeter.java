@@ -13,8 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-module org.moditect.layrry.it.app {
-    exports org.moditect.layrry.it.app;
-    requires org.moditect.layrry.it.foo;
-    requires org.moditect.layrry.it.bar;
+package org.moditect.layrry.it.greeter;
+
+public class Greeter {
+
+    public String hello(String name, String from) {
+        return "Hello, " + name + " from " + from + " (Greeter 2.0.0)";
+    }
+
+    public String goodBye(String name, String from) {
+        return "Good bye, " + name + " from " + from + " (Greeter 2.0.0)";
+    }
 }

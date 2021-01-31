@@ -13,8 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-module org.moditect.layrry.it.app {
-    exports org.moditect.layrry.it.app;
-    requires org.moditect.layrry.it.foo;
-    requires org.moditect.layrry.it.bar;
+package org.moditect.layrry.it.foo;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import org.moditect.layrry.it.greeter.Greeter;
+
+public class Foo {
+
+    private static final Logger LOGGER = LogManager.getLogger(Foo.class);
+
+    public void foo(String name) {
+        LOGGER.info(new Greeter().greet(name, "Foo"));
+    }
 }

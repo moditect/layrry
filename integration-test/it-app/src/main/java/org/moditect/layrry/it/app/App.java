@@ -13,8 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-module org.moditect.layrry.it.app {
-    exports org.moditect.layrry.it.app;
-    requires org.moditect.layrry.it.foo;
-    requires org.moditect.layrry.it.bar;
+package org.moditect.layrry.it.app;
+
+import org.moditect.layrry.it.bar.Bar;
+import org.moditect.layrry.it.foo.Foo;
+
+/**
+ * Hello world!
+ */
+public class App {
+
+    public static void main(String... args) {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Usage: org.moditect.layrry.it.app.App <name>");
+        }
+
+        new Foo().foo(args[0]);
+        new Bar().bar(args[0]);
+    }
 }

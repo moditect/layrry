@@ -13,8 +13,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-module com.example.foo {
-    exports com.example.foo;
+module org.moditect.layrry.it.foo {
+    exports org.moditect.layrry.it.foo;
     requires org.apache.logging.log4j;
-    requires com.example.greeter;
+    requires org.moditect.layrry.it.greeter;
 }
