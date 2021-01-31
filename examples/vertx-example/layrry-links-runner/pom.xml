@@ -19,20 +19,16 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>org.moditect.layrry</groupId>
-    <artifactId>layrry-plugin-example</artifactId>
+    <groupId>org.moditect.layrry.example.links</groupId>
+    <artifactId>layrry-links-example</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>layrry-plugin-example-runner</artifactId>
+  <artifactId>layrry-links-runner</artifactId>
   <packaging>jar</packaging>
-  <name>Layrry Plugin Example Runner</name>
-
-  <properties>
-    <layers.dir>${project.build.directory}/layers</layers.dir>
-  </properties>
+  <name>Layrry Links Runner</name>
 
   <dependencies>
     <dependency>
@@ -46,8 +42,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>4.3.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>4.0.3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -65,7 +68,7 @@
               <argument>-classpath</argument>
               <classpath/>
               <argument>org.moditect.layrry.launcher.LayrryLauncher</argument>
-              <gument>--layers-config</gument>
+              <argument>--layers-config</argument>
               <argument>src/test/resources/layers.yml</argument>
             </arguments>
           </configuration>
@@ -78,7 +81,7 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-            <id>copy-greeter-en</id>
+            <id>copy-members-plugin</id>
             <phase>generate-test-resources</phase>
             <goals>
               <goal>copy</goal>
@@ -86,18 +89,18 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.moditect.layrry.example.greeter</groupId>
-                  <artifactId>greeter-en</artifactId>
+                  <groupId>org.moditect.layrry.example.links</groupId>
+                  <artifactId>layrry-links-membership</artifactId>
                   <version>1.0.0</version>
-                  <type>zip</type>
+                  <type>tar.gz</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${layers.dir}</outputDirectory>
+                  <outputDirectory>${project.build.directory}/route-plugins1</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
           <execution>
-            <id>copy-greeter-de</id>
+            <id>copy-tournaments-plugin</id>
             <phase>generate-test-resources</phase>
             <goals>
               <goal>copy</goal>
@@ -105,18 +108,18 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.moditect.layrry.example.greeter</groupId>
-                  <artifactId>greeter-de</artifactId>
+                  <groupId>org.moditect.layrry.example.links</groupId>
+                  <artifactId>layrry-links-tournament</artifactId>
                   <version>1.0.0</version>
-                  <type>zip</type>
+                  <type>tar.gz</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${layers.dir}</outputDirectory>
+                  <outputDirectory>${project.build.directory}/plugins-prepared/tournament</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
           <execution>
-            <id>copy-greeter-fr</id>
+            <id>copy-greenkeeping-plugin</id>
             <phase>generate-test-resources</phase>
             <goals>
               <goal>copy</goal>
@@ -124,12 +127,12 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.moditect.layrry.example.greeter</groupId>
-                  <artifactId>greeter-fr</artifactId>
+                  <groupId>org.moditect.layrry.example.links</groupId>
+                  <artifactId>layrry-links-greenkeeping</artifactId>
                   <version>1.0.0</version>
-                  <type>zip</type>
+                  <type>tar.gz</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${layers.dir}</outputDirectory>
+                  <outputDirectory>${project.build.directory}/plugins-prepared/greenkeeping</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -142,7 +145,9 @@
         <configuration>
           <systemPropertyVariables>
             <layersConfig>${project.basedir}/src/test/resources/layers.yml</layersConfig>
-            <basedir>${project.basedir}</basedir>
+            <pluginDir1>${project.build.directory}/route-plugins1</pluginDir1>
+            <pluginDir2>${project.build.directory}/route-plugins2</pluginDir2>
+            <preparedPluginDir>${project.build.directory}/plugins-prepared</preparedPluginDir>
           </systemPropertyVariables>
         </configuration>
       </plugin>

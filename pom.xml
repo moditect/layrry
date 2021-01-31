@@ -94,8 +94,7 @@
     <module>layrry-core</module>
     <module>layrry-launcher</module>
     <module>integration-test</module>
-    <module>plugin-example</module>
-    <module>vertx-example</module>
+    <module>examples</module>
   </modules>
 
   <dependencyManagement>

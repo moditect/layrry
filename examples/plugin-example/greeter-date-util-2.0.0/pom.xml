@@ -19,42 +19,24 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>org.moditect.layrry</groupId>
+    <groupId>org.moditect.layrry.example.greeter</groupId>
     <artifactId>layrry-plugin-example</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.moditect.layrry.example.greeter</groupId>
-  <artifactId>greeter-en</artifactId>
-  <version>1.0.0</version>
-  <name>Greeter EN</name>
+  <artifactId>greeter-date-util</artifactId>
+  <version>2.0.0</version>
+  <packaging>jar</packaging>
+  <name>Greeter Date Util</name>
 
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>greeter-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>greeter-date-util</artifactId>
-      <version>2.0.0</version>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

@@ -25,34 +25,21 @@
     <version>1.0.0.Alpha1</version>
   </parent>
 
-  <artifactId>layrry-plugin-example</artifactId>
+  <groupId>org.moditect.layrry.example</groupId>
+  <artifactId>layrry-examples-aggregator</artifactId>
   <packaging>pom</packaging>
-  <name>Layrry Plug-in Example</name>
+  <name>Layrry Example Aggregator</name>
 
   <properties>
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <maven.source.skip>true</maven.source.skip>
+    <target.assembly.directory>UNDEFINED</target.assembly.directory>
   </properties>
 
   <modules>
-    <module>greeter-core</module>
-    <module>greeter-date-util-1.0.0</module>
-    <module>greeter-date-util-2.0.0</module>
-    <module>greeter-en</module>
-    <module>greeter-de</module>
-    <module>greeter-fr</module>
-    <module>greeter-runner</module>
+    <module>plugin-example</module>
+    <module>vertx-example</module>
   </modules>
-  
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>greeter-core</artifactId>
-        <version>1.0.0</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <pluginManagement>
@@ -63,7 +50,7 @@
           <version>${version.assembly.plugin}</version>
           <configuration>
             <appendAssemblyId>false</appendAssemblyId>
-            <outputDirectory>${project.build.directory}/layers</outputDirectory>
+            <outputDirectory>${target.assembly.directory}</outputDirectory>
             <attach>true</attach>
             <descriptors>
               <descriptor>src/main/assembly/assembly.xml</descriptor>

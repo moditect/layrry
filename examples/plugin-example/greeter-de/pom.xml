@@ -15,47 +15,45 @@
      limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>org.moditect.layrry</groupId>
-    <artifactId>layrry-links-example</artifactId>
+    <groupId>org.moditect.layrry.example.greeter</groupId>
+    <artifactId>layrry-plugin-example</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
 
-  <groupId>org.moditect.layrry.example.links</groupId>
-  <artifactId>layrry-links-membership</artifactId>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>greeter-de</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>Layrry Links Membership Plug-in</name>
+  <name>Greeter DE</name>
 
   <dependencies>
     <dependency>
-      <groupId>org.moditect.layrry.example.links</groupId>
-      <artifactId>layrry-links-core</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>greeter-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-core</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>greeter-date-util</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-web</artifactId>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-assembly-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
-
 </project>

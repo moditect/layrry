@@ -23,16 +23,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.moditect.layrry</groupId>
+    <groupId>org.moditect.layrry.example.links</groupId>
     <artifactId>layrry-links-example</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
 
-  <groupId>org.moditect.layrry.example.links</groupId>
-  <artifactId>layrry-links-greenkeeping</artifactId>
+  <artifactId>layrry-links-membership</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>Layrry Links Greenkeeping Plug-in</name>
+  <name>Layrry Links Membership Plug-in</name>
 
   <dependencies>
     <dependency>

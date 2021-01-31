@@ -23,22 +23,20 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.moditect.layrry</groupId>
+    <groupId>org.moditect.layrry.example.links</groupId>
     <artifactId>layrry-links-example</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
 
-  <groupId>org.moditect.layrry.example.links</groupId>
-  <artifactId>layrry-links-core</artifactId>
+  <artifactId>layrry-links-greenkeeping</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>Layrry Links Core</name>
+  <name>Layrry Links Greenkeeping Plug-in</name>
 
   <dependencies>
     <dependency>
-      <groupId>org.moditect.layrry</groupId>
-      <artifactId>layrry-platform</artifactId>
-      <version>1.0.0.Alpha1</version>
+      <groupId>org.moditect.layrry.example.links</groupId>
+      <artifactId>layrry-links-core</artifactId>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
@@ -48,14 +46,15 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-bridge-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

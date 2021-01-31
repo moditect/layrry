@@ -17,27 +17,41 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.moditect.layrry</groupId>
-    <artifactId>layrry-plugin-example</artifactId>
+    <groupId>org.moditect.layrry.example</groupId>
+    <artifactId>layrry-examples-aggregator</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-
   <groupId>org.moditect.layrry.example.greeter</groupId>
-  <artifactId>greeter-date-util</artifactId>
-  <version>1.0.0</version>
-  <packaging>jar</packaging>
-  <name>Greeter Date Util</name>
+  <artifactId>layrry-plugin-example</artifactId>
+  <packaging>pom</packaging>
+  <name>Layrry Plug-in Example</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <properties>
+    <target.assembly.directory>${project.build.directory}/layers</target.assembly.directory>
+  </properties>
+
+  <modules>
+    <module>greeter-core</module>
+    <module>greeter-date-util-1.0.0</module>
+    <module>greeter-date-util-2.0.0</module>
+    <module>greeter-en</module>
+    <module>greeter-de</module>
+    <module>greeter-fr</module>
+    <module>greeter-runner</module>
+  </modules>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>greeter-core</artifactId>
+        <version>1.0.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>

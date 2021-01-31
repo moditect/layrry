@@ -20,11 +20,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.moditect.layrry</groupId>
-    <artifactId>layrry-aggregator</artifactId>
+    <groupId>org.moditect.layrry.example</groupId>
+    <artifactId>layrry-examples-aggregator</artifactId>
     <version>1.0.0.Alpha1</version>
   </parent>
 
+  <groupId>org.moditect.layrry.example.links</groupId>
   <artifactId>layrry-links-example</artifactId>
   <packaging>pom</packaging>
   <name>Layrry Links Example</name>
@@ -33,8 +34,7 @@
 
   <properties>
     <vertx.version>4.0.0</vertx.version>
-    <maven.javadoc.skip>true</maven.javadoc.skip>
-    <maven.source.skip>true</maven.source.skip>
+    <target.assembly.directory>${project.build.directory}/plugins</target.assembly.directory>
   </properties>
 
   <dependencyManagement>
@@ -71,31 +71,4 @@
     <module>layrry-links-runner</module>
   </modules>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>${version.assembly.plugin}</version>
-          <configuration>
-            <appendAssemblyId>false</appendAssemblyId>
-            <outputDirectory>${project.build.directory}/plugins</outputDirectory>
-            <attach>true</attach>
-            <descriptors>
-              <descriptor>src/main/assembly/assembly.xml</descriptor>
-            </descriptors>
-          </configuration>
-          <executions>
-            <execution>
-              <phase>package</phase>
-              <goals>
-                <goal>single</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
 </project>
