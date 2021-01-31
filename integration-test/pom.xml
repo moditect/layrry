@@ -25,6 +25,7 @@
     <version>1.0.0.Alpha1</version>
   </parent>
 
+  <groupId>org.moditect.layrry.it</groupId>
   <artifactId>layrry-integrationtest</artifactId>
   <packaging>pom</packaging>
   <name>Layrry Integration Test - Aggregator</name>

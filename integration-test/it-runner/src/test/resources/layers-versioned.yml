@@ -19,25 +19,25 @@ layers:
     modules:
       - "org.apache.logging.log4j:log4j-api:{{log4jVersion}}"
       - "org.apache.logging.log4j:log4j-core:{{log4jVersion}}"
-      - "com.example.it:it-logconfig:{{appVersion}}"
+      - "org.moditect.layrry.it:it-logconfig:{{appVersion}}"
   foo:
     parents:
       - "log"
     modules:
-      - "com.example.it:it-greeter:1.0.0"
-      - "com.example.it:it-foo:{{appVersion}}"
+      - "org.moditect.layrry.it:it-greeter:1.0.0"
+      - "org.moditect.layrry.it:it-foo:{{appVersion}}"
   bar:
     parents:
       - "log"
     modules:
-      - "com.example.it:it-greeter:2.0.0"
-      - "com.example.it:it-bar:{{appVersion}}"
+      - "org.moditect.layrry.it:it-greeter:2.0.0"
+      - "org.moditect.layrry.it:it-bar:{{appVersion}}"
   app:
     parents:
       - "foo"
       - "bar"
     modules:
-      - "com.example.it:it-app:{{appVersion}}"
+      - "org.moditect.layrry.it:it-app:{{appVersion}}"
 main:
   module: com.example.app
   class: com.example.app.App
