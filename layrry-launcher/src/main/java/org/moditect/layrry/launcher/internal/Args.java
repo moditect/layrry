@@ -23,22 +23,22 @@ import java.util.List;
 
 public class Args {
 
-    @Parameter(description = "Main arguments")
+    @Parameter(description = "[arguments]")
     private List<String> mainArgs = new ArrayList<>();
 
-    @Parameter(names = "--layers-config", required = true, description = "Layers configuration file")
+    @Parameter(names = "--layers-config", required = true, description = "Layers configuration file. May be a local file or remote URL.")
     private String layersConfig;
 
-    @Parameter(names = "--properties", description = "Additional config properties")
+    @Parameter(names = "--properties", description = "Additional configuration properties. May be a local file or remote URL. Must use the Java properties format.")
     private String properties;
 
     @Parameter(names = "--basedir", description = "Base directory for resolving relative paths")
     private File basedir;
 
-    @Parameter(names = "--help", description = "Show usage", help = true)
+    @Parameter(names = "--help", description = "Show usage and quit", help = true)
     private boolean help;
 
-    @Parameter(names = "--version", description = "Show version", help = true)
+    @Parameter(names = "--version", description = "Show version and quit", help = true)
     private boolean version;
 
     public List<String> getMainArgs() {

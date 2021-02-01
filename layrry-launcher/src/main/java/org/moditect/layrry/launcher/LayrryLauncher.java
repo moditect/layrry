@@ -45,8 +45,9 @@ public final class LayrryLauncher {
         Args arguments = new Args();
 
         JCommander jCommander = JCommander.newBuilder()
-                .addObject(arguments)
-                .build();
+            .programName(LayrryLauncher.class.getName())
+            .addObject(arguments)
+            .build();
         jCommander.parse(args);
 
         if (arguments.isHelp()) {
