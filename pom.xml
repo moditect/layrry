@@ -347,6 +347,9 @@
                 <exclude>*.dot</exclude>
                 <exclude>LICENSE.txt</exclude>
                 <exclude>install-jdk.sh</exclude>
+                <exclude>mvnw.cmd</exclude>
+                <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+                <exclude>.mvn/wrapper/MavenWrapperDownloader.java</exclude>
               </excludes>
             </configuration>
           </execution>
