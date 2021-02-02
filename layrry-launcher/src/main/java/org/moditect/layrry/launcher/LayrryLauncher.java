@@ -16,6 +16,7 @@
 package org.moditect.layrry.launcher;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import org.moditect.layrry.Layrry;
 import org.moditect.layrry.launcher.internal.Args;
 
@@ -48,7 +49,13 @@ public final class LayrryLauncher {
             .programName(LayrryLauncher.class.getName())
             .addObject(arguments)
             .build();
-        jCommander.parse(args);
+
+        try {
+            jCommander.parse(args);
+        } catch (ParameterException e) {
+            jCommander.usage();
+            return;
+        }
 
         if (arguments.isHelp()) {
             jCommander.usage();
