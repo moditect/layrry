@@ -161,8 +161,8 @@ public final class LayrryLauncher {
             LayrryLauncher.class.getClassLoader());
 
         for (LayersConfigParser parser : parsers) {
-            File layersConfigFile = new File(basedir, "layers."+parser.getPreferredFileExtension());
-            if(layersConfigFile.exists()) {
+            File layersConfigFile = new File(basedir, "layers." + parser.getPreferredFileExtension());
+            if (layersConfigFile.exists()) {
                 return layersConfigFile.getAbsolutePath();
             }
         }
