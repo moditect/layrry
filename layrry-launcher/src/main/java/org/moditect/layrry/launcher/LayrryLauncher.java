@@ -79,6 +79,17 @@ public final class LayrryLauncher {
         URL propertiesFileUrl = toUrl(propertiesFile);
 
         String layersConfig = arguments.getLayersConfig();
+        if (null == layersConfig || layersConfig.isEmpty()) {
+            layersConfig = resolveLayersConfigFile(basedir);
+        }
+        if (null == layersConfig) {
+            jCommander.getConsole()
+                .println("Missing --layers-config parameter or local file named layers" + getSupportedConfigFormats());
+            jCommander.getConsole().println("");
+            printUsage(jCommander);
+            return;
+        }
+
         URL layersConfigUrl = toUrl(layersConfig);
 
         if (null != layersConfigUrl) {
@@ -138,5 +149,23 @@ public final class LayrryLauncher {
         }
 
         return extensions;
+    }
+
+    private static String resolveLayersConfigFile(File basedir) {
+        if (basedir == null) {
+            basedir = new File(System.getProperty("user.dir"));
+        }
+
+        ServiceLoader<LayersConfigParser> parsers = ServiceLoader.load(LayersConfigParser.class,
+            LayrryLauncher.class.getClassLoader());
+
+        for (LayersConfigParser parser : parsers) {
+            File layersConfigFile = new File(basedir, "layers."+parser.getPreferredFileExtension());
+            if(layersConfigFile.exists()) {
+                return layersConfigFile.getAbsolutePath();
+            }
+        }
+
+        return null;
     }
 }
