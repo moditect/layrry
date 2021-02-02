@@ -26,7 +26,7 @@ public class Args {
     @Parameter(description = "[arguments]")
     private List<String> mainArgs = new ArrayList<>();
 
-    @Parameter(names = "--layers-config", required = true, description = "Layers configuration file. May be a local file or remote URL.")
+    @Parameter(names = "--layers-config", description = "Layers configuration file. May be a local file or remote URL.")
     private String layersConfig;
 
     @Parameter(names = "--properties", description = "Additional configuration properties. May be a local file or remote URL. Must use the Java properties format.")
