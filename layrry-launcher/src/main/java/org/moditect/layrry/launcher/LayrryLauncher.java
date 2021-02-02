@@ -84,7 +84,8 @@ public final class LayrryLauncher {
         }
         if (null == layersConfig) {
             jCommander.getConsole()
-                .println("Missing --layers-config parameter or local file named layers" + getSupportedConfigFormats());
+                .println("Missing --layers-config parameter or local file named layers[" +
+                    String.join("|", getSupportedConfigFormats()) + "]");
             jCommander.getConsole().println("");
             printUsage(jCommander);
             return;
