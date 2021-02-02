@@ -26,10 +26,12 @@ public class Args {
     @Parameter(description = "[arguments]")
     private List<String> mainArgs = new ArrayList<>();
 
-    @Parameter(names = "--layers-config", description = "Layers configuration file. May be a local file or remote URL.")
+    @Parameter(names = "--layers-config", description = "Layers configuration file. May be a local file or remote URL. " +
+        "Examples: path/to/layers.yml, https://server/path/to/layers.toml")
     private String layersConfig;
 
-    @Parameter(names = "--properties", description = "Additional configuration properties. May be a local file or remote URL. Must use the Java properties format.")
+    @Parameter(names = "--properties", description = "Additional configuration properties. May be a local file or remote URL. " +
+        "Must use the Java properties format. Examples: path/to/versions.properties, https://server/path/to/versions.properties")
     private String properties;
 
     @Parameter(names = "--basedir", description = "Base directory for resolving relative paths")
