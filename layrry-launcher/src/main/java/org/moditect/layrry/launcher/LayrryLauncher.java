@@ -18,6 +18,7 @@ package org.moditect.layrry.launcher;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import org.moditect.layrry.Layrry;
+import org.moditect.layrry.config.LayersConfigParser;
 import org.moditect.layrry.launcher.internal.Args;
 
 import java.io.File;
@@ -25,6 +26,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedHashSet;
+import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * The main entry point for using Layrry on the command line. Expects the layers config file to be passed in:
@@ -53,12 +57,12 @@ public final class LayrryLauncher {
         try {
             jCommander.parse(args);
         } catch (ParameterException e) {
-            jCommander.usage();
+            printUsage(jCommander);
             return;
         }
 
         if (arguments.isHelp()) {
-            jCommander.usage();
+            printUsage(jCommander);
             return;
         }
 
@@ -113,5 +117,26 @@ public final class LayrryLauncher {
         } catch (MalformedURLException e) {
             return null;
         }
+    }
+
+    private static void printUsage(JCommander jCommander) {
+        jCommander.usage();
+
+        StringBuilder sb = new StringBuilder("Supported config formats are ")
+            .append(getSupportedConfigFormats());
+        jCommander.getConsole().println(sb.toString());
+    }
+
+    private static Set<String> getSupportedConfigFormats() {
+        Set<String> extensions = new LinkedHashSet<>();
+
+        ServiceLoader<LayersConfigParser> parsers = ServiceLoader.load(LayersConfigParser.class,
+            LayrryLauncher.class.getClassLoader());
+
+        for (LayersConfigParser parser : parsers) {
+            extensions.add("." + parser.getPreferredFileExtension());
+        }
+
+        return extensions;
     }
 }
