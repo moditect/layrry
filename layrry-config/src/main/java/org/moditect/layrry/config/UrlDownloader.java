@@ -43,7 +43,8 @@ class UrlDownloader {
     static Path download(URL url, Properties properties) {
         HttpClient.Builder builder = HttpClient.newBuilder()
             .connectTimeout(Duration.of(getLong("connection.timeout", properties, 30_000), ChronoUnit.MILLIS))
-            .followRedirects(HttpClient.Redirect.ALWAYS);
+            .followRedirects(HttpClient.Redirect.ALWAYS)
+            .version(HttpClient.Version.HTTP_2);
 
         builder = setupProxy(builder, url, properties);
         builder = setupAuthentication(builder, url, properties);
@@ -64,6 +65,7 @@ class UrlDownloader {
         try {
             return HttpRequest.newBuilder()
                 .uri(url.toURI())
+                .version(HttpClient.Version.HTTP_2)
                 .build();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid URL", e);
@@ -96,24 +98,28 @@ class UrlDownloader {
     }
 
     private static HttpClient.Builder setupProxy(HttpClient.Builder builder, URL url, Properties properties) {
-        if (getBoolean("http.proxy", properties)) {
-            setIfUndefined("http.proxyHost", properties, "");
-            setIfUndefined("http.proxyPort", properties, "80");
-            setIfUndefined("http.nonProxyHosts", properties, "localhost|127.*|[::1]");
-        }
-        if (getBoolean("https.proxy", properties)) {
-            setIfUndefined("https.proxyHost", properties, "");
-            setIfUndefined("https.proxyPort", properties, "443");
-            setIfUndefined("http.nonProxyHosts", properties, "localhost|127.*|[::1]");
-        }
-        if (getBoolean("socks.proxy", properties)) {
-            setIfUndefined("socksProxyHost", properties.getProperty("socks.proxyHost", ""));
-            setIfUndefined("socksProxyPort", properties.getProperty("socks.proxyPort", "1080"));
+        if (getBoolean("use.proxy", properties)) {
+            if (getBoolean("http.proxy", properties)) {
+                setIfUndefined("http.proxyHost", properties, "");
+                setIfUndefined("http.proxyPort", properties, "80");
+                setIfUndefined("http.nonProxyHosts", properties, "localhost|127.*|[::1]");
+            }
+            if (getBoolean("https.proxy", properties)) {
+                setIfUndefined("https.proxyHost", properties, "");
+                setIfUndefined("https.proxyPort", properties, "443");
+                setIfUndefined("http.nonProxyHosts", properties, "localhost|127.*|[::1]");
+            }
+            if (getBoolean("socks.proxy", properties)) {
+                setIfUndefined("socksProxyHost", properties.getProperty("socks.proxyHost", ""));
+                setIfUndefined("socksProxyPort", properties.getProperty("socks.proxyPort", "1080"));
+            }
+
+            int port = url.getPort();
+            if (port == -1) port = url.getDefaultPort();
+            return builder.proxy(ProxySelector.of(new InetSocketAddress(url.getHost(), port)));
         }
 
-        int port = url.getPort();
-        if (port == -1) port = url.getDefaultPort();
-        return builder.proxy(ProxySelector.of(new InetSocketAddress(url.getHost(), port)));
+        return builder;
     }
 
     private static HttpClient.Builder setupAuthentication(HttpClient.Builder builder, URL url, Properties properties) {
