@@ -393,6 +393,33 @@ layrry-launcher-{layrry-version}-all.jar \
   --properties https://server:port/path/to/versions.properties
 ----
 
+=== Proxy Configuration
+
+You may need to configure a proxy when using the remote configuration feature. The following properties may be used to
+configure a proxy
+
+[options="header"]
+|===
+| Key                 | Description
+| use.proxy           | Whether to use any proxy or not. Defaults to `false`.
+| http.proxy          | Whether to use HTTP proxy or not. Defaults to `false`.
+| http.proxyHost      | Defaults to empty String.
+| http.proxyport      | Defaults to `80`.
+| http.proxyUser      | Defaults to empty String.
+| http.proxyPassword  | Defaults to empty String.
+| http.nonProxyHosts  | Defaults to `localhost\|127.*\|[::1]`.
+| https.proxy         | Whether to use HTTPS proxy or not. Defaults to `false`.
+| https.proxyHost     | Defaults to empty String.
+| https.proxyport     | Defaults to `443`.
+| https.proxyUser     | Defaults to empty String.
+| https.proxyPassword | Defaults to empty String.
+| socks.proxy         | Whether to use SOCKS proxy or not. Defaults to `false`.
+| socksProxyHost      | Defaults to empty String.
+| socksProxyPort      | Defaults to `1080`.
+| socks.proxyUser     | Defaults to empty String.
+| socks.proxyPassword | Defaults to empty String.
+|===
+
 == Using the Layrry API
 
 In addition to the YAML-based/TOML-based launcher, Layrry provides also a Java API for assembling and running layered applications.
