@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,10 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.util.Collection;
+
 import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-
-import java.util.Collection;
 
 /**
  * Resolves artifacts using a locally configured repositories.

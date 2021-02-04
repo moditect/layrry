@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,13 +23,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.moditect.layrry.example.links.core.spi.RouterContributor;
 import org.moditect.layrry.platform.PluginDescriptor;
 import org.moditect.layrry.platform.PluginLifecycleListener;
-
-import org.moditect.layrry.example.links.core.spi.RouterContributor;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
@@ -38,6 +36,7 @@ import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 public class LayrryLinksVerticle extends AbstractVerticle {
@@ -61,14 +60,14 @@ public class LayrryLinksVerticle extends AbstractVerticle {
 
         registerContributedRoutes(LayrryLinksVerticle.class.getModule().getLayer());
 
-        for(Entry<String, ModuleLayer> layer : moduleLayers.entrySet()) {
+        for (Entry<String, ModuleLayer> layer : moduleLayers.entrySet()) {
             registerContributedRoutes(layer.getValue());
         }
 
         int port = Integer.getInteger("port", 8080);
         vertx.createHttpServer()
-            .requestHandler(mainRouter)
-            .listen(port);
+                .requestHandler(mainRouter)
+                .listen(port);
 
         LOGGER.info("Server ready! Browse to http://localhost:{}/routes", port);
     }
@@ -95,12 +94,12 @@ public class LayrryLinksVerticle extends AbstractVerticle {
 
     private static void unregisterContributedRoutes(ModuleLayer layer) {
         mainRouter.getRoutes()
-            .stream()
-            .filter(route -> route.getPath() != null && startsWithAny(route.getPath(), routesByLayer.get(layer)))
-            .forEach(route -> {
-                route.remove();
-                LOGGER.info("Removed router for path: " + route.getPath());
-            });
+                .stream()
+                .filter(route -> route.getPath() != null && startsWithAny(route.getPath(), routesByLayer.get(layer)))
+                .forEach(route -> {
+                    route.remove();
+                    LOGGER.info("Removed router for path: " + route.getPath());
+                });
 
         routesByLayer.remove(layer);
 
@@ -133,11 +132,11 @@ public class LayrryLinksVerticle extends AbstractVerticle {
 
     private static String getRoutesList() {
         return routesByLayer.values()
-            .stream()
-            .flatMap(routes -> routes.stream())
-            .map(route -> "<p><a href=\"" + route + "\">" + route + "<a/></p>")
-            .sorted()
-            .collect(Collectors.joining());
+                .stream()
+                .flatMap(routes -> routes.stream())
+                .map(route -> "<p><a href=\"" + route + "\">" + route + "<a/></p>")
+                .sorted()
+                .collect(Collectors.joining());
     }
 
     public static class RoutesOverviewRouterContributor implements RouterContributor {
@@ -148,11 +147,11 @@ public class LayrryLinksVerticle extends AbstractVerticle {
             SockJSHandler sockJsHandler = SockJSHandler.create(vertx);
 
             sockJsHandler.bridge(options, event -> {
-              if (event.type() == BridgeEventType.SOCKET_CREATED) {
-                  LOGGER.info("Socket created");
-              }
+                if (event.type() == BridgeEventType.SOCKET_CREATED) {
+                    LOGGER.info("Socket created");
+                }
 
-              event.complete(true);
+                event.complete(true);
             });
 
             Router router = Router.router(vertx);
@@ -165,36 +164,37 @@ public class LayrryLinksVerticle extends AbstractVerticle {
 
         private void handleGetRoutesOverview(RoutingContext routingContext) {
             String index = "<!DOCTYPE html>\n" +
-                "                <html lang=\"en\">\n" +
-                "                  <head>\n" +
-                "                    <title>Layrry Links</title>\n" +
-                "                    <meta charset=\"utf-8\">\n" +
-                "                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n" +
-                "\n" +
-                "                    <script src=\"https://code.jquery.com/jquery-1.11.2.min.js\"></script>\n" +
-                "                    <script src=\"https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js\"></script>\n" +
-                "                    <script src=\"https://cdn.jsdelivr.net/npm/vertx3-eventbus-client@3.9.0/vertx-eventbus.min.js\"></script>\n" +
-                "\n" +
-                "                    <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\" integrity=\"sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh\" crossorigin=\"anonymous\">\n" +
-                "                  </head>\n" +
-                "                  <body>\n" +
-                "\n" +
-                "                    <div class=\"container\">\n" +
-                "                      <h1>Layrry Links -- Routes</h1>\n" +
-                "                      <div id=\"status\">%s</div>\n" +
-                "                    </div>\n" +
-                "\n" +
-                "                    <script>\n" +
-                "                      var eb = new EventBus(\"http://localhost:8080/routes/eventbus\");\n" +
-                "\n" +
-                "                      eb.onopen = function () {\n" +
-                "                        eb.registerHandler(\"routes-updates\", function (err, msg) {\n" +
-                "                          $('#status').html(msg.body);\n" +
-                "                        });\n" +
-                "                      }\n" +
-                "                    </script>\n" +
-                "                  </body>\n" +
-                "                </html>";
+                    "                <html lang=\"en\">\n" +
+                    "                  <head>\n" +
+                    "                    <title>Layrry Links</title>\n" +
+                    "                    <meta charset=\"utf-8\">\n" +
+                    "                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n" +
+                    "\n" +
+                    "                    <script src=\"https://code.jquery.com/jquery-1.11.2.min.js\"></script>\n" +
+                    "                    <script src=\"https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js\"></script>\n" +
+                    "                    <script src=\"https://cdn.jsdelivr.net/npm/vertx3-eventbus-client@3.9.0/vertx-eventbus.min.js\"></script>\n" +
+                    "\n" +
+                    "                    <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\" integrity=\"sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh\" crossorigin=\"anonymous\">\n"
+                    +
+                    "                  </head>\n" +
+                    "                  <body>\n" +
+                    "\n" +
+                    "                    <div class=\"container\">\n" +
+                    "                      <h1>Layrry Links -- Routes</h1>\n" +
+                    "                      <div id=\"status\">%s</div>\n" +
+                    "                    </div>\n" +
+                    "\n" +
+                    "                    <script>\n" +
+                    "                      var eb = new EventBus(\"http://localhost:8080/routes/eventbus\");\n" +
+                    "\n" +
+                    "                      eb.onopen = function () {\n" +
+                    "                        eb.registerHandler(\"routes-updates\", function (err, msg) {\n" +
+                    "                          $('#status').html(msg.body);\n" +
+                    "                        });\n" +
+                    "                      }\n" +
+                    "                    </script>\n" +
+                    "                  </body>\n" +
+                    "                </html>";
 
             index = String.format(index, getRoutesList());
 

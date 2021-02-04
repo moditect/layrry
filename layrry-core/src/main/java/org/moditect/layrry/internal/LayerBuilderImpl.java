@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
  */
 package org.moditect.layrry.internal;
 
-import org.moditect.layrry.LayerBuilder;
-import org.moditect.layrry.Layers;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.moditect.layrry.LayerBuilder;
+import org.moditect.layrry.Layers;
 
 public class LayerBuilderImpl implements LayerBuilder {
 
@@ -38,7 +38,6 @@ public class LayerBuilderImpl implements LayerBuilder {
         this.moduleGavs = new ArrayList<>();
         this.parents = new ArrayList<>();
     }
-
 
     @Override
     public LayerBuilder withModulesIn(Path layerDir) {

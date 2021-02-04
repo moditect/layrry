@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,9 +31,9 @@ public class LocalFormatStageImpl implements LocalFormatStage {
     @Override
     public Path[] asPath() {
         return artifacts.stream()
-            .map(LocalResolvedArtifact::getFile)
-            .map(File::toPath)
-            .collect(Collectors.toSet())
-            .toArray(new Path[artifacts.size()]);
+                .map(LocalResolvedArtifact::getFile)
+                .map(File::toPath)
+                .collect(Collectors.toSet())
+                .toArray(new Path[artifacts.size()]);
     }
 }

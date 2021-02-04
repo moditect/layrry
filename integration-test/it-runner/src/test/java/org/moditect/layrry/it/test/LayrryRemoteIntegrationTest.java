@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moditect.layrry.launcher.LayrryLauncher;
 
-public class LayrryRemoteIntegrationTest extends AbstractRemoteIntegrationTestCase{
+public class LayrryRemoteIntegrationTest extends AbstractRemoteIntegrationTestCase {
     @BeforeClass
     public static void startServer() throws Exception {
         startServer(new ResourceHandler());
@@ -29,8 +29,8 @@ public class LayrryRemoteIntegrationTest extends AbstractRemoteIntegrationTestCa
     @Test
     public void runLayersFromYaml() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            serverUri + "layers.yml",
-            "Alice");
+                serverUri + "layers.yml",
+                "Alice");
 
         assertOutput();
     }
@@ -38,8 +38,8 @@ public class LayrryRemoteIntegrationTest extends AbstractRemoteIntegrationTestCa
     @Test
     public void runLayersFromToml() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            serverUri + "layers.toml",
-            "Alice");
+                serverUri + "layers.toml",
+                "Alice");
 
         assertOutput();
     }
@@ -47,10 +47,10 @@ public class LayrryRemoteIntegrationTest extends AbstractRemoteIntegrationTestCa
     @Test
     public void runVersionedLayersFromYaml() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            serverUri + "layers-versioned.yml",
-            "--properties",
-            serverUri + "versions.properties",
-            "Alice");
+                serverUri + "layers-versioned.yml",
+                "--properties",
+                serverUri + "versions.properties",
+                "Alice");
 
         assertOutput();
     }

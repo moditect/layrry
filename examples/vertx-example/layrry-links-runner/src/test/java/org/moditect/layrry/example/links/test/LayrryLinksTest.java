@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,6 @@
  */
 package org.moditect.layrry.example.links.test;
 
-import static io.restassured.RestAssured.given;
-import static org.awaitility.Awaitility.await;
-import static org.hamcrest.Matchers.equalTo;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +23,10 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.moditect.layrry.launcher.LayrryLauncher;
+
+import static io.restassured.RestAssured.given;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.equalTo;
 
 public class LayrryLinksTest {
     private static final String TOURNAMENT_PLUGIN_NAME = "tournament";
@@ -72,8 +72,8 @@ public class LayrryLinksTest {
         LayrryLauncher.launch("--layers-config", layersConfig);
 
         given()
-            .when().get("/members/123")
-            .then()
+                .when().get("/members/123")
+                .then()
                 .statusCode(200)
                 .body("name", equalTo("Rudy Rough"));
 
@@ -82,19 +82,19 @@ public class LayrryLinksTest {
         Files.find(pluginDir1,
                 Integer.MAX_VALUE,
                 (filePath, fileAttr) -> fileAttr.isRegularFile())
-             .forEach(System.out::println);
+                .forEach(System.out::println);
 
         await().atMost(30, TimeUnit.SECONDS).until(() -> {
             return given()
-            .when()
-                .get("/tournaments")
-            .then()
-                .extract().statusCode() == 200;
+                    .when()
+                    .get("/tournaments")
+                    .then()
+                    .extract().statusCode() == 200;
         });
 
         given()
-            .when().get("/tournaments/123")
-            .then()
+                .when().get("/tournaments/123")
+                .then()
                 .statusCode(200)
                 .body("name", equalTo("Easter 36"));
 
@@ -102,10 +102,10 @@ public class LayrryLinksTest {
 
         await().atMost(30, TimeUnit.SECONDS).until(() -> {
             return given()
-            .when()
-                .get("/tournaments")
-            .then()
-                .extract().statusCode() == 404;
+                    .when()
+                    .get("/tournaments")
+                    .then()
+                    .extract().statusCode() == 404;
         });
     }
 
@@ -121,15 +121,15 @@ public class LayrryLinksTest {
 
         await().atMost(30, TimeUnit.SECONDS).until(() -> {
             return given()
-            .when()
-                .get("/greenkeeping-activities")
-            .then()
-                .extract().statusCode() == 200;
+                    .when()
+                    .get("/greenkeeping-activities")
+                    .then()
+                    .extract().statusCode() == 200;
         });
 
         given()
-            .when().get("/greenkeeping-activities/123")
-            .then()
+                .when().get("/greenkeeping-activities/123")
+                .then()
                 .statusCode(200)
                 .body("name", equalTo("Sand Front 9"));
     }

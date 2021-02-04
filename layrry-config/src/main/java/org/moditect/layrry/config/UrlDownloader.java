@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,9 +42,9 @@ class UrlDownloader {
 
     static Path download(URL url, Properties properties) {
         HttpClient.Builder builder = HttpClient.newBuilder()
-            .connectTimeout(Duration.of(getLong("connection.timeout", properties, 30_000), ChronoUnit.MILLIS))
-            .followRedirects(HttpClient.Redirect.ALWAYS)
-            .version(HttpClient.Version.HTTP_2);
+                .connectTimeout(Duration.of(getLong("connection.timeout", properties, 30_000), ChronoUnit.MILLIS))
+                .followRedirects(HttpClient.Redirect.ALWAYS)
+                .version(HttpClient.Version.HTTP_2);
 
         builder = setupProxy(builder, url, properties);
         builder = setupAuthentication(builder, url, properties);
@@ -56,7 +56,8 @@ class UrlDownloader {
         try {
             HttpResponse<Path> response = client.send(request, fileBodyHandler(url));
             return response.body();
-        } catch (IOException | InterruptedException e) {
+        }
+        catch (IOException | InterruptedException e) {
             throw new IllegalStateException("Unexpected error when downloading from " + url, e);
         }
     }
@@ -64,10 +65,11 @@ class UrlDownloader {
     private static HttpRequest createRequest(URL url) {
         try {
             return HttpRequest.newBuilder()
-                .uri(url.toURI())
-                .version(HttpClient.Version.HTTP_2)
-                .build();
-        } catch (URISyntaxException e) {
+                    .uri(url.toURI())
+                    .version(HttpClient.Version.HTTP_2)
+                    .build();
+        }
+        catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid URL", e);
         }
     }
@@ -91,7 +93,8 @@ class UrlDownloader {
 
                 Path layersConfigFilePath = File.createTempFile("layrry", fileName).toPath();
                 return HttpResponse.BodyHandlers.ofFile(layersConfigFilePath).apply(responseInfo);
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 throw new IllegalStateException("Unexpected I/O error", ioe);
             }
         };
@@ -115,7 +118,8 @@ class UrlDownloader {
             }
 
             int port = url.getPort();
-            if (port == -1) port = url.getDefaultPort();
+            if (port == -1)
+                port = url.getDefaultPort();
             return builder.proxy(ProxySelector.of(new InetSocketAddress(url.getHost(), port)));
         }
 
@@ -133,7 +137,8 @@ class UrlDownloader {
                     return new PasswordAuthentication(username, password.toCharArray());
                 }
             });
-        } else if (getBoolean("socks.proxy", properties) && getBoolean("socks.proxy.auth", properties)) {
+        }
+        else if (getBoolean("socks.proxy", properties) && getBoolean("socks.proxy.auth", properties)) {
             String username = properties.getProperty("socks.proxyUser", "");
             String password = properties.getProperty("socks.proxyPassword", "");
             System.setProperty("java.net.socks.username", username);
@@ -228,7 +233,7 @@ class UrlDownloader {
                         String username = properties.getProperty(protocol + ".proxyUser", "");
                         String password = properties.getProperty(protocol + ".proxyPassword", "");
                         if (getRequestingHost().equalsIgnoreCase(host) &&
-                            Integer.parseInt(port) == getRequestingPort()) {
+                                Integer.parseInt(port) == getRequestingPort()) {
                             return new PasswordAuthentication(username, password.toCharArray());
                         }
                     }
@@ -258,7 +263,8 @@ class UrlDownloader {
     static boolean getBoolean(String name, Properties properties) {
         try {
             return Boolean.parseBoolean(properties.getProperty(name));
-        } catch (IllegalArgumentException | NullPointerException e) {
+        }
+        catch (IllegalArgumentException | NullPointerException e) {
             // ignored
         }
         return false;
@@ -267,7 +273,8 @@ class UrlDownloader {
     static int getInteger(String name, Properties properties, int defaultValue) {
         try {
             return Integer.parseInt(properties.getProperty(name));
-        } catch (NumberFormatException | NullPointerException e) {
+        }
+        catch (NumberFormatException | NullPointerException e) {
             // ignored
         }
         return defaultValue;
@@ -276,7 +283,8 @@ class UrlDownloader {
     static long getLong(String name, Properties properties, long defaultValue) {
         try {
             return Long.parseLong(properties.getProperty(name));
-        } catch (NumberFormatException | NullPointerException e) {
+        }
+        catch (NumberFormatException | NullPointerException e) {
             // ignored
         }
         return defaultValue;

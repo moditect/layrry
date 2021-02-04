@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,8 +77,8 @@ public class TournamentsRouterContributor implements RouterContributor {
 
     private void handleListProducts(RoutingContext routingContext) {
         routingContext.response()
-            .putHeader("content-type", "application/json")
-            .end(tournamentService.getTournaments().encodePrettily());
+                .putHeader("content-type", "application/json")
+                .end(tournamentService.getTournaments().encodePrettily());
     }
 
     private void sendError(int statusCode, HttpServerResponse response) {

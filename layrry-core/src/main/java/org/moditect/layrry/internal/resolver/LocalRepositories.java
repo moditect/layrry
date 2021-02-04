@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,8 @@ public final class LocalRepositories {
         // Argument tests are inside the impl constructor
         if ("flat".equals(layout)) {
             return new FlatLocalRepository(id, path);
-        } else if ("default".equals(layout)) {
+        }
+        else if ("default".equals(layout)) {
             return new DefaultLocalRepository(id, path);
         }
         throw new IllegalArgumentException("layout must be 'default' or 'flat.");
@@ -55,10 +56,11 @@ public final class LocalRepositories {
      * @throws IllegalArgumentException for null or empty id or if the Path is technically wrong or null
      */
     public static LocalRepository createLocalRepository(final String id, final String path, final String layout)
-        throws IllegalArgumentException {
+            throws IllegalArgumentException {
         if ("flat".equals(layout)) {
             return new FlatLocalRepository(id, path);
-        } else if ("default".equals(layout)) {
+        }
+        else if ("default".equals(layout)) {
             return new DefaultLocalRepository(id, path);
         }
         throw new IllegalArgumentException("layout must be 'default' or 'flat.");

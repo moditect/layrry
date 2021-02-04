@@ -14,9 +14,6 @@
 #  limitations under the License.
 #
 
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Build
 
 on:
@@ -28,54 +25,41 @@ on:
 jobs:
   build:
     name: Build
+    if: github.repository == 'moditect/layrry' && startsWith(github.event.head_commit.message, '🏁 Releasing version') != true && startsWith(github.event.head_commit.message, '⬆️  Next version') != true
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - name: 'Check out repository'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
     - name: 'Set up Java'
       uses: actions/setup-java@v2
       with:
         java-version: 17
         distribution: 'zulu'
-    - name: Cache Maven packages
-      uses: actions/cache@v2.1.7
+
+    - name: 'Cache Maven packages'
+      uses: actions/cache@v2
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Build with Maven
+
+    - name: 'Build'
       run: mvn install --file pom.xml
 
-  earlyaccess:
-    name: 'Early Access'
-    if: github.event_name == 'push' && github.repository == 'moditect/layrry' && github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+    - name: 'Release with JReleaser'
+      if: github.event_name == 'push'
+      env:
+        JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: ./mvnw -B --file pom.xml -Pjreleaser jreleaser:release
 
-      - name: 'Set up Java'
-        uses: actions/setup-java@v2
-        with:
-          java-version: 17
-          distribution: 'zulu'
-
-      - name: Cache Maven packages
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build with Maven
-        run: mvn -DskipTests verify --file pom.xml
-
-      - name: 'Release early-access artifacts'
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          automatic_release_tag: 'early-access'
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: true
-          title: "Layrry Early-Access"
-          files: |
-            layrry-launcher/target/*-all.jar
-            layrry-launcher/target/distributions/*.zip
-            layrry-launcher/target/distributions/*.tar.gz
+    - name: 'JReleaser output'
+      if: github.event_name == 'push' && always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: jreleaser-logs
+        path: |
+          target/jreleaser/trace.log
+          target/jreleaser/output.properties

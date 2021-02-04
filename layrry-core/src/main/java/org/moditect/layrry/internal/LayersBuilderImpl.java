@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,6 @@
  */
 package org.moditect.layrry.internal;
 
-import org.moditect.layrry.LayerBuilder;
-import org.moditect.layrry.Layers;
-import org.moditect.layrry.LayersBuilder;
-import org.moditect.layrry.LocalResolve;
-import org.moditect.layrry.RemoteResolve;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +22,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.moditect.layrry.LayerBuilder;
+import org.moditect.layrry.Layers;
+import org.moditect.layrry.LayersBuilder;
+import org.moditect.layrry.LocalResolve;
+import org.moditect.layrry.RemoteResolve;
 
 public class LayersBuilderImpl implements LayersBuilder {
 
@@ -64,13 +64,15 @@ public class LayersBuilderImpl implements LayersBuilder {
 
     @Override
     public LayersBuilder resolve(LocalResolve resolve) {
-        if (null != resolve) localResolvers.add(resolve);
+        if (null != resolve)
+            localResolvers.add(resolve);
         return this;
     }
 
     @Override
     public LayersBuilder resolve(RemoteResolve resolve) {
-        if (null != resolve) remoteResolvers.add(resolve);
+        if (null != resolve)
+            remoteResolvers.add(resolve);
         return this;
     }
 

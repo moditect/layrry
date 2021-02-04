@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,8 +77,8 @@ public class GreenkeepingRouterContributor implements RouterContributor {
 
     private void handleListActivities(RoutingContext routingContext) {
         routingContext.response()
-            .putHeader("content-type", "application/json")
-            .end(greenkeepingService.getActivities().encodePrettily());
+                .putHeader("content-type", "application/json")
+                .end(greenkeepingService.getActivities().encodePrettily());
     }
 
     private void sendError(int statusCode, HttpServerResponse response) {

@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,15 +22,19 @@ public class Main {
     public String getModule() {
         return module;
     }
+
     public void setModule(String module) {
         this.module = module;
     }
+
     public String getClazz() {
         return clazz;
     }
+
     public void setClazz(String clazz) {
         this.clazz = clazz;
     }
+
     @Override
     public String toString() {
         return "Main [module=" + module + ", clazz=" + clazz + "]";

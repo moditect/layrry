@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +49,6 @@ public class App {
                 System.out.println(i++ + ": " + greeterFactory.getFlag() + "  " + greeterFactory.getLanguage());
             }
 
-
             BufferedReader systemIn = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 
             try {
@@ -60,7 +59,7 @@ public class App {
                 System.out.print("Here's your " + factories.get(factoryIndex).getLanguage() + " greeting: ");
                 System.out.println(factories.get(factoryIndex).getGreeter().greet(name));
             }
-            catch(ProgramStoppedException e) {
+            catch (ProgramStoppedException e) {
                 System.out.println("Exiting");
                 return;
             }
@@ -73,7 +72,7 @@ public class App {
         System.out.println("");
         System.out.print("Choose a greeter: 1: ");
 
-        while((line = systemIn.readLine()) != null) {
+        while ((line = systemIn.readLine()) != null) {
 
             int greeter;
             if (line.isEmpty()) {
@@ -83,7 +82,7 @@ public class App {
                 try {
                     greeter = Integer.parseInt(line);
                 }
-                catch(NumberFormatException e) {
+                catch (NumberFormatException e) {
                     System.out.println("Not a valid number.");
                     System.out.println("");
                     System.out.print("Choose a greeter: 1: ");
@@ -113,7 +112,7 @@ public class App {
         System.out.println("");
         System.out.print("What's your name: ");
 
-        while((line = systemIn.readLine()) != null) {
+        while ((line = systemIn.readLine()) != null) {
             if (!line.isEmpty()) {
                 return line;
             }
@@ -130,9 +129,9 @@ public class App {
 
         for (Entry<String, ModuleLayer> layer : GreeterPluginLifecycleListener.getModuleLayers().entrySet()) {
             ServiceLoader.load(layer.getValue(), GreeterFactory.class)
-                .stream()
-                .map(p -> p.get())
-                .forEach(factories::add);
+                    .stream()
+                    .map(p -> p.get())
+                    .forEach(factories::add);
         }
 
         Collections.sort(factories, (gf1, gf2) -> gf1.getLanguage().compareTo(gf2.getLanguage()));

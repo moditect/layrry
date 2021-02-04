@@ -56,26 +56,21 @@
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>${version.exec.plugin}</version>
-          <configuration>
-            <executable>java</executable>
-            <arguments>
-              <argument>-classpath</argument>
-              <classpath/>
-              <argument>org.moditect.layrry.launcher.LayrryLauncher</argument>
-              <argument>--layers-config</argument>
-              <argument>src/test/resources/layers.yml</argument>
-            </arguments>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+          <executable>java</executable>
+          <arguments>
+            <argument>-classpath</argument>
+            <classpath/>
+            <argument>org.moditect.layrry.launcher.LayrryLauncher</argument>
+            <argument>--layers-config</argument>
+            <argument>src/test/resources/layers.yml</argument>
+          </arguments>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>

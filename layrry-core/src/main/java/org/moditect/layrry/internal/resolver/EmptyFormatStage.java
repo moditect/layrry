@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,16 @@
  */
 package org.moditect.layrry.internal.resolver;
 
-import org.jboss.shrinkwrap.resolver.api.NoResolvedResultException;
-import org.jboss.shrinkwrap.resolver.api.NonUniqueResultException;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenResolvedArtifact;
-
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
+
+import org.jboss.shrinkwrap.resolver.api.NoResolvedResultException;
+import org.jboss.shrinkwrap.resolver.api.NonUniqueResultException;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenResolvedArtifact;
 
 public class EmptyFormatStage implements MavenFormatStage {
     @Override
@@ -70,7 +70,8 @@ public class EmptyFormatStage implements MavenFormatStage {
     }
 
     @Override
-    public <RETURNTYPE> RETURNTYPE asSingle(Class<RETURNTYPE> aClass) throws IllegalArgumentException, UnsupportedOperationException, NonUniqueResultException, NoResolvedResultException {
+    public <RETURNTYPE> RETURNTYPE asSingle(Class<RETURNTYPE> aClass)
+            throws IllegalArgumentException, UnsupportedOperationException, NonUniqueResultException, NoResolvedResultException {
         return null;
     }
 }

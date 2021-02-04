@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,10 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.util.Collection;
+
 import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-
-import java.util.Collection;
 
 public class ResolveImpl implements Resolve, ArtifactResolver {
     private ConfigurableLocalArtifactResolverSystem local;
@@ -36,26 +36,26 @@ public class ResolveImpl implements Resolve, ArtifactResolver {
 
     public CompositeFormatStage resolve() throws IllegalStateException, ResolutionException {
         return new CompositeFormatStageImpl(
-            fetchLocal().resolve(),
-            fetchRemote().resolve());
+                fetchLocal().resolve(),
+                fetchRemote().resolve());
     }
 
     public CompositeFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
         return new CompositeFormatStageImpl(
-            fetchLocal().resolve(canonicalForm),
-            fetchRemote().resolve(canonicalForm));
+                fetchLocal().resolve(canonicalForm),
+                fetchRemote().resolve(canonicalForm));
     }
 
     public CompositeFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
         return new CompositeFormatStageImpl(
-            fetchLocal().resolve(canonicalForms),
-            fetchRemote().resolve(canonicalForms));
+                fetchLocal().resolve(canonicalForms),
+                fetchRemote().resolve(canonicalForms));
     }
 
     public CompositeFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
         return new CompositeFormatStageImpl(
-            fetchLocal().resolve(canonicalForms),
-            fetchRemote().resolve(canonicalForms));
+                fetchLocal().resolve(canonicalForms),
+                fetchRemote().resolve(canonicalForms));
     }
 
     private ConfigurableLocalArtifactResolverSystem fetchLocal() {

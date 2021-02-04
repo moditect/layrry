@@ -1,7 +1,4 @@
-import org.moditect.layrry.example.links.core.spi.RouterContributor;
-import org.moditect.layrry.example.links.greenkeeping.internal.GreenkeepingRouterContributor;
-
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +13,11 @@ import org.moditect.layrry.example.links.greenkeeping.internal.GreenkeepingRoute
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 module org.moditect.layrry.example.links.greenkeeping {
     requires org.moditect.layrry.platform;
     requires org.moditect.layrry.example.links.core;
     requires io.vertx.core;
     requires io.vertx.web;
-    provides RouterContributor with GreenkeepingRouterContributor;
+    provides org.moditect.layrry.example.links.core.spi.RouterContributor
+        with org.moditect.layrry.example.links.greenkeeping.internal.GreenkeepingRouterContributor;
 }

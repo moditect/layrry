@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,10 @@
  */
 package org.moditect.layrry;
 
+import java.nio.file.Path;
+
 import org.moditect.layrry.internal.resolver.LocalRepositories;
 import org.moditect.layrry.internal.resolver.LocalRepository;
-
-import java.nio.file.Path;
 
 /**
  * Configures local artifact resolution.

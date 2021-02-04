@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,9 @@
  */
 package org.moditect.layrry.internal.resolver;
 
-import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
-
 import java.io.File;
+
+import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
 
 /**
  * Encapsulation of a resolved Maven-based artifact's metadata form a local repository.

@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 package org.moditect.layrry.it.test;
 
+import java.nio.file.Path;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -22,8 +24,6 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.junit.AfterClass;
-
-import java.nio.file.Path;
 
 public abstract class AbstractRemoteIntegrationTestCase extends AbstractIntegrationTestCase {
     protected static String serverUri;
@@ -39,7 +39,7 @@ public abstract class AbstractRemoteIntegrationTestCase extends AbstractIntegrat
         resource_handler.setResourceBase(Path.of("src", "test", "resources").toAbsolutePath().toString());
 
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resource_handler, new DefaultHandler()});
+        handlers.setHandlers(new Handler[]{ resource_handler, new DefaultHandler() });
         server.setHandler(handlers);
 
         server.start();

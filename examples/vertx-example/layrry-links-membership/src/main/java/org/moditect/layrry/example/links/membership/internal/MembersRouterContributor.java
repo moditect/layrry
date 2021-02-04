@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,8 +77,8 @@ public class MembersRouterContributor implements RouterContributor {
 
     private void handleListMembers(RoutingContext routingContext) {
         routingContext.response()
-            .putHeader("content-type", "application/json")
-            .end(membersService.getMembers().encodePrettily());
+                .putHeader("content-type", "application/json")
+                .end(membersService.getMembers().encodePrettily());
     }
 
     private void sendError(int statusCode, HttpServerResponse response) {

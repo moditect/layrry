@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,11 @@
  */
 package org.moditect.layrry.launcher.internal;
 
-import com.beust.jcommander.Parameter;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.beust.jcommander.Parameter;
 
 public class Args {
 
@@ -27,11 +27,11 @@ public class Args {
     private List<String> mainArgs = new ArrayList<>();
 
     @Parameter(names = "--layers-config", description = "Layers configuration file. May be a local file or remote URL. " +
-        "Examples: path/to/layers.yml, https://server/path/to/layers.toml")
+            "Examples: path/to/layers.yml, https://server/path/to/layers.toml")
     private String layersConfig;
 
     @Parameter(names = "--properties", description = "Additional configuration properties. May be a local file or remote URL. " +
-        "Must use the Java properties format. Examples: path/to/versions.properties, https://server/path/to/versions.properties")
+            "Must use the Java properties format. Examples: path/to/versions.properties, https://server/path/to/versions.properties")
     private String properties;
 
     @Parameter(names = "--basedir", description = "Base directory for resolving relative paths")
@@ -69,6 +69,7 @@ public class Args {
 
     @Override
     public String toString() {
-        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + ", properties=" + properties + ", basedir=" + basedir + ", help=" + help + ", version=" + version + "]";
+        return "Args [mainArgs=" + mainArgs + ", layersConfig=" + layersConfig + ", properties=" + properties + ", basedir=" + basedir + ", help=" + help + ", version="
+                + version + "]";
     }
 }

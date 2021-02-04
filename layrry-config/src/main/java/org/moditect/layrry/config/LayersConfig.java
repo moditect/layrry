@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ public class LayersConfig {
     public Map<String, Layer> getLayers() {
         return layers;
     }
+
     public void setLayers(Map<String, Layer> layers) {
         this.layers = layers;
     }

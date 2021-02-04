@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,14 @@
  */
 package org.moditect.layrry.internal.resolver;
 
-import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
+import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 
 public class ConfigurableLocalArtifactResolverSystemImpl implements ConfigurableLocalArtifactResolverSystem {
     private final Map<String, LocalRepository> localRepositories = new LinkedHashMap<>();
@@ -30,9 +30,9 @@ public class ConfigurableLocalArtifactResolverSystemImpl implements Configurable
     @Override
     public String toString() {
         return new StringBuilder("ConfigurableLocalArtifactResolverSystem[repositories=")
-            .append(localRepositories)
-            .append("]")
-            .toString();
+                .append(localRepositories)
+                .append("]")
+                .toString();
     }
 
     @Override

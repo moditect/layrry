@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,14 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.nio.file.Path;
+import java.util.Collection;
+
 import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
 import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
-
-import java.nio.file.Path;
-import java.util.Collection;
 
 public class ConfigurableRemoteArtifactResolverSystemImpl implements ConfigurableRemoteArtifactResolverSystem {
     private final ConfigurableMavenResolverSystem delegate;
@@ -58,25 +58,29 @@ public class ConfigurableRemoteArtifactResolverSystemImpl implements Configurabl
 
     @Override
     public MavenFormatStage resolve() throws IllegalStateException, ResolutionException {
-        if (!enabled) return new EmptyFormatStage();
+        if (!enabled)
+            return new EmptyFormatStage();
         return delegate.resolve().withoutTransitivity();
     }
 
     @Override
     public MavenFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
-        if (!enabled) return new EmptyFormatStage();
+        if (!enabled)
+            return new EmptyFormatStage();
         return delegate.resolve(canonicalForm).withoutTransitivity();
     }
 
     @Override
     public MavenFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
-        if (!enabled) return new EmptyFormatStage();
+        if (!enabled)
+            return new EmptyFormatStage();
         return delegate.resolve(canonicalForms).withoutTransitivity();
     }
 
     @Override
     public MavenFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
-        if (!enabled) return new EmptyFormatStage();
+        if (!enabled)
+            return new EmptyFormatStage();
         return delegate.resolve(canonicalForms).withoutTransitivity();
     }
 }

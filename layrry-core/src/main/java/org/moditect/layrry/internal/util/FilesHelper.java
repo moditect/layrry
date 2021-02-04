@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,6 @@
  */
 package org.moditect.layrry.internal.util;
 
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.compress.archivers.ArchiveInputStream;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.compress.utils.IOUtils;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +24,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
+
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 
 public class FilesHelper {
 
@@ -51,7 +51,8 @@ public class FilesHelper {
         try {
             Files.createDirectories(dest.getParent());
             Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -60,14 +61,15 @@ public class FilesHelper {
         File destinationDir = dest.toFile();
 
         try (InputStream fi = Files.newInputStream(src);
-             InputStream bi = new BufferedInputStream(fi);
-             ArchiveInputStream in = new ArchiveStreamFactory().createArchiveInputStream(bi)) {
+                InputStream bi = new BufferedInputStream(fi);
+                ArchiveInputStream in = new ArchiveStreamFactory().createArchiveInputStream(bi)) {
 
             String filename = src.getFileName().toString();
             // subtract .zip, .tar
             filename = filename.substring(0, filename.length() - 4);
             unpack(filename + "/", destinationDir, in);
-        } catch (ArchiveException | IOException e) {
+        }
+        catch (ArchiveException | IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -76,14 +78,15 @@ public class FilesHelper {
         File destinationDir = dest.toFile();
 
         try (InputStream fi = Files.newInputStream(src);
-             InputStream bi = new BufferedInputStream(fi);
-             InputStream gzi = new GzipCompressorInputStream(bi);
-             ArchiveInputStream in = new TarArchiveInputStream(gzi)) {
+                InputStream bi = new BufferedInputStream(fi);
+                InputStream gzi = new GzipCompressorInputStream(bi);
+                ArchiveInputStream in = new TarArchiveInputStream(gzi)) {
             String filename = src.getFileName().toString();
             // subtract .tar.gz
             filename = filename.substring(0, filename.length() - 7);
             unpack(filename + "/", destinationDir, in);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -112,7 +115,8 @@ public class FilesHelper {
                 if (!file.isDirectory() && !file.mkdirs()) {
                     throw new IOException("failed to create directory " + file);
                 }
-            } else {
+            }
+            else {
                 File parent = file.getParentFile();
                 if (!parent.isDirectory() && !parent.mkdirs()) {
                     throw new IOException("failed to create directory " + parent);

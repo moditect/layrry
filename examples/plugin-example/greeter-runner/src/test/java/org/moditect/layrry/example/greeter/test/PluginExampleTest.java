@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  */
 package org.moditect.layrry.example.greeter.test;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -26,6 +24,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moditect.layrry.launcher.LayrryLauncher;
+
+import static org.junit.Assert.assertTrue;
 
 public class PluginExampleTest {
 
@@ -54,7 +54,7 @@ public class PluginExampleTest {
     @Test
     public void runLayers() throws Exception {
         String input = "1\nBob";
-        InputStream testInput = new ByteArrayInputStream( input.getBytes("UTF-8") );
+        InputStream testInput = new ByteArrayInputStream(input.getBytes("UTF-8"));
         System.setIn(testInput);
 
         LayrryLauncher.launch("--layers-config", layersConfig);

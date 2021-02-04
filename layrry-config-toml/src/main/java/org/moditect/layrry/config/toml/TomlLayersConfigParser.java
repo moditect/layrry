@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,6 @@
  */
 package org.moditect.layrry.config.toml;
 
-import com.github.jezza.Toml;
-import com.github.jezza.TomlTable;
-import org.moditect.layrry.config.Layer;
-import org.moditect.layrry.config.LayersConfig;
-import org.moditect.layrry.config.LayersConfigParser;
-import org.moditect.layrry.config.Main;
-import org.moditect.layrry.config.Resolve;
-import org.moditect.layrry.config.Repository;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -32,18 +23,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.moditect.layrry.config.Layer;
+import org.moditect.layrry.config.LayersConfig;
+import org.moditect.layrry.config.LayersConfigParser;
+import org.moditect.layrry.config.Main;
+import org.moditect.layrry.config.Repository;
+import org.moditect.layrry.config.Resolve;
+
+import com.github.jezza.Toml;
+import com.github.jezza.TomlTable;
+
 public class TomlLayersConfigParser implements LayersConfigParser {
 
     @Override
     public Set<String> getSupportedMimeTypes() {
         return Set.of(
-            "text/vnd.toml",
-            "application/vnd.toml",
-            "text/toml",
-            "text/x-toml",
-            "application/toml",
-            "application/x-toml"
-        );
+                "text/vnd.toml",
+                "application/vnd.toml",
+                "text/toml",
+                "text/x-toml",
+                "application/toml",
+                "application/x-toml");
     }
 
     @Override
@@ -96,7 +96,8 @@ public class TomlLayersConfigParser implements LayersConfigParser {
         Map<String, Repository> repositories = new LinkedHashMap<>();
         resolve.setLocalRepositories(repositories);
 
-        if (table == null) return;
+        if (table == null)
+            return;
 
         table.entrySet().forEach(entry -> {
             Repository repository = new Repository();

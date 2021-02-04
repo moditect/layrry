@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,16 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-import org.moditect.layrry.platform.PluginLifecycleListener;
-
-import org.moditect.layrry.example.greeter.api.GreeterFactory;
-import org.moditect.layrry.example.greeter.app.internal.GreeterPluginLifecycleListener;
-
 module org.moditect.layrry.example.greeter.core {
     requires org.moditect.layrry.platform;
     exports org.moditect.layrry.example.greeter.api;
     exports org.moditect.layrry.example.greeter.app;
-    provides PluginLifecycleListener with GreeterPluginLifecycleListener;
-    uses GreeterFactory;
+    provides org.moditect.layrry.platform.PluginLifecycleListener with 
+             org.moditect.layrry.example.greeter.app.internal.GreeterPluginLifecycleListener;
+    uses org.moditect.layrry.example.greeter.api.GreeterFactory;
 }

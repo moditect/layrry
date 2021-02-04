@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,6 @@
  */
 package org.moditect.layrry.config;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import kr.motd.maven.os.Detector;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +27,12 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.ServiceLoader;
+
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+
+import kr.motd.maven.os.Detector;
 
 public class LayersConfigLoader {
 
@@ -47,7 +48,8 @@ public class LayersConfigLoader {
 
         try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
             properties.load(inputStream);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new IllegalStateException("Unexpected error reading properties file: " + propertiesFile, e);
         }
 
@@ -59,7 +61,8 @@ public class LayersConfigLoader {
 
         try (InputStream inputStream = propertiesFileUrl.openStream()) {
             properties.load(inputStream);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new IllegalStateException("Unexpected error reading properties from: " + propertiesFileUrl, e);
         }
 
@@ -75,7 +78,8 @@ public class LayersConfigLoader {
 
         try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
             properties.load(inputStream);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new IllegalStateException("Unexpected error reading properties file: " + propertiesFile, e);
         }
 
@@ -87,7 +91,8 @@ public class LayersConfigLoader {
 
         try (InputStream inputStream = propertiesFileUrl.openStream()) {
             properties.load(inputStream);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new IllegalStateException("Unexpected error reading properties from: " + propertiesFileUrl, e);
         }
 
@@ -109,7 +114,8 @@ public class LayersConfigLoader {
             if (parser.supports(layersConfigFile)) {
                 try (InputStream inputStream = layersConfigFile.toUri().toURL().openStream()) {
                     return parser.parse(replacePlaceholders(properties, inputStream));
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     throw new IllegalArgumentException("Unexpected error parsing config file. " + layersConfigFile, e);
                 }
             }
@@ -209,7 +215,8 @@ public class LayersConfigLoader {
     private static Path convertToPath(URL url) {
         try {
             return new File(url.toURI()).toPath();
-        } catch (URISyntaxException e) {
+        }
+        catch (URISyntaxException e) {
             throw new IllegalArgumentException("Unsupported error converting URL to Path. " + url);
         }
     }
