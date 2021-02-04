@@ -87,6 +87,22 @@
     <url>https://github.com/moditect/layrry</url>
   </scm>
 
+  <issueManagement>
+    <system>github.com</system>
+    <url>https://github.com/moditect/layrry/issues</url>
+  </issueManagement>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>central</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>central</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+  </distributionManagement>
+
   <modules>
     <module>layrry-platform</module>
     <module>layrry-config</module>
