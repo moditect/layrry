@@ -56,7 +56,6 @@ class UrlDownloader {
             HttpResponse<Path> response = client.send(request, fileBodyHandler(url));
             return response.body();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
             throw new IllegalStateException("Unexpected error when downloading from " + url, e);
         }
     }
@@ -112,7 +111,9 @@ class UrlDownloader {
             setIfUndefined("socksProxyPort", properties.getProperty("socks.proxyPort", "1080"));
         }
 
-        return builder.proxy(ProxySelector.of(new InetSocketAddress(url.getHost(), url.getPort())));
+        int port = url.getPort();
+        if (port == -1) port = url.getDefaultPort();
+        return builder.proxy(ProxySelector.of(new InetSocketAddress(url.getHost(), port)));
     }
 
     private static HttpClient.Builder setupAuthentication(HttpClient.Builder builder, URL url, Properties properties) {
