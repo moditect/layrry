@@ -67,29 +67,23 @@
       <id>gunnarmorling</id>
       <name>Gunnar Morling</name>
       <url>https://www.morling.dev/</url>
-      <roles>
-        <role>developer</role>
-      </roles>
     </developer>
     <developer>
       <id>aalmiray</id>
       <name>Andres Almiray</name>
       <url>http://andresalmiray.com/</url>
-      <roles>
-        <role>developer</role>
-      </roles>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/moditect/layrry.git</connection>
+    <connection>scm:git:${project.url}.git</connection>
     <developerConnection>scm:git:git@github.com:moditect/layrry.git</developerConnection>
-    <url>https://github.com/moditect/layrry</url>
+    <url>${project.url}</url>
   </scm>
 
   <issueManagement>
     <system>github.com</system>
-    <url>https://github.com/moditect/layrry/issues</url>
+    <url>${project.url}/issues</url>
   </issueManagement>
 
   <distributionManagement>
