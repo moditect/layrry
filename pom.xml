@@ -252,76 +252,16 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>${version.jar.plugin}</version>
-          <configuration>
-            <archive>
-              <manifestEntries>
-                <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
-                <Build-Timestamp>${git.build.time}</Build-Timestamp>
-                <Build-Revision>${git.commit.id}</Build-Revision>
-                <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
-              </manifestEntries>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
           <version>${version.git.plugin}</version>
-          <executions>
-            <execution>
-              <id>get-the-git-infos</id>
-              <goals>
-                <goal>revision</goal>
-              </goals>
-              <phase>validate</phase>
-            </execution>
-          </executions>
-          <configuration>
-            <verbose>false</verbose>
-            <failOnNoGitDirectory>false</failOnNoGitDirectory>
-            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-            <generateGitPropertiesFilename>${project.build.directory}/git.properties
-            </generateGitPropertiesFilename>
-            <dateFormat>yyyy-MM-dd'T'HH:mm:ssXXX</dateFormat>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
           <version>${version.enforcer.plugin}</version>
-          <executions>
-            <execution>
-              <phase>validate</phase>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules combine.children="override">
-                  <requireMavenVersion>
-                    <version>3.6.3</version>
-                  </requireMavenVersion>
-                  <requireJavaVersion>
-                    <version>${maven.compiler.release}</version>
-                  </requireJavaVersion>
-                  <enforceBytecodeVersion>
-                    <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
-                  </enforceBytecodeVersion>
-                  <dependencyConvergence/>
-                  <requireUpperBoundDeps/>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-          <dependencies>
-            <dependency>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>extra-enforcer-rules</artifactId>
-              <version>1.3</version>
-            </dependency>
-          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -362,12 +302,76 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
+              <Build-Timestamp>${git.build.time}</Build-Timestamp>
+              <Build-Revision>${git.commit.id}</Build-Revision>
+              <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
+            </manifestEntries>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>collect-git-properties</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <verbose>false</verbose>
+          <failOnNoGitDirectory>false</failOnNoGitDirectory>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>${project.build.directory}/git.properties
+          </generateGitPropertiesFilename>
+          <dateFormat>yyyy-MM-dd'T'HH:mm:ssXXX</dateFormat>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules combine.children="override">
+                <requireMavenVersion>
+                  <version>3.6.3</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>${maven.compiler.release}</version>
+                </requireJavaVersion>
+                <enforceBytecodeVersion>
+                  <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
+                </enforceBytecodeVersion>
+                <dependencyConvergence/>
+                <requireUpperBoundDeps/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.3</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
