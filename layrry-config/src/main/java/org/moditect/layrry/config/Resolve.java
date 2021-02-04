@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,9 +69,9 @@ public class Resolve {
     @Override
     public String toString() {
         return "Resolve [remote=" + remote +
-            ", workOffline=" + workOffline +
-            ", useMavenCentral=" + useMavenCentral +
-            ", fromFile=" + fromFile +
-            ", localRepositories=" + localRepositories + "]";
+                ", workOffline=" + workOffline +
+                ", useMavenCentral=" + useMavenCentral +
+                ", fromFile=" + fromFile +
+                ", localRepositories=" + localRepositories + "]";
     }
 }

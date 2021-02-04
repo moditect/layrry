@@ -27,8 +27,8 @@ layers:
       - "com.fasterxml.jackson.core:jackson-annotations:2.11.3"
   log:
     modules:
-      - "org.apache.logging.log4j:log4j-api:jar:2.17.0"
-      - "org.apache.logging.log4j:log4j-core:jar:2.17.0"
+      - "org.apache.logging.log4j:log4j-api:2.17.0"
+      - "org.apache.logging.log4j:log4j-core:2.17.0"
       - "org.moditect.layrry.example.links:layrry-links-logconfig:1.0.0"
   platform:
     modules:

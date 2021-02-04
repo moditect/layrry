@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,19 @@
  */
 package org.moditect.layrry.it.test;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moditect.layrry.launcher.LayrryLauncher;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-public class ContentNegotiationRemoteIntegrationTest extends AbstractRemoteIntegrationTestCase{
+public class ContentNegotiationRemoteIntegrationTest extends AbstractRemoteIntegrationTestCase {
     @BeforeClass
     public static void startServer() throws Exception {
         startServer(new ContentNegotationResourceHandler());
@@ -46,8 +47,8 @@ public class ContentNegotiationRemoteIntegrationTest extends AbstractRemoteInteg
     @Test
     public void runLayersFromYaml() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            serverUri + "layers?type=yml",
-            "Alice");
+                serverUri + "layers?type=yml",
+                "Alice");
 
         assertOutput();
     }
@@ -55,8 +56,8 @@ public class ContentNegotiationRemoteIntegrationTest extends AbstractRemoteInteg
     @Test
     public void runLayersFromToml() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            serverUri + "layers?type=toml",
-            "Alice");
+                serverUri + "layers?type=toml",
+                "Alice");
 
         assertOutput();
     }

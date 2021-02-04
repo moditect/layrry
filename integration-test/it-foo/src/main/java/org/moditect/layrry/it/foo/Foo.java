@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@ package org.moditect.layrry.it.foo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.moditect.layrry.it.greeter.Greeter;
 
 public class Foo {

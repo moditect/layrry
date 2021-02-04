@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,11 +13,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-import org.moditect.layrry.platform.PluginLifecycleListener;
-
 module org.moditect.layrry.platform {
     exports org.moditect.layrry.platform;
     opens org.moditect.layrry.platform.internal;
-    uses PluginLifecycleListener;
+    uses org.moditect.layrry.platform.PluginLifecycleListener;
 }

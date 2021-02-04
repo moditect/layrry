@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,12 @@
  */
 package org.moditect.layrry.example.greeter.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.file.Path;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -27,13 +33,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moditect.layrry.launcher.LayrryLauncher;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.nio.file.Path;
 
 import static org.junit.Assert.assertTrue;
 
@@ -56,7 +55,7 @@ public class PluginExampleRemoteTest {
         resource_handler.setResourceBase(Path.of("src", "test", "resources").toAbsolutePath().toString());
 
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resource_handler, new DefaultHandler()});
+        handlers.setHandlers(new Handler[]{ resource_handler, new DefaultHandler() });
         server.setHandler(handlers);
 
         server.start();
@@ -90,10 +89,10 @@ public class PluginExampleRemoteTest {
     @Test
     public void runLayersWithYaml() throws Exception {
         String input = "1\nBob";
-        InputStream testInput = new ByteArrayInputStream( input.getBytes("UTF-8") );
+        InputStream testInput = new ByteArrayInputStream(input.getBytes("UTF-8"));
         System.setIn(testInput);
 
-        LayrryLauncher.launch("--layers-config",  serverUri + "layers-remote.yml", "--basedir", System.getProperty("basedir"));
+        LayrryLauncher.launch("--layers-config", serverUri + "layers-remote.yml", "--basedir", System.getProperty("basedir"));
 
         String output = sysOut.toString();
 
@@ -103,10 +102,10 @@ public class PluginExampleRemoteTest {
     @Test
     public void runLayersWithToml() throws Exception {
         String input = "1\nBob";
-        InputStream testInput = new ByteArrayInputStream( input.getBytes("UTF-8") );
+        InputStream testInput = new ByteArrayInputStream(input.getBytes("UTF-8"));
         System.setIn(testInput);
 
-        LayrryLauncher.launch("--layers-config",  serverUri + "layers-remote.toml", "--basedir", System.getProperty("basedir"));
+        LayrryLauncher.launch("--layers-config", serverUri + "layers-remote.toml", "--basedir", System.getProperty("basedir"));
 
         String output = sysOut.toString();
 

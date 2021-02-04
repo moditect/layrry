@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,11 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.io.File;
+
 import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
 import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
-
-import java.io.File;
 
 class LocalResolvedArtifactImpl implements LocalResolvedArtifact {
     private static final MavenArtifactInfo[] NO_DEPENDENCIES = new MavenArtifactInfo[0];

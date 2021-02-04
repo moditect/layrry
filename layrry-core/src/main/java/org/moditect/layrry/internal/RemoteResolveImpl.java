@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,10 @@
  */
 package org.moditect.layrry.internal;
 
+import java.nio.file.Path;
+
 import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
 import org.moditect.layrry.RemoteResolve;
-
-import java.nio.file.Path;
 
 public class RemoteResolveImpl implements RemoteResolve {
     private boolean enabled = true;
@@ -45,15 +45,15 @@ public class RemoteResolveImpl implements RemoteResolve {
     @Override
     public String toString() {
         return new StringBuilder("RemoteResolve[enabled=")
-            .append(enabled)
-            .append(", workOffline=")
-            .append(workOffline)
-            .append(", useMavenCentral=")
-            .append(useMavenCentral)
-            .append(", fromFile=")
-            .append(fromFile)
-            .append("]")
-            .toString();
+                .append(enabled)
+                .append(", workOffline=")
+                .append(workOffline)
+                .append(", useMavenCentral=")
+                .append(useMavenCentral)
+                .append(", fromFile=")
+                .append(fromFile)
+                .append("]")
+                .toString();
     }
 
     @Override

@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,12 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Properties;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -22,12 +28,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Properties;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -51,7 +51,7 @@ public class FlatLocalRepositoryTest {
         File jarfile = repository.newFile("ccc-1.2.3-mac.jar");
 
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "ccc-1.2.3-mac.jar")
-            .addAsResource(pomProperties, "/META-INF/maven/com/acme/ccc/pom.properties");
+                .addAsResource(pomProperties, "/META-INF/maven/com/acme/ccc/pom.properties");
         archive.as(ZipExporter.class).exportTo(jarfile, true);
     }
 
@@ -66,10 +66,10 @@ public class FlatLocalRepositoryTest {
         // then:
         assertThat(artifacts, hasSize(3));
         assertTrue(artifacts.stream()
-            .filter(a -> "1.2.3-SNAPSHOT".equals(a.getCoordinate().getVersion()))
-            .findFirst().isPresent());
+                .filter(a -> "1.2.3-SNAPSHOT".equals(a.getCoordinate().getVersion()))
+                .findFirst().isPresent());
         assertTrue(artifacts.stream()
-            .filter(a -> "mac".equals(a.getCoordinate().getClassifier()))
-            .findFirst().isPresent());
+                .filter(a -> "mac".equals(a.getCoordinate().getClassifier()))
+                .findFirst().isPresent());
     }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,75 +15,75 @@
  */
 package org.moditect.layrry.it.test;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.Resolvers;
 import org.moditect.layrry.launcher.LayrryLauncher;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class LayrryIntegrationIT extends AbstractIntegrationTestCase {
     @Test
     public void runLayersFromApi() {
         Layers layers = Layers.builder()
-            .layer("log")
+                .layer("log")
                 .withModule("org.apache.logging.log4j:log4j-api:2.17.0")
                 .withModule("org.apache.logging.log4j:log4j-core:2.17.0")
                 .withModule("org.moditect.layrry.it:it-logconfig:1.0.0")
-            .layer("foo")
+                .layer("foo")
                 .withParent("log")
                 .withModule("org.moditect.layrry.it:it-greeter:1.0.0")
                 .withModule("org.moditect.layrry.it:it-foo:1.0.0")
-            .layer("bar")
+                .layer("bar")
                 .withParent("log")
                 .withModule("org.moditect.layrry.it:it-greeter:2.0.0")
                 .withModule("org.moditect.layrry.it:it-bar:1.0.0")
-            .layer("app")
+                .layer("app")
                 .withParent("foo")
                 .withParent("bar")
                 .withModule("org.moditect.layrry.it:it-app:1.0.0")
-            .build();
+                .build();
 
         layers.run("org.moditect.layrry.it.app/org.moditect.layrry.it.app.App", "Alice");
 
         assertOutput();
     }
-    
+
     @Test
     public void runLayersFromApiWithFlatRepository() {
         Layers layers = Layers.builder()
-        .resolve(Resolvers.remote().enabled(false))
-        .resolve(Resolvers.local()
-                 .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat"))
-        .layer("log")
-        .withModule("org.apache.logging.log4j:log4j-api:2.17.0")
-        .withModule("org.apache.logging.log4j:log4j-core:2.17.0")
-        .withModule("org.moditect.layrry.it:it-logconfig:1.0.0")
-        .layer("foo")
-        .withParent("log")
-        .withModule("org.moditect.layrry.it:it-greeter:1.0.0")
-        .withModule("org.moditect.layrry.it:it-foo:1.0.0")
-        .layer("bar")
-        .withParent("log")
-        .withModule("org.moditect.layrry.it:it-greeter:2.0.0")
-        .withModule("org.moditect.layrry.it:it-bar:1.0.0")
-        .layer("app")
-        .withParent("foo")
-        .withParent("bar")
-        .withModule("org.moditect.layrry.it:it-app:1.0.0")
-        .build();
-        
+                .resolve(Resolvers.remote().enabled(false))
+                .resolve(Resolvers.local()
+                        .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat"))
+                .layer("log")
+                .withModule("org.apache.logging.log4j:log4j-api:2.17.0")
+                .withModule("org.apache.logging.log4j:log4j-core:2.17.0")
+                .withModule("org.moditect.layrry.it:it-logconfig:1.0.0")
+                .layer("foo")
+                .withParent("log")
+                .withModule("org.moditect.layrry.it:it-greeter:1.0.0")
+                .withModule("org.moditect.layrry.it:it-foo:1.0.0")
+                .layer("bar")
+                .withParent("log")
+                .withModule("org.moditect.layrry.it:it-greeter:2.0.0")
+                .withModule("org.moditect.layrry.it:it-bar:1.0.0")
+                .layer("app")
+                .withParent("foo")
+                .withParent("bar")
+                .withModule("org.moditect.layrry.it:it-app:1.0.0")
+                .build();
+
         layers.run("org.moditect.layrry.it.app/org.moditect.layrry.it.app.App", "Alice");
-        
+
         assertOutput();
     }
 
     @Test
     public void runLayersFromYaml() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            Path.of("src", "test", "resources", "layers.yml").toAbsolutePath().toString(),
-            "Alice");
+                Path.of("src", "test", "resources", "layers.yml").toAbsolutePath().toString(),
+                "Alice");
 
         assertOutput();
     }
@@ -91,8 +91,8 @@ public class LayrryIntegrationIT extends AbstractIntegrationTestCase {
     @Test
     public void runLayersFromToml() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            Path.of("src", "test", "resources", "layers.toml").toAbsolutePath().toString(),
-            "Alice");
+                Path.of("src", "test", "resources", "layers.toml").toAbsolutePath().toString(),
+                "Alice");
 
         assertOutput();
     }
@@ -100,8 +100,8 @@ public class LayrryIntegrationIT extends AbstractIntegrationTestCase {
     @Test
     public void runLayersFromYamlWithFlatRepository() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            Path.of("src", "test", "resources", "layers-flat.yml").toAbsolutePath().toString(),
-            "Alice");
+                Path.of("src", "test", "resources", "layers-flat.yml").toAbsolutePath().toString(),
+                "Alice");
 
         assertOutput();
     }
@@ -109,8 +109,8 @@ public class LayrryIntegrationIT extends AbstractIntegrationTestCase {
     @Test
     public void runLayersFromTomlWithFlatRepository() throws Exception {
         LayrryLauncher.launch("--layers-config",
-            Path.of("src", "test", "resources", "layers-flat.toml").toAbsolutePath().toString(),
-            "Alice");
+                Path.of("src", "test", "resources", "layers-flat.toml").toAbsolutePath().toString(),
+                "Alice");
 
         assertOutput();
     }

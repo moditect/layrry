@@ -17,66 +17,99 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version"
+        required: true
+      next:
+        description: "Next version"
+        required: false
 
 jobs:
   Release:
     runs-on: ubuntu-latest
     steps:
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-
-      - name: Checkout
+      - name: 'Check out repository'
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: 'Set up Java'
         uses: actions/setup-java@v2
         with:
           java-version: 17
           distribution: 'zulu'
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Cache Maven
+      - name: 'Cache Maven packages'
         uses: actions/cache@v2.1.7
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build Maven
-        run: mvn install --file pom.xml -DskipTests
+      - name: 'Set release version'
+        id: version
+        run: |
+          RELEASE_VERSION=${{ github.event.inputs.version }}
+          NEXT_VERSION=${{ github.event.inputs.next }}
+          PLAIN_VERSION=`echo ${RELEASE_VERSION} | awk 'match($0, /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)/) { print substr($0, RSTART, RLENGTH); }'`
+          COMPUTED_NEXT_VERSION="${PLAIN_VERSION}-SNAPSHOT"
+          if [ -z $NEXT_VERSION ]
+          then
+            NEXT_VERSION=$COMPUTED_NEXT_VERSION
+          fi
+          ./mvnw -B versions:set versions:commit -DnewVersion=$RELEASE_VERSION
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Action"
+          git commit -a -m "🏁 Releasing version $RELEASE_VERSION"
+          git push origin HEAD:master
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITUB_ENV
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITUB_ENV
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+      - name: 'Build'
+        run: |
+          chmod +x mvnw
+          ./mvnw -B install --file pom.xml
 
-      - name: Upload zip
-        id: upload-zip
-        uses: actions/upload-release-asset@v1
+      - name: 'Release to Maven Central'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./layrry-launcher/target/distributions/layrry-launcher-${{ steps.get_version.outputs.VERSION }}-dist.zip
-          asset_name: layrry-launcher-${{ steps.get_version.outputs.VERSION }}.zip
-          asset_content_type: application/zip
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          export GPG_TTY=$(tty)
+          export MAVEN_OPTS=--illegal-access=permit
+          ./mvnw --no-transfer-progress -B --file pom.xml \
+            -Drepository.url=https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
+            -Dmaven.site.skip=true -Drelease=true deploy
 
-      - name: Upload tgz
-        id: upload-tgz
-        uses: actions/upload-release-asset@v1
+      - name: 'Release to GitHub'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_SDKMAN_CONSUMER_KEY: ${{ secrets.JRELEASER_SDKMAN_CONSUMER_KEY }}
+          JRELEASER_SDKMAN_CONSUMER_TOKEN: ${{ secrets.JRELEASER_SDKMAN_CONSUMER_TOKEN }}
+        run: |
+          ./mvnw -B --file pom.xml -pl :layrry-aggregator -Pjreleaser jreleaser:full-release
+
+      - name: 'JReleaser output'
+        if: always()
+        uses: actions/upload-artifact@v2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./layrry-launcher/target/distributions/layrry-launcher-${{ steps.get_version.outputs.VERSION }}-dist.tar.gz
-          asset_name: layrry-launcher-${{ steps.get_version.outputs.VERSION }}.tar.gz
-          asset_content_type: application/gzip
+          name: jreleaser-logs
+          path: |
+            target/jreleaser/trace.log
+            target/jreleaser/output.properties
+
+      - name: 'Set next version'
+        run: |
+          ./mvnw -B versions:set versions:commit -DnewVersion=${{ env.NEXT_VERSION }}
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Action"
+          git commit -a -m "⬆️  Next version ${{ env.NEXT_VERSION }}"
+          git push origin HEAD:master

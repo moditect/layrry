@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,11 @@
  */
 package org.moditect.layrry.it.test;
 
-import org.junit.After;
-import org.junit.Before;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import org.junit.After;
+import org.junit.Before;
 
 import static org.junit.Assert.assertTrue;
 

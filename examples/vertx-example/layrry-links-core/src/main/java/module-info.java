@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-import org.moditect.layrry.platform.PluginLifecycleListener;
-
-import org.moditect.layrry.example.links.core.internal.LayrryLinksVerticle.RoutesOverviewRouterContributor;
-import org.moditect.layrry.example.links.core.internal.LayrryLinksVerticle.RoutesPluginLifecycleListener;
-import org.moditect.layrry.example.links.core.spi.RouterContributor;
-
 module org.moditect.layrry.example.links.core {
     requires org.moditect.layrry.platform;
     requires org.apache.logging.log4j;
@@ -30,7 +23,9 @@ module org.moditect.layrry.example.links.core {
     exports org.moditect.layrry.example.links.core;
     exports org.moditect.layrry.example.links.core.spi;
 
-    uses RouterContributor;
-    provides PluginLifecycleListener with RoutesPluginLifecycleListener;
-    provides RouterContributor with RoutesOverviewRouterContributor;
+    uses org.moditect.layrry.example.links.core.spi.RouterContributor;
+    provides org.moditect.layrry.platform.PluginLifecycleListener
+        with org.moditect.layrry.example.links.core.internal.LayrryLinksVerticle.RoutesPluginLifecycleListener;
+    provides org.moditect.layrry.example.links.core.spi.RouterContributor
+        with org.moditect.layrry.example.links.core.internal.LayrryLinksVerticle.RoutesOverviewRouterContributor;
 }

@@ -19,6 +19,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.moditect</groupId>
+    <artifactId>moditect-org-parent</artifactId>
+    <version>1.2.0.Final</version>
+  </parent>
+
   <groupId>org.moditect.layrry</groupId>
   <artifactId>layrry-aggregator</artifactId>
   <version>1.0.0-SNAPSHOT</version>
@@ -30,61 +36,37 @@
   <inceptionYear>2020</inceptionYear>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.identifier>layrry</project.identifier>
+    <project.repository>moditect/layrry</project.repository>
+    <local.repository.path>/tmp/repository</local.repository.path>
+    <layrry.version>${project.version}</layrry.version>
+    <!-- build requires Java 17 -->
+    <java.version>17</java.version>
+    <!-- bytecode compatibility set to 11 -->
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>1</maven.compiler.target>
     <maven.compiler.release>11</maven.compiler.release>
     <version.appsembler.plugin>2.1.0</version.appsembler.plugin>
     <version.assembly.plugin>3.3.0</version.assembly.plugin>
-    <version.clean.plugin>3.1.0</version.clean.plugin>
-    <version.compiler.plugin>3.8.1</version.compiler.plugin>
-    <version.dependency.plugin>3.2.0</version.dependency.plugin>
-    <version.enforcer.plugin>3.0.0-M3</version.enforcer.plugin>
     <version.exec.plugin>3.0.0</version.exec.plugin>
-    <version.failsafe.plugin>3.0.0-M5</version.failsafe.plugin>
-    <version.git.plugin>4.9.10</version.git.plugin>
-    <version.install.plugin>3.0.0-M1</version.install.plugin>
-    <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
-    <version.jar.plugin>3.2.0</version.jar.plugin>
-    <version.license.plugin>3.0</version.license.plugin>
-    <version.resources.plugin>3.2.0</version.resources.plugin>
     <version.shade.plugin>3.2.4</version.shade.plugin>
-    <version.source.plugin>3.2.1</version.source.plugin>
-    <version.surefire.plugin>3.0.0-M4</version.surefire.plugin>
-    <version.versions.plugin>2.8.1</version.versions.plugin>
     <version.log4j>2.17.0</version.log4j>
   </properties>
 
-  <licenses>
-    <license>
-      <name>Apache-2.0</name>
-      <url>https://spdx.org/licenses/Apache-2.0.html</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+  <scm>
+    <connection>scm:git:${repository.url}</connection>
+    <developerConnection>scm:git:${repository.url}</developerConnection>
+    <url>${repository.url}</url>
+    <tag>HEAD</tag>
+  </scm>
 
   <developers>
-    <developer>
-      <id>gunnarmorling</id>
-      <name>Gunnar Morling</name>
-      <url>https://www.morling.dev/</url>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
     <developer>
       <id>aalmiray</id>
       <name>Andres Almiray</name>
       <url>http://andresalmiray.com/</url>
-      <roles>
-        <role>developer</role>
-      </roles>
     </developer>
   </developers>
-
-  <scm>
-    <connection>scm:git:https://github.com/moditect/layrry.git</connection>
-    <developerConnection>scm:git:git@github.com:moditect/layrry.git</developerConnection>
-    <url>https://github.com/moditect/layrry</url>
-  </scm>
 
   <modules>
     <module>layrry-platform</module>
@@ -93,8 +75,6 @@
     <module>layrry-config-toml</module>
     <module>layrry-core</module>
     <module>layrry-launcher</module>
-    <module>integration-test</module>
-    <module>examples</module>
   </modules>
 
   <dependencyManagement>
@@ -169,7 +149,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.11</version>
+        <version>3.12.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -177,51 +157,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>${version.clean.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>${version.resources.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>com.mycila</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <version>${version.license.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${version.compiler.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>${version.dependency.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>${version.install.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>versions-maven-plugin</artifactId>
-          <version>${version.versions.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${version.surefire.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${version.failsafe.plugin}</version>
-        </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
@@ -242,180 +177,136 @@
           <artifactId>maven-assembly-plugin</artifactId>
           <version>${version.assembly.plugin}</version>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${version.jar.plugin}</version>
-          <configuration>
-            <archive>
-              <manifestEntries>
-                <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
-                <Build-Timestamp>${git.build.time}</Build-Timestamp>
-                <Build-Revision>${git.commit.id}</Build-Revision>
-                <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
-              </manifestEntries>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>pl.project13.maven</groupId>
-          <artifactId>git-commit-id-plugin</artifactId>
-          <version>${version.git.plugin}</version>
-          <executions>
-            <execution>
-              <id>get-the-git-infos</id>
-              <goals>
-                <goal>revision</goal>
-              </goals>
-              <phase>validate</phase>
-            </execution>
-          </executions>
-          <configuration>
-            <verbose>false</verbose>
-            <failOnNoGitDirectory>false</failOnNoGitDirectory>
-            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-            <generateGitPropertiesFilename>${project.build.directory}/git.properties
-            </generateGitPropertiesFilename>
-            <dateFormat>yyyy-MM-dd'T'HH:mm:ssXXX</dateFormat>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>${version.enforcer.plugin}</version>
-          <executions>
-            <execution>
-              <phase>validate</phase>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules combine.children="override">
-                  <requireMavenVersion>
-                    <version>3.6.3</version>
-                  </requireMavenVersion>
-                  <requireJavaVersion>
-                    <version>${maven.compiler.release}</version>
-                  </requireJavaVersion>
-                  <enforceBytecodeVersion>
-                    <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
-                  </enforceBytecodeVersion>
-                  <dependencyConvergence/>
-                  <requireUpperBoundDeps/>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-          <dependencies>
-            <dependency>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>extra-enforcer-rules</artifactId>
-              <version>1.3</version>
-            </dependency>
-          </dependencies>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${version.source.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${version.javadoc.plugin}</version>
-        </plugin>
       </plugins>
     </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <configuration>
-          <header>etc/license.txt</header>
+        <configuration combine.self="override">
+          <header>${rootdir}/etc/license.txt</header>
           <strictCheck>true</strictCheck>
+          <excludes>
+            <exclude>*.dot</exclude>
+            <exclude>README.adoc</exclude>
+            <exclude>LICENSE.txt</exclude>
+            <exclude>install-jdk.sh</exclude>
+            <exclude>mvnw</exclude>
+            <exclude>mvnw.cmd</exclude>
+            <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+            <exclude>.mvn/wrapper/MavenWrapperDownloader.java</exclude>
+          </excludes>
+          <mapping>
+            <yml>SCRIPT_STYLE</yml>
+            <toml>SCRIPT_STYLE</toml>
+          </mapping>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <excludes>
-                <exclude>*.dot</exclude>
-                <exclude>LICENSE.txt</exclude>
-                <exclude>install-jdk.sh</exclude>
-                <exclude>mvnw.cmd</exclude>
-                <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
-                <exclude>.mvn/wrapper/MavenWrapperDownloader.java</exclude>
-                <exclude>.github/dependabot.yml</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.coderplus.maven.plugins</groupId>
-        <artifactId>copy-rename-maven-plugin</artifactId>
-        <version>1.0</version>
-        <executions>
-          <execution>
-            <id>copy-license-file</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <sourceFile>${session.executionRootDirectory}/LICENSE.txt</sourceFile>
-              <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-layrry</destinationFile>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>test</id>
+      <activation>
+        <property>
+          <name>release</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>integration-test</module>
+        <module>examples</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>jreleaser</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jreleaser</groupId>
+            <artifactId>jreleaser-maven-plugin</artifactId>
+            <version>0.10.0</version>
+            <inherited>false</inherited>
+            <configuration>
+              <jreleaser>
+                <release>
+                  <github>
+                    <branch>master</branch>
+                    <skipTag>true</skipTag>
+                    <changelog>
+                      <formatted>ALWAYS</formatted>
+                      <format>- {{commitShortHash}} {{commitTitle}}</format>
+                      <contributors>
+                        <format>* {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}</format>
+                      </contributors>
+                      <hide>
+                        <contributors>
+                          <contributor>GitHub</contributor>
+                          <contributor>bot</contributor>
+                        </contributors>
+                      </hide>
+                      <labelers>
+                        <labeler>
+                          <title>Issue #</title>
+                          <label>feature</label>
+                        </labeler>
+                        <labeler>
+                          <title>Bump</title>
+                          <label>dependencies</label>
+                        </labeler>
+                        <labeler>
+                          <title>Merge</title>
+                          <label>merge</label>
+                        </labeler>
+                      </labelers>
+                      <categories>
+                        <category>
+                          <key>feature</key>
+                          <title>Features</title>
+                          <labels>feature</labels>
+                          <order>1</order>
+                        </category>
+                        <category>
+                          <key>deps</key>
+                          <title>Dependencies</title>
+                          <labels>dependencies</labels>
+                          <order>2</order>
+                        </category>
+                        <category>
+                          <key>merge</key>
+                          <title>merge</title>
+                          <labels>merge</labels>
+                          <order>0</order>
+                        </category>
+                      </categories>
+                      <hide>
+                        <categories>merge</categories>
+                      </hide>
+                    </changelog>
+                  </github>
+                </release>
+                <distributions>
+                  <layrry>
+                    <sdkman>
+                      <active>RELEASE</active>
+                    </sdkman>
+                    <artifacts>
+                      <artifact>
+                        <path>layrry-launcher/target/distributions/layrry-{{projectVersion}}.zip</path>
+                      </artifact>
+                      <artifact>
+                        <path>layrry-launcher/target/distributions/layrry-{{projectVersion}}.tar.gz</path>
+                      </artifact>
+                    </artifacts>
+                  </layrry>
+                </distributions>
+              </jreleaser>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

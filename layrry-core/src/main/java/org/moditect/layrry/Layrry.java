@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
  */
 package org.moditect.layrry;
 
+import java.net.URL;
+import java.nio.file.Path;
+
 import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigLoader;
 import org.moditect.layrry.internal.LayersFactory;
-
-import java.net.URL;
-import java.nio.file.Path;
 
 /**
  * The main entry point for using Layrry in embedded mode. Expects the layers config file to be passed in:

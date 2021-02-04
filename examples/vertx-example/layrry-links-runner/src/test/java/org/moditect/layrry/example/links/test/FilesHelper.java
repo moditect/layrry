@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,9 +35,9 @@ public class FilesHelper {
 
         try {
             Files.list(src)
-                .sorted(Comparator.reverseOrder())
-                .map(source -> dest.resolve(src.relativize(source)).toFile())
-                .forEach(File::delete);
+                    .sorted(Comparator.reverseOrder())
+                    .map(source -> dest.resolve(src.relativize(source)).toFile())
+                    .forEach(File::delete);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -56,7 +56,8 @@ public class FilesHelper {
     private static void copy(Path source, Path dest) {
         try {
             Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }

@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,6 @@
  */
 package org.moditect.layrry.internal.resolver;
 
-import org.jboss.shrinkwrap.resolver.api.maven.PackagingType;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,6 +26,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.jboss.shrinkwrap.resolver.api.maven.PackagingType;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 
 class ArtifactUtils {
     private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(.*?)\\-(\\d[\\d+\\.]*?)\\.jar");
@@ -121,7 +121,8 @@ class ArtifactUtils {
                     return new LocalResolvedArtifactImpl(mavenCoordinate, file);
                 }
             }
-        } catch (IOException ignored) {
+        }
+        catch (IOException ignored) {
             // noop
         }
         return null;
@@ -129,14 +130,16 @@ class ArtifactUtils {
 
     static boolean coordinatesMatch(MavenCoordinate a, MavenCoordinate b) {
         // Do we have an exact match?
-        if (a.equals(b) && a.getVersion().equals(b.getVersion())) return true;
+        if (a.equals(b) && a.getVersion().equals(b.getVersion()))
+            return true;
 
         // Is the group missing?
         if ("*".equals(a.getGroupId()) || "*".equals(b.getGroupId())) {
             a = MavenCoordinates.createCoordinate("*", a.getArtifactId(), a.getVersion(), a.getPackaging(), a.getClassifier());
             b = MavenCoordinates.createCoordinate("*", b.getArtifactId(), b.getVersion(), b.getPackaging(), b.getClassifier());
         }
-        if (a.equals(b) && a.getVersion().equals(b.getVersion())) return true;
+        if (a.equals(b) && a.getVersion().equals(b.getVersion()))
+            return true;
 
         // We may have failed to detect a classifier on 'a' but 'b' may have it
         String ac = a.getClassifier();
@@ -145,7 +148,7 @@ class ArtifactUtils {
         if (!isBlank(bc) && isBlank(ac)) {
             // let b.version += " " + b.classifier
             // b.classifier = null
-            b = MavenCoordinates.createCoordinate(b.getGroupId(), b.getArtifactId(), b.getVersion() +"-"+ bc, b.getPackaging(), null);
+            b = MavenCoordinates.createCoordinate(b.getGroupId(), b.getArtifactId(), b.getVersion() + "-" + bc, b.getPackaging(), null);
         }
 
         return a.equals(b) && a.getVersion().equals(b.getVersion());

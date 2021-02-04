@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,6 @@
  */
 package org.moditect.layrry.internal.resolver;
 
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +25,10 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.jboss.shrinkwrap.resolver.api.ResolutionException;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 
 /**
  * Organizes artifacts in a directory tree that follows the Maven coordinate conventions.
@@ -70,11 +70,11 @@ public class DefaultLocalRepository implements LocalRepository {
     @Override
     public String toString() {
         return new StringBuilder("DefaultLocalRepository[id=")
-            .append(id)
-            .append(", path=")
-            .append(path)
-            .append("]")
-            .toString();
+                .append(id)
+                .append(", path=")
+                .append(path)
+                .append("]")
+                .toString();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class DefaultLocalRepository implements LocalRepository {
     @Override
     public Collection<LocalResolvedArtifact> resolve() throws IllegalStateException, ResolutionException {
         return getLocalMavenResolvedArtifacts()
-            .collect(Collectors.toSet());
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -103,8 +103,8 @@ public class DefaultLocalRepository implements LocalRepository {
         MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate(canonicalForm);
 
         return getLocalMavenResolvedArtifacts()
-            .filter(a -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), mavenCoordinate))
-            .collect(Collectors.toSet());
+                .filter(a -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), mavenCoordinate))
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -114,12 +114,12 @@ public class DefaultLocalRepository implements LocalRepository {
         }
 
         Set<MavenCoordinate> mavenCoordinates = Arrays.stream(canonicalForms)
-            .map(MavenCoordinates::createCoordinate)
-            .collect(Collectors.toSet());
+                .map(MavenCoordinates::createCoordinate)
+                .collect(Collectors.toSet());
 
         return getLocalMavenResolvedArtifacts()
-            .filter(a -> mavenCoordinates.stream().anyMatch(m -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), m)))
-            .collect(Collectors.toSet());
+                .filter(a -> mavenCoordinates.stream().anyMatch(m -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), m)))
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -129,22 +129,23 @@ public class DefaultLocalRepository implements LocalRepository {
         }
 
         Set<MavenCoordinate> mavenCoordinates = canonicalForms.stream()
-            .map(MavenCoordinates::createCoordinate)
-            .collect(Collectors.toSet());
+                .map(MavenCoordinates::createCoordinate)
+                .collect(Collectors.toSet());
 
         return getLocalMavenResolvedArtifacts()
-            .filter(a -> mavenCoordinates.stream().anyMatch(m -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), m)))
-            .collect(Collectors.toSet());
+                .filter(a -> mavenCoordinates.stream().anyMatch(m -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), m)))
+                .collect(Collectors.toSet());
     }
 
     private Stream<LocalResolvedArtifact> getLocalMavenResolvedArtifacts() {
         try {
             return Files.walk(path)
-                .filter(Files::isRegularFile)
-                .filter(p -> p.toFile().getName().endsWith(".jar"))
-                .map(this::toLocalMavenResolvedArtifact);
-        } catch (IOException e) {
-            return Collections.<LocalResolvedArtifact>emptySet().stream();
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toFile().getName().endsWith(".jar"))
+                    .map(this::toLocalMavenResolvedArtifact);
+        }
+        catch (IOException e) {
+            return Collections.<LocalResolvedArtifact> emptySet().stream();
         }
     }
 

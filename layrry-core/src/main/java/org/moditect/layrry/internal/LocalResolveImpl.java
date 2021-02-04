@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,14 @@
  */
 package org.moditect.layrry.internal;
 
-import org.moditect.layrry.LocalResolve;
-import org.moditect.layrry.internal.resolver.LocalRepositories;
-import org.moditect.layrry.internal.resolver.LocalRepository;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.moditect.layrry.LocalResolve;
+import org.moditect.layrry.internal.resolver.LocalRepositories;
+import org.moditect.layrry.internal.resolver.LocalRepository;
 
 public class LocalResolveImpl implements LocalResolve {
     private final List<LocalRepository> localRepositories = new ArrayList<>();
@@ -34,9 +34,9 @@ public class LocalResolveImpl implements LocalResolve {
     @Override
     public String toString() {
         return new StringBuilder("LocalResolve[repositories=")
-            .append(localRepositories)
-            .append("]")
-            .toString();
+                .append(localRepositories)
+                .append("]")
+                .toString();
     }
 
     @Override

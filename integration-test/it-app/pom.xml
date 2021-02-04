@@ -75,6 +75,13 @@
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>${version.enforcer.extra.rules}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

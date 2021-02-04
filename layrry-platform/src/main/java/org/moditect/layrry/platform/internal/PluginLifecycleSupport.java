@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@ public class PluginLifecycleSupport {
         PluginDescriptor plugin = new PluginDescriptor(pluginName, pluginLayer);
 
         Iterator<PluginLifecycleListener> listeners = loader.iterator();
-        while(listeners.hasNext()) {
+        while (listeners.hasNext()) {
             PluginLifecycleListener listener = listeners.next();
 
             // notify each listener only through it defining layer, but not via other layers
@@ -50,7 +50,7 @@ public class PluginLifecycleSupport {
         PluginDescriptor plugin = new PluginDescriptor(pluginName, pluginLayer);
 
         Iterator<PluginLifecycleListener> listeners = loader.iterator();
-        while(listeners.hasNext()) {
+        while (listeners.hasNext()) {
             PluginLifecycleListener listener = listeners.next();
 
             // notify each listener only through it defining layer, but not via other layers

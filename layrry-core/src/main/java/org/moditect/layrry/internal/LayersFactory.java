@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,10 @@
  */
 package org.moditect.layrry.internal;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map.Entry;
+
 import org.moditect.layrry.LayerBuilder;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.LayersBuilder;
@@ -23,10 +27,6 @@ import org.moditect.layrry.RemoteResolve;
 import org.moditect.layrry.Resolvers;
 import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.Resolve;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map.Entry;
 
 /**
  * Creates a {@link Layers} instance based on a given configuration.
@@ -38,7 +38,8 @@ public class LayersFactory {
         for (Entry<String, org.moditect.layrry.config.Layer> layer : layersConfig.getLayers().entrySet()) {
             if (layer.getValue().getDirectory() != null) {
                 handlePluginLayer(layer, layersConfigDir, builder);
-            } else {
+            }
+            else {
                 handleLayer(layer, builder);
             }
         }
@@ -64,8 +65,8 @@ public class LayersFactory {
 
         LocalResolve local = Resolvers.local();
         resolve.getLocalRepositories().forEach((id, repository) -> local.withLocalRepo(id,
-            layersConfigDir.resolve(repository.getPath()),
-            repository.getLayout()));
+                layersConfigDir.resolve(repository.getPath()),
+                repository.getLayout()));
         builder.resolve(local);
 
         return builder.build();

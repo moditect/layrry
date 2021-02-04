@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,14 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -50,15 +50,15 @@ public class DefaultLocalRepositoryTest {
         // then:
         assertThat(artifacts, hasSize(3));
         assertTrue(artifacts.stream()
-            .filter(a -> "1.2.3-SNAPSHOT".equals(a.getCoordinate().getVersion()))
-            .findFirst().isPresent());
+                .filter(a -> "1.2.3-SNAPSHOT".equals(a.getCoordinate().getVersion()))
+                .findFirst().isPresent());
         assertTrue(artifacts.stream()
-            .filter(a -> "mac".equals(a.getCoordinate().getClassifier()))
-            .findFirst().isPresent());
+                .filter(a -> "mac".equals(a.getCoordinate().getClassifier()))
+                .findFirst().isPresent());
     }
 
     private void createArtifact(String groupId, String artifactId, String version, String classifier) throws IOException {
-        File dir = repository.newFolder((groupId + "." + artifactId ).split("\\."));
+        File dir = repository.newFolder((groupId + "." + artifactId).split("\\."));
         dir = new File(dir, version);
         dir.mkdirs();
         String fileName = artifactId + "-" + version + (classifier != null ? "-" + classifier : "") + ".jar";

@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,11 @@
  */
 package org.moditect.layrry.config.yaml;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Set;
+
 import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigParser;
 import org.yaml.snakeyaml.Yaml;
@@ -22,23 +27,17 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.Set;
-
 public class YamlLayersConfigParser implements LayersConfigParser {
 
     @Override
     public Set<String> getSupportedMimeTypes() {
         return Set.of(
-            "text/vnd.yaml",
-            "application/vnd.yaml",
-            "text/yaml",
-            "text/x-yaml",
-            "application/yaml",
-            "application/x-yaml"
-        );
+                "text/vnd.yaml",
+                "application/vnd.yaml",
+                "text/yaml",
+                "text/x-yaml",
+                "application/yaml",
+                "application/x-yaml");
     }
 
     @Override

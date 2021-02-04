@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2020 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,6 @@
  */
 package org.moditect.layrry.launcher;
 
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.ParameterException;
-import org.moditect.layrry.Layrry;
-import org.moditect.layrry.config.LayersConfigParser;
-import org.moditect.layrry.launcher.internal.Args;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,6 +23,13 @@ import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
+
+import org.moditect.layrry.Layrry;
+import org.moditect.layrry.config.LayersConfigParser;
+import org.moditect.layrry.launcher.internal.Args;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 
 /**
  * The main entry point for using Layrry on the command line. Expects the layers config file to be passed in:
@@ -50,13 +51,14 @@ public final class LayrryLauncher {
         Args arguments = new Args();
 
         JCommander jCommander = JCommander.newBuilder()
-            .programName(LayrryLauncher.class.getName())
-            .addObject(arguments)
-            .build();
+                .programName(LayrryLauncher.class.getName())
+                .addObject(arguments)
+                .build();
 
         try {
             jCommander.parse(args);
-        } catch (ParameterException e) {
+        }
+        catch (ParameterException e) {
             printUsage(jCommander);
             return;
         }
@@ -84,8 +86,8 @@ public final class LayrryLauncher {
         }
         if (null == layersConfig) {
             jCommander.getConsole()
-                .println("Missing --layers-config parameter or local file named layers[" +
-                    String.join("|", getSupportedConfigFormats()) + "]");
+                    .println("Missing --layers-config parameter or local file named layers[" +
+                            String.join("|", getSupportedConfigFormats()) + "]");
             jCommander.getConsole().println("");
             printUsage(jCommander);
             return;
@@ -100,12 +102,15 @@ public final class LayrryLauncher {
 
             if (null == propertiesFile) {
                 Layrry.run(layersConfigUrl, basedir.toPath(), parsedArgs);
-            } else if (null != propertiesFileUrl) {
+            }
+            else if (null != propertiesFileUrl) {
                 Layrry.run(layersConfigUrl, basedir.toPath(), propertiesFileUrl, parsedArgs);
-            } else {
+            }
+            else {
                 Layrry.run(layersConfigUrl, basedir.toPath(), Paths.get(propertiesFile).toAbsolutePath(), parsedArgs);
             }
-        } else {
+        }
+        else {
             Path layersConfigPath = Paths.get(layersConfig).toAbsolutePath();
 
             Path basedirPath = layersConfigPath.getParent();
@@ -115,9 +120,11 @@ public final class LayrryLauncher {
 
             if (null == propertiesFile) {
                 Layrry.run(layersConfigPath, basedirPath, parsedArgs);
-            } else if (null != propertiesFileUrl) {
+            }
+            else if (null != propertiesFileUrl) {
                 Layrry.run(layersConfigPath, basedirPath, propertiesFileUrl, parsedArgs);
-            } else {
+            }
+            else {
                 Layrry.run(layersConfigPath, basedirPath, Paths.get(propertiesFile).toAbsolutePath(), parsedArgs);
             }
         }
@@ -126,7 +133,8 @@ public final class LayrryLauncher {
     private static URL toUrl(String input) {
         try {
             return new URL(input);
-        } catch (MalformedURLException e) {
+        }
+        catch (MalformedURLException e) {
             return null;
         }
     }
@@ -135,7 +143,7 @@ public final class LayrryLauncher {
         jCommander.usage();
 
         StringBuilder sb = new StringBuilder("Supported config formats are ")
-            .append(getSupportedConfigFormats());
+                .append(getSupportedConfigFormats());
         jCommander.getConsole().println(sb.toString());
     }
 
@@ -143,7 +151,7 @@ public final class LayrryLauncher {
         Set<String> extensions = new LinkedHashSet<>();
 
         ServiceLoader<LayersConfigParser> parsers = ServiceLoader.load(LayersConfigParser.class,
-            LayrryLauncher.class.getClassLoader());
+                LayrryLauncher.class.getClassLoader());
 
         for (LayersConfigParser parser : parsers) {
             extensions.add("." + parser.getPreferredFileExtension());
@@ -158,7 +166,7 @@ public final class LayrryLauncher {
         }
 
         ServiceLoader<LayersConfigParser> parsers = ServiceLoader.load(LayersConfigParser.class,
-            LayrryLauncher.class.getClassLoader());
+                LayrryLauncher.class.getClassLoader());
 
         for (LayersConfigParser parser : parsers) {
             File layersConfigFile = new File(basedir, "layers." + parser.getPreferredFileExtension());
