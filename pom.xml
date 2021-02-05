@@ -53,6 +53,7 @@
     <version.surefire.plugin>3.0.0-M4</version.surefire.plugin>
     <version.versions.plugin>2.8.1</version.versions.plugin>
     <version.log4j>2.14.0</version.log4j>
+    <local.repository.path>/tmp/repository</local.repository.path>
   </properties>
 
   <licenses>
@@ -394,16 +395,28 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
       </plugin>
+      <!--plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>publication,gpg</releaseProfiles>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+        </configuration>
+      </plugin-->
       <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-release-plugin</artifactId>
-      <configuration>
-        <useReleaseProfile>false</useReleaseProfile>
-        <releaseProfiles>publication,gpg</releaseProfiles>
-        <autoVersionSubmodules>true</autoVersionSubmodules>
-        <tagNameFormat>v@{project.version}</tagNameFormat>
-      </configuration>
-    </plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <inherited>false</inherited>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${local.repository.path}</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -491,6 +504,48 @@
                     <arg>loopback</arg>
                   </gpgArguments>
                 </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>local-deploy</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>local-snapshot</id>
+          <url>file://${local.repository.path}/snapshot</url>
+        </snapshotRepository>
+        <repository>
+          <id>local-release</id>
+          <url>file://${local.repository.path}/release</url>
+        </repository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.0.0</version>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>generate-repository-directories</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <target>
+                    <mkdir dir="${local.repository.path}/snapshot"/>
+                    <mkdir dir="${local.repository.path}/release"/>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>
