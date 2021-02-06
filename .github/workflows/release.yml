@@ -43,10 +43,8 @@ jobs:
       - name: Import GPG key
         env:
           GPG_SECRET_KEYS: ${{ secrets.MODITECT_GPG_SECRET_KEYS }}
-          GPG_OWNERTRUST: ${{ secrets.MODITECT_GPG_OWNERTRUST }}
         run: |
           echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
-          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
       - name: Configure git
         run: |
