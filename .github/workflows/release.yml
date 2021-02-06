@@ -56,7 +56,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.MODITECT_GPG_PASSPHRASE }}
           SONATYPE_USERNAME: ${{ secrets.MODITECT_SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.MODITECT_SONATYPE_PASSWORD }}
-        run: mvn -B -s ./mvn/release-settings.xml release:prepare release:perform -Drelease -Dgpg.passhrase=${GPG_PASSPHRASE} -Dcentral.username=${SONATYPE_USERNAME} -Dcentral.password=${SONATYPE_PASSWORD}
+        run: mvn -B --file pom.xml -s .mvn/release-settings.xml release:prepare release:perform -Drelease -Dgpg.passhrase=${GPG_PASSPHRASE} -Dcentral.username=${SONATYPE_USERNAME} -Dcentral.password=${SONATYPE_PASSWORD}
 
       - name: Get the version
         id: get_version
