@@ -106,8 +106,6 @@
     <module>layrry-config-toml</module>
     <module>layrry-core</module>
     <module>layrry-launcher</module>
-    <module>integration-test</module>
-    <module>examples</module>
   </modules>
 
   <dependencyManagement>
@@ -405,22 +403,24 @@
           <tagNameFormat>v@{project.version}</tagNameFormat>
         </configuration>
       </plugin-->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <inherited>false</inherited>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${local.repository.path}</directory>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
   <profiles>
+    <profile>
+      <id>test</id>
+      <activation>
+        <property>
+          <name>release</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>integration-test</module>
+        <module>examples</module>
+      </modules>
+    </profile>
+
     <profile>
       <id>publication</id>
       <activation>
@@ -528,6 +528,18 @@
       </distributionManagement>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <inherited>false</inherited>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${local.repository.path}</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
