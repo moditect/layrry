@@ -1,0 +1,14 @@
+<settings>
+    <servers>
+        <server>
+            <id>gpg.passphrase</id>
+            <passphrase>${gpg.passphrase}</passphrase>
+        </server>
+        <server>
+            <id>central</id>
+            <username>${central.username}</username>
+            <password>${central.password}</password>
+        </server>
+    </servers>
+</settings>
+

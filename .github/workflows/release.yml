@@ -18,17 +18,13 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [ master ]
 
 jobs:
   Release:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.event.head_commit.message, '[release]')
     steps:
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -44,8 +40,29 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Import GPG key
+        env:
+          GPG_SECRET_KEYS: ${{ secrets.MODITECT_GPG_SECRET_KEYS }}
+          GPG_OWNERTRUST: ${{ secrets.MODITECT_GPG_OWNERTRUST }}
+        run: |
+          echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
+          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+
+      - name: Configure git
+        run: |
+          git config user.email "moditectbot@moditect.org"
+          git config user.name "moditectbot"
+
       - name: Build Maven
-        run: mvn install --file pom.xml -DskipTests
+        env:
+          GPG_PASSPHRASE: ${{ secrets.MODITECT_GPG_PASSPHRASE }}
+          SONATYPE_USERNAME: ${{ secrets.MODITECT_SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.MODITECT_SONATYPE_PASSWORD }}
+        run: mvn -B -s ./mvn/release-settings.xml release:prepare release:perform -Drelease -Dgpg.passhrase=${GPG_PASSPHRASE} -Dcentral.username=${SONATYPE_USERNAME} -Dcentral.password=${SONATYPE_PASSWORD}
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
 
       - name: Create release
         id: create_release
@@ -58,7 +75,18 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload zip
+      - name: Upload JAR
+        id: upload-jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./layrry-launcher/target/layrry-launcher-${{ steps.get_version.outputs.VERSION }}-all.jar
+          asset_name: layrry-launcher-${{ steps.get_version.outputs.VERSION }}-all.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload ZIP
         id: upload-zip
         uses: actions/upload-release-asset@v1
         env:
@@ -69,7 +97,7 @@ jobs:
           asset_name: layrry-launcher-${{ steps.get_version.outputs.VERSION }}.zip
           asset_content_type: application/zip
 
-      - name: Upload tgz
+      - name: Upload TAR
         id: upload-tgz
         uses: actions/upload-release-asset@v1
         env:
