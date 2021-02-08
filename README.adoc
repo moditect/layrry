@@ -396,7 +396,7 @@ layrry-launcher-{layrry-version}-all.jar \
 === Proxy Configuration
 
 You may need to configure a proxy when using the remote configuration feature. The following properties may be used to
-configure a proxy
+configure a proxy:
 
 [options="header"]
 |===
@@ -419,6 +419,9 @@ configure a proxy
 | socks.proxyUser     | Defaults to empty String.
 | socks.proxyPassword | Defaults to empty String.
 |===
+
+These properties may be set as `System` properties by passing `-Dkey=value` as part of command line arguments when using
+the launcher, or as part of the additional properties file if `--properties` is given as an argument to the launcher.
 
 == Using the Layrry API
 
