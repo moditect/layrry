@@ -39,11 +39,11 @@ public class LayersConfigLoader {
     private static final String OS_DETECTED_LWJGLNAME = "os.detected.lwjglname";
 
     public static LayersConfig loadConfig(URL layersConfigUrl) {
-        return loadConfig(layersConfigUrl, new Properties());
+        return loadConfig(layersConfigUrl, newProperties());
     }
 
     public static LayersConfig loadConfig(URL layersConfigUrl, Path propertiesFile) {
-        Properties properties = new Properties();
+        Properties properties = newProperties();
 
         try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
             properties.load(inputStream);
@@ -55,7 +55,7 @@ public class LayersConfigLoader {
     }
 
     public static LayersConfig loadConfig(URL layersConfigUrl, URL propertiesFileUrl) {
-        Properties properties = new Properties();
+        Properties properties = newProperties();
 
         try (InputStream inputStream = propertiesFileUrl.openStream()) {
             properties.load(inputStream);
@@ -67,11 +67,11 @@ public class LayersConfigLoader {
     }
 
     public static LayersConfig loadConfig(Path layersConfigFile) {
-        return loadConfig(layersConfigFile, new Properties());
+        return loadConfig(layersConfigFile, newProperties());
     }
 
     public static LayersConfig loadConfig(Path layersConfigFile, Path propertiesFile) {
-        Properties properties = new Properties();
+        Properties properties = newProperties();
 
         try (InputStream inputStream = propertiesFile.toUri().toURL().openStream()) {
             properties.load(inputStream);
@@ -83,7 +83,7 @@ public class LayersConfigLoader {
     }
 
     public static LayersConfig loadConfig(Path layersConfigFile, URL propertiesFileUrl) {
-        Properties properties = new Properties();
+        Properties properties = newProperties();
 
         try (InputStream inputStream = propertiesFileUrl.openStream()) {
             properties.load(inputStream);
@@ -122,18 +122,16 @@ public class LayersConfigLoader {
         OsDetector detector = new OsDetector();
 
         Properties props = new Properties();
-        // 1. custom properties
+        // 1. custom properties (includes System properties)
         props.putAll(properties);
-        // 2. system properties
-        props.putAll(System.getProperties());
-        // 3. os properties
+        // 2. os properties
         props.putAll(detector.getProperties());
-        // 4. special case for JavaFX OS classifier
+        // 3. special case for JavaFX OS classifier
         String javafxClassifier = resolveJavaFxClassifier(detector.get(Detector.DETECTED_NAME));
         if (null != javafxClassifier) {
             props.put(OS_DETECTED_JFXNAME, javafxClassifier);
         }
-        // 5. special case for LWJGL OS classifier
+        // 4. special case for LWJGL OS classifier
         String lwjglClassifier = resolveLwjglClassifier(detector.get(Detector.DETECTED_NAME), detector.get(Detector.DETECTED_ARCH));
         if (null != javafxClassifier) {
             props.put(OS_DETECTED_LWJGLNAME, lwjglClassifier);
@@ -214,5 +212,9 @@ public class LayersConfigLoader {
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Unsupported error converting URL to Path. " + url);
         }
+    }
+
+    private static Properties newProperties() {
+        return new Properties(System.getProperties());
     }
 }
