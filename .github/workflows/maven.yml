@@ -64,7 +64,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn -Drelease verify --file pom.xml
+        run: mvn -DskipTests verify --file pom.xml
 
       - name: 'Release early-access artifacts'
         uses: marvinpinto/action-automatic-releases@latest
