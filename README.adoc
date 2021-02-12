@@ -1,6 +1,8 @@
 = Layrry - A Launcher and API for Modularized Java Applications
 :layrry-version: 1.0.0.Alpha1
 
+_Latest version: {layrry-version} (http://andresalmiray.com/layrry-1-0-0-alpha1-has-been-released/[announcement])_
+
 Layrry is a launcher and Java API for executing modularized Java applications.
 
 It allows to assemble modularized applications based on Maven artifact coordinates of the (modular) JARs to include.
@@ -10,12 +12,12 @@ and removing modules at application runtime.
 
 The module graph is built either declaratively (using YAML or TOML descriptors) or programmatically (using a fluent API).
 
-Learn more about Layrry in this series of blog posts:
+Learn more about Layrry in these blog posts:
 
-* link:https://www.morling.dev/blog/introducing-layrry-runner-and-api-for-modularized-java-applications/[Part 1: "Introducing Layrry: A Launcher and API for Modularized Java Applications"]
-* link:https://www.morling.dev/blog/plugin-architectures-with-layrry-and-the-java-module-system/[Part 2: "Plug-in Architectures With Layrry and the Java Module System"]
-* Part 3: Dynamically loading Java modules at application runtime with Layrry (coming soon)
-* link:https://www.morling.dev/blog/class-unloading-in-layered-java-applications/[Part 4: "Class Unloading in Layered Java Applications"]
+* link:https://www.morling.dev/blog/introducing-layrry-runner-and-api-for-modularized-java-applications/[Introducing Layrry: A Launcher and API for Modularized Java Applications]
+* link:https://www.morling.dev/blog/plugin-architectures-with-layrry-and-the-java-module-system/[Plug-in Architectures With Layrry and the Java Module System]
+* link:https://www.morling.dev/blog/class-unloading-in-layered-java-applications/[Class Unloading in Layered Java Applications]
+* link:http://andresalmiray.com/building-a-layered-modular-java-application-watch-out-for-these/[Building a layered modular Java application? Watch out for these!]
 
 Layrry also was presented at different (online) conferences and meet-ups, for example at vJUG (https://speakerdeck.com/gunnarmorling/plug-in-architectures-with-layrry-and-the-java-module-system-vjug[slides], https://www.youtube.com/watch?v=iJyys_LgG-U[recording]).
 
