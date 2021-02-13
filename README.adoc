@@ -1,7 +1,14 @@
 = Layrry - A Launcher and API for Modularized Java Applications
-:layrry-version: 1.0.0.Alpha1
+:linkattrs:
+:project-owner:   moditect
+:project-name:    layrry
+:project-group:   org.moditect.layrry
+:project-version: 1.0.0.Alpha1
 
-_Latest version: {layrry-version} (http://andresalmiray.com/layrry-1-0-0-alpha1-has-been-released/[announcement])_
+image:https://github.com/{project-owner}/{project-name}/workflows/Build/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions"]
+image:https://img.shields.io/maven-central/v/{project-group}/{project-name}-core.svg[Download, link="https://search.maven.org/#search|ga|1|{project-group}"]
+
+_Latest version: {project-version} (http://andresalmiray.com/layrry-1-0-0-alpha1-has-been-released/[announcement])_
 
 Layrry is a launcher and Java API for executing modularized Java applications.
 
@@ -53,7 +60,7 @@ The Layrry Launcher is a CLI tool which takes a configuration of a layered appli
 [source]
 [subs="attributes"]
 ----
-layrry-launcher-{layrry-version}-all.jar --layers-config <path/to/layers.yml> [program arguments]
+layrry-launcher-{project-version}-all.jar --layers-config <path/to/layers.yml> [program arguments]
 ----
 
 E.g. like so:
@@ -61,7 +68,7 @@ E.g. like so:
 [source]
 [subs="attributes"]
 ----
-layrry-launcher-{layrry-version}-all.jar --layers-config hello-world.yml Alice Bob
+layrry-launcher-{project-version}-all.jar --layers-config hello-world.yml Alice Bob
 ----
 
 The application layers configuration file is a YAML file which the following structure:
@@ -323,7 +330,7 @@ supported by JavaFX
 project_version = 1.0.0
 javafx_version = 11.0.2
 tilesfx_version = 11.44
-layrry_version = {layrry-version}
+layrry_version = {project-version}
 ----
 
 This application can be launched as
@@ -331,7 +338,7 @@ This application can be launched as
 [source]
 [subs="attributes"]
 ----
-layrry-launcher-{layrry-version}-all.jar --layers-config layers.toml --properties versions.properties
+layrry-launcher-{project-version}-all.jar --layers-config layers.toml --properties versions.properties
 ----
 
 == Remote Configuration
@@ -343,7 +350,7 @@ that exposes those resources via HTTPS, such as
 [source]
 [subs="attributes"]
 ----
-layrry-launcher-{layrry-version}-all.jar \
+layrry-launcher-{project-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config https://server:port/path/to/layers.toml \
   --properties https://server:port/path/to/versions.properties
@@ -360,7 +367,7 @@ resources as you deem necessary, that is, the following combinations are valid:
 [subs="attributes"]
 .All remote
 ----
-layrry-launcher-{layrry-version}-all.jar \
+layrry-launcher-{project-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config https://server:port/path/to/layers.toml \
   --properties https://server:port/path/to/versions.properties
@@ -370,7 +377,7 @@ layrry-launcher-{layrry-version}-all.jar \
 [subs="attributes"]
 .All local
 ----
-layrry-launcher-{layrry-version}-all.jar \
+layrry-launcher-{project-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config layers.toml \
   --properties versions.properties
@@ -380,7 +387,7 @@ layrry-launcher-{layrry-version}-all.jar \
 [subs="attributes"]
 .Mixed
 ----
-layrry-launcher-{layrry-version}-all.jar \
+layrry-launcher-{project-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config https://server:port/path/to/layers.toml \
   --properties versions.properties
@@ -389,7 +396,7 @@ layrry-launcher-{layrry-version}-all.jar \
 [source]
 [subs="attributes"]
 ----
-layrry-launcher-{layrry-version}-all.jar \
+layrry-launcher-{project-version}-all.jar \
   --basedir /home/user/joe \
   --layers-config layers.toml \
   --properties https://server:port/path/to/versions.properties
@@ -438,7 +445,7 @@ In order to use Layrry programmatically, add the following dependency to your _p
 <dependency>
     <groupId>org.moditect.layrry</groupId>
     <artifactId>layrry</artifactId>
-    <version>{layrry-version}</version>
+    <version>{project-version}</version>
 </dependency>
 ----
 
