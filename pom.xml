@@ -40,7 +40,7 @@
     <version.enforcer.plugin>3.0.0-M3</version.enforcer.plugin>
     <version.exec.plugin>3.0.0</version.exec.plugin>
     <version.failsafe.plugin>3.0.0-M5</version.failsafe.plugin>
-    <version.git.plugin>3.0.1</version.git.plugin>
+    <version.git.plugin>4.0.3</version.git.plugin>
     <version.install.plugin>3.0.0-M1</version.install.plugin>
     <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
     <version.jar.plugin>3.1.2</version.jar.plugin>
