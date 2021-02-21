@@ -33,7 +33,7 @@
   application show-casing Layrry's dynamic plug-in capabilities</description>
 
   <properties>
-    <vertx.version>4.0.0</vertx.version>
+    <vertx.version>4.0.2</vertx.version>
     <target.assembly.directory>${project.build.directory}/plugins</target.assembly.directory>
   </properties>
 
