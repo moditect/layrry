@@ -57,21 +57,21 @@ public class LayrryIntegrationIT extends AbstractIntegrationTestCase {
         .resolve(Resolvers.local()
                  .withLocalRepo("flat", Paths.get("target/repositories/flat").toAbsolutePath(), "flat"))
         .layer("log")
-        .withModule("org.apache.logging.log4j:log4j-api:2.14.0")
-        .withModule("org.apache.logging.log4j:log4j-core:2.14.0")
-        .withModule("org.moditect.layrry.it:it-logconfig:1.0.0")
+            .withModule("org.apache.logging.log4j:log4j-api:2.14.0")
+            .withModule("org.apache.logging.log4j:log4j-core:2.14.0")
+            .withModule("org.moditect.layrry.it:it-logconfig:1.0.0")
         .layer("foo")
-        .withParent("log")
-        .withModule("org.moditect.layrry.it:it-greeter:1.0.0")
-        .withModule("org.moditect.layrry.it:it-foo:1.0.0")
+            .withParent("log")
+            .withModule("org.moditect.layrry.it:it-greeter:1.0.0")
+            .withModule("org.moditect.layrry.it:it-foo:1.0.0")
         .layer("bar")
-        .withParent("log")
-        .withModule("org.moditect.layrry.it:it-greeter:2.0.0")
-        .withModule("org.moditect.layrry.it:it-bar:1.0.0")
+            .withParent("log")
+            .withModule("org.moditect.layrry.it:it-greeter:2.0.0")
+            .withModule("org.moditect.layrry.it:it-bar:1.0.0")
         .layer("app")
-        .withParent("foo")
-        .withParent("bar")
-        .withModule("org.moditect.layrry.it:it-app:1.0.0")
+            .withParent("foo")
+            .withParent("bar")
+            .withModule("org.moditect.layrry.it:it-app:1.0.0")
         .build();
         
         layers.run("org.moditect.layrry.it.app/org.moditect.layrry.it.app.App", "Alice");
@@ -110,6 +110,24 @@ public class LayrryIntegrationIT extends AbstractIntegrationTestCase {
     public void runLayersFromTomlWithFlatRepository() throws Exception {
         LayrryLauncher.launch("--layers-config",
             Path.of("src", "test", "resources", "layers-flat.toml").toAbsolutePath().toString(),
+            "Alice");
+
+        assertOutput();
+    }
+
+    @Test
+    public void runLayersFromYamlWithtransitivity() throws Exception {
+        LayrryLauncher.launch("--layers-config",
+            Path.of("src", "test", "resources", "layers-transitivity.yml").toAbsolutePath().toString(),
+            "Alice");
+
+        assertOutput();
+    }
+
+    @Test
+    public void runLayersFromTomlWithtransitivity() throws Exception {
+        LayrryLauncher.launch("--layers-config",
+            Path.of("src", "test", "resources", "layers-transitivity.toml").toAbsolutePath().toString(),
             "Alice");
 
         assertOutput();

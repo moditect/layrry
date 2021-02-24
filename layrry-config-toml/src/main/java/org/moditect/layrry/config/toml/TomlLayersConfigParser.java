@@ -87,6 +87,7 @@ public class TomlLayersConfigParser implements LayersConfigParser {
             resolve.setRemote((Boolean) table.getOrDefault("remote", true));
             resolve.setWorkOffline((Boolean) table.getOrDefault("workOffline", false));
             resolve.setUseMavenCentral((Boolean) table.getOrDefault("useMavenCentral", true));
+            resolve.setUseTransitivity((Boolean) table.getOrDefault("useTransitivity", false));
             resolve.setFromFile((String) table.get("fromFile"));
             readRepositories(resolve, (TomlTable) table.get("localRepositories"));
         }

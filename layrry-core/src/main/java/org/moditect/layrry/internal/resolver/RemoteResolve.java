@@ -27,7 +27,7 @@ public interface RemoteResolve {
      * Sets whether to consult any repositories Maven (Maven local and remote); defaults to true.
      *
      * @param enabled Whether to consult any repositories Maven (Maven local and remote); defaults to true.
-     * @return Modified instance of {@code RemoteMaven}
+     * @return Modified instance of {@code RemoteResolve}
      */
     RemoteResolve enabled(boolean enabled);
 
@@ -35,7 +35,7 @@ public interface RemoteResolve {
      * Configures this {@link RemoteResolve} from the specified file
      *
      * @param file The file the {@link RemoteResolve} should be configured from
-     * @return Modified instance of {@code RemoteMaven}
+     * @return Modified instance of {@code RemoteResolve}
      * @throws IllegalArgumentException
      *             If the file is not specified, is a directory, or does not exist
      * @throws InvalidConfigurationFileException
@@ -48,7 +48,7 @@ public interface RemoteResolve {
      * This method is able to override the value defined in settings.xml if loaded later.
      *
      * @param workOffline Whether to consult any remote Maven Repository in resolution; defaults to false.
-     * @return Modified instance of {@code RemoteMaven}
+     * @return Modified instance of {@code RemoteResolve}
      */
     RemoteResolve workOffline(boolean workOffline);
 
@@ -56,7 +56,15 @@ public interface RemoteResolve {
      * Sets whether to consult the Maven Central Repository in resolution; defaults to true.
      *
      * @param useMavenCentral Whether to consult the Maven Central Repository in resolution; defaults to true.
-     * @return Modified instance of {@code RemoteMaven}
+     * @return Modified instance of {@code RemoteResolve}
      */
     RemoteResolve withMavenCentralRepo(boolean useMavenCentral);
+
+    /**
+     * Sets whether to resolve transitive dependencies or not; defaults to false.
+     *
+     * @param useTransitivity Whether to resolve transitive dependencies or not; defaults to false.
+     * @return Modified instance of {@code RemoteResolve}
+     */
+    RemoteResolve withTransitivity(boolean useTransitivity);
 }
