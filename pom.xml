@@ -336,22 +336,25 @@
         <configuration>
           <header>etc/license.txt</header>
           <strictCheck>true</strictCheck>
+          <excludes>
+            <exclude>*.dot</exclude>
+            <exclude>LICENSE.txt</exclude>
+            <exclude>install-jdk.sh</exclude>
+            <exclude>.github/dependabot.yml</exclude>
+            <exclude>mvnw.cmd</exclude>
+            <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+            <exclude>.mvn/wrapper/MavenWrapperDownloader.java</exclude>
+          </excludes>
+          <mapping>
+            <yml>SCRIPT_STYLE</yml>
+            <toml>SCRIPT_STYLE</toml>
+          </mapping>
         </configuration>
         <executions>
           <execution>
             <goals>
               <goal>check</goal>
             </goals>
-            <configuration>
-              <excludes>
-                <exclude>*.dot</exclude>
-                <exclude>LICENSE.txt</exclude>
-                <exclude>install-jdk.sh</exclude>
-                <exclude>mvnw.cmd</exclude>
-                <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
-                <exclude>.mvn/wrapper/MavenWrapperDownloader.java</exclude>
-              </excludes>
-            </configuration>
           </execution>
         </executions>
       </plugin>
