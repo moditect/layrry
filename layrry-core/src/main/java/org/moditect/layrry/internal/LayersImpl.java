@@ -61,7 +61,7 @@ public class LayersImpl implements Layers {
     /**
      * The actual module layers by name.
      */
-    private final Map<String, ModuleLayer> moduleLayers;
+    private final Map<String, ModuleLayerInfo> moduleLayers;
 
     /**
      * Temporary directory where all plug-ins will be copied to. Modules will be
@@ -79,6 +79,28 @@ public class LayersImpl implements Layers {
 
     private int pluginIndex = 0;
 
+    static class ModuleLayerInfo {
+        private final ModuleLayer moduleLayer;
+        private final List<Path> modulePathEntries;
+
+        static ModuleLayerInfo of(ModuleLayer moduleLayer, List<Path> modulePathEntries) {
+            return new ModuleLayerInfo(moduleLayer, modulePathEntries);
+        }
+
+        private ModuleLayerInfo(ModuleLayer moduleLayer, List<Path> modulePathEntries) {
+            this.moduleLayer = moduleLayer;
+            this.modulePathEntries = Collections.unmodifiableList(modulePathEntries);
+        }
+
+        ModuleLayer getModuleLayer() {
+            return moduleLayer;
+        }
+
+        List<Path> getModulePathEntries() {
+            return modulePathEntries;
+        }
+    }
+
     public LayersImpl(Set<PluginsDirectory> pluginsDirectories, Map<String, Component> components,
                       List<LocalResolve> localResolves,
                       List<RemoteResolve> remoteResolves) {
@@ -95,6 +117,7 @@ public class LayersImpl implements Layers {
             resolve.remote().enabled(remote.enabled());
             resolve.remote().workOffline(remote.workOffline());
             resolve.remote().withMavenCentralRepo(remote.useMavenCentral());
+            resolve.remote().withTransitivity(remote.useTransitivity());
             if (null != remote.fromFile()) resolve.remote().fromFile(remote.fromFile());
         }
 
@@ -109,7 +132,7 @@ public class LayersImpl implements Layers {
     @Override
     public void run(String main, String... args) {
         try {
-            Map<String, ModuleLayer> pluginLayersByName = new HashMap<>();
+            Map<String, ModuleLayerInfo> pluginLayersByName = new HashMap<>();
 
             for (Entry<String, Component> entry : components.entrySet()) {
                 Component component = entry.getValue();
@@ -122,7 +145,7 @@ public class LayersImpl implements Layers {
 
             if (!pluginsDirectories.isEmpty()) {
                 Deployer deployer = new Deployer(pluginsDirectories);
-                for (Entry<String, ModuleLayer> plugin : pluginLayersByName.entrySet()) {
+                for (Entry<String, ModuleLayerInfo> plugin : pluginLayersByName.entrySet()) {
                     deployer.deploy(plugin.getKey(), plugin.getValue());
                 }
             }
@@ -146,18 +169,18 @@ public class LayersImpl implements Layers {
 
         List<Path> modulePathEntries = getModulePathEntries(component);
 
-        List<ModuleLayer> parentLayers = getParentLayers(name, component.getParents());
-        ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
+        List<ModuleLayerInfo> parentLayers = getParentLayers(name, component.getParents());
+        ModuleLayerInfo moduleLayerInfo = createModuleLayer(parentLayers, modulePathEntries);
 
-        moduleLayers.put(name, moduleLayer);
+        moduleLayers.put(name, moduleLayerInfo);
 
         event.name = name;
-        event.modules = moduleLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+        event.modules = moduleLayerInfo.getModuleLayer().modules().stream().map(Module::getName).collect(Collectors.joining(", "));
         event.commit();
     }
 
-    private Map<String, ModuleLayer> handlePluginComponent(String name, Plugin plugin) throws IOException {
-        Map<String, ModuleLayer> pluginLayersByName = new HashMap<>();
+    private Map<String, ModuleLayerInfo> handlePluginComponent(String name, Plugin plugin) throws IOException {
+        Map<String, ModuleLayerInfo> pluginLayersByName = new HashMap<>();
 
         // Expect .jar, .zip, .tar, .tar.gz as direct children
         // TODO: support nested dirs?
@@ -179,29 +202,44 @@ public class LayersImpl implements Layers {
                 Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + pluginName);
                 List<Path> modulePathEntries = unpackPluginArtifact(path, pluginDir);
 
-                List<ModuleLayer> parentLayers = getParentLayers(name, plugin.getParents());
-                ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
+                List<ModuleLayerInfo> parentLayers = getParentLayers(name, plugin.getParents());
+                ModuleLayerInfo moduleLayerInfo = createModuleLayer(parentLayers, modulePathEntries);
 
-                moduleLayers.put(pluginName, moduleLayer);
-                pluginLayersByName.put(pluginName, moduleLayer);
+                moduleLayers.put(pluginName, moduleLayerInfo);
+                pluginLayersByName.put(pluginName, moduleLayerInfo);
 
                 event.name = pluginName;
-                event.modules = moduleLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+                event.modules = moduleLayerInfo.getModuleLayer().modules().stream().map(Module::getName).collect(Collectors.joining(", "));
                 event.commit();
             });
 
         return pluginLayersByName;
     }
 
-    private ModuleLayer createModuleLayer(List<ModuleLayer> parentLayers, List<Path> modulePathEntries) {
+    private ModuleLayerInfo createModuleLayer(List<ModuleLayerInfo> parentModuleLayerInfos, List<Path> modulePathEntries) {
         ClassLoader scl = ClassLoader.getSystemClassLoader();
 
-        ModuleFinder finder = ModuleFinder.of(modulePathEntries.toArray(Path[]::new));
+        // check only by filename
+        List<Path> parentModulePathEntries = parentModuleLayerInfos.stream()
+            .map(ModuleLayerInfo::getModulePathEntries)
+            .flatMap(List::stream)
+            .map(Path::getFileName)
+            .collect(Collectors.toList());
+
+        List<Path> filteredModulePathEntries = modulePathEntries.stream()
+            .filter(modulePathEntry -> !parentModulePathEntries.contains(modulePathEntry.getFileName()))
+            .collect(Collectors.toList());
+
+        ModuleFinder finder = ModuleFinder.of(filteredModulePathEntries.toArray(Path[]::new));
 
         Set<String> roots = finder.findAll()
             .stream()
             .map(m -> m.descriptor().name())
             .collect(Collectors.toSet());
+
+        List<ModuleLayer> parentLayers = parentModuleLayerInfos.stream()
+            .map(ModuleLayerInfo::getModuleLayer)
+            .collect(Collectors.toList());
 
         Configuration appConfig = Configuration.resolve(
                 finder,
@@ -210,7 +248,8 @@ public class LayersImpl implements Layers {
                 roots
         );
 
-        return ModuleLayer.defineModulesWithOneLoader(appConfig, parentLayers, scl).layer();
+        ModuleLayer moduleLayer = ModuleLayer.defineModulesWithOneLoader(appConfig, parentLayers, scl).layer();
+        return ModuleLayerInfo.of(moduleLayer, filteredModulePathEntries);
     }
 
     private List<Path> getModulePathEntries(Layer layer) {
@@ -220,9 +259,9 @@ public class LayersImpl implements Layers {
 
     private Class<?> getMainClass(String main) throws ClassNotFoundException {
         String[] parts = main.split("/");
-        for(Entry<String, ModuleLayer> entry : moduleLayers.entrySet()) {
+        for(Entry<String, ModuleLayerInfo> entry : moduleLayers.entrySet()) {
             try {
-                ClassLoader loader = entry.getValue().findLoader(parts[0]);
+                ClassLoader loader = entry.getValue().getModuleLayer().findLoader(parts[0]);
                 return loader.loadClass(parts[1]);
             }
             catch(IllegalArgumentException iae) {
@@ -233,19 +272,23 @@ public class LayersImpl implements Layers {
         throw new IllegalArgumentException("Module " + parts[0] + " not found");
     }
 
-    private List<ModuleLayer> getParentLayers(String name, List<String> parents) {
-        List<ModuleLayer> parentLayers = new ArrayList<>();
+    private List<ModuleLayerInfo> getParentLayers(String name, List<String> parents) {
+        List<ModuleLayerInfo> parentLayers = new ArrayList<>();
 
         for (String parent : parents) {
-            ModuleLayer parentLayer = moduleLayers.get(parent);
-            if (parentLayer == null) {
+            ModuleLayerInfo moduleLayerInfo = moduleLayers.get(parent);
+            if (moduleLayerInfo == null) {
                 throw new IllegalArgumentException("Layer '" + name  + "': parent layer '" + parent + "' not configured yet");
             }
 
-            parentLayers.add(parentLayer);
+            parentLayers.add(moduleLayerInfo);
         }
 
-        return parentLayers.isEmpty() ? List.of(ModuleLayer.boot()) : parentLayers;
+        return parentLayers.isEmpty() ? getModuleLayerInfoFromBootLayer() : parentLayers;
+    }
+
+    private List<ModuleLayerInfo> getModuleLayerInfoFromBootLayer() {
+        return Collections.singletonList(ModuleLayerInfo.of(ModuleLayer.boot(),Collections.emptyList()));
     }
 
     private List<Path> unpackPluginArtifact(Path pluginArtifact, Path targetDir) {
@@ -336,15 +379,15 @@ public class LayersImpl implements Layers {
 
                 Path pluginDir = pluginsWorkingDir.resolve(pluginIndex++ + "-" + pluginName);
                 List<Path> modulePathEntries = unpackPluginArtifact(event.path(), pluginDir);
-                List<ModuleLayer> parentLayers = getParentLayers(pluginName, pluginDirectory.getParents());
+                List<ModuleLayerInfo> parentLayers = getParentLayers(pluginName, pluginDirectory.getParents());
 
-                ModuleLayer moduleLayer = createModuleLayer(parentLayers, modulePathEntries);
+                ModuleLayerInfo moduleLayerInfo = createModuleLayer(parentLayers, modulePathEntries);
 
-                moduleLayers.put(pluginName, moduleLayer);
-                deploy(pluginName, moduleLayer);
+                moduleLayers.put(pluginName, moduleLayerInfo);
+                deploy(pluginName, moduleLayerInfo);
 
                 jfrEvent.name = pluginName;
-                jfrEvent.modules = moduleLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+                jfrEvent.modules = moduleLayerInfo.getModuleLayer().modules().stream().map(Module::getName).collect(Collectors.joining(", "));
                 jfrEvent.commit();
             }
             else if (event.eventType() == EventType.DELETE) {
@@ -357,21 +400,21 @@ public class LayersImpl implements Layers {
                 PluginLayerRemovedEvent jfrEvent = new PluginLayerRemovedEvent();
                 jfrEvent.begin();
 
-                ModuleLayer pluginLayer = moduleLayers.get(pluginName);
-                undeploy(pluginName, pluginLayer);
+                ModuleLayerInfo moduleLayerInfo = moduleLayers.get(pluginName);
+                undeploy(pluginName, moduleLayerInfo);
                 moduleLayers.remove(pluginName);
 
                 jfrEvent.name = pluginName;
-                jfrEvent.modules = pluginLayer.modules().stream().map(Module::getName).collect(Collectors.joining(", "));
+                jfrEvent.modules = moduleLayerInfo.getModuleLayer().modules().stream().map(Module::getName).collect(Collectors.joining(", "));
                 jfrEvent.commit();
             }
         }
 
-        public void deploy(String pluginName, ModuleLayer pluginLayer) {
+        public void deploy(String pluginName, ModuleLayerInfo pluginLayerInfo) {
             // for each existing layer, notify any potential lifecycle listeners about the new layer
-            for (ModuleLayer moduleLayer : moduleLayers.values()) {
+            for (ModuleLayerInfo moduleLayerInfo : moduleLayers.values()) {
                 try {
-                    notifyOnAddition.invoke(supportInstance, moduleLayer, pluginName, pluginLayer);
+                    notifyOnAddition.invoke(supportInstance, moduleLayerInfo.getModuleLayer(), pluginName, pluginLayerInfo.getModuleLayer());
                 }
                 catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     throw new IllegalArgumentException(e);
@@ -379,11 +422,11 @@ public class LayersImpl implements Layers {
             }
         }
 
-        public void undeploy(String pluginName, ModuleLayer pluginLayer) {
+        public void undeploy(String pluginName, ModuleLayerInfo pluginLayerInfo) {
             // for each existing layer, notify any potential lifecycle listeners about the removed layer
-            for (ModuleLayer moduleLayer : moduleLayers.values()) {
+            for (ModuleLayerInfo moduleLayerInfo : moduleLayers.values()) {
                 try {
-                    notifyOnRemoval.invoke(supportInstance, moduleLayer, pluginName, pluginLayer);
+                    notifyOnRemoval.invoke(supportInstance, moduleLayerInfo.getModuleLayer(), pluginName, pluginLayerInfo);
                 }
                 catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     throw new IllegalArgumentException(e);
@@ -391,16 +434,17 @@ public class LayersImpl implements Layers {
             }
         }
 
-        private ModuleLayer getLayrryPlatformLayer(Map<String, ModuleLayer> moduleLayers) {
-            for (Entry<String, ModuleLayer> layer : moduleLayers.entrySet()) {
+        private ModuleLayer getLayrryPlatformLayer(Map<String, ModuleLayerInfo> moduleLayers) {
+            for (Entry<String, ModuleLayerInfo> layer : moduleLayers.entrySet()) {
                 Optional<Module> platformModule = layer.getValue()
+                    .getModuleLayer()
                     .modules()
                     .stream()
                     .filter(m -> m.getName().equals("org.moditect.layrry.platform"))
                     .findFirst();
 
                 if (platformModule.isPresent()) {
-                    return layer.getValue();
+                    return layer.getValue().getModuleLayer();
                 }
             }
 

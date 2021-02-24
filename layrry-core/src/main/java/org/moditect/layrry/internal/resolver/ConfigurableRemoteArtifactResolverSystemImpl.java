@@ -20,6 +20,7 @@ import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -27,6 +28,7 @@ import java.util.Collection;
 public class ConfigurableRemoteArtifactResolverSystemImpl implements ConfigurableRemoteArtifactResolverSystem {
     private final ConfigurableMavenResolverSystem delegate;
     private boolean enabled = true;
+    private boolean transitivity = false;
 
     public ConfigurableRemoteArtifactResolverSystemImpl(ConfigurableMavenResolverSystem delegate) {
         this.delegate = delegate;
@@ -57,26 +59,36 @@ public class ConfigurableRemoteArtifactResolverSystemImpl implements Configurabl
     }
 
     @Override
+    public RemoteResolve withTransitivity(boolean useTransitivity) {
+        this.transitivity = useTransitivity;
+        return this;
+    }
+
+    @Override
     public MavenFormatStage resolve() throws IllegalStateException, ResolutionException {
         if (!enabled) return new EmptyFormatStage();
-        return delegate.resolve().withoutTransitivity();
+        return resolveTransitivity(delegate.resolve());
     }
 
     @Override
     public MavenFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
         if (!enabled) return new EmptyFormatStage();
-        return delegate.resolve(canonicalForm).withoutTransitivity();
+        return resolveTransitivity(delegate.resolve(canonicalForm));
     }
 
     @Override
     public MavenFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
         if (!enabled) return new EmptyFormatStage();
-        return delegate.resolve(canonicalForms).withoutTransitivity();
+        return resolveTransitivity(delegate.resolve(canonicalForms));
     }
 
     @Override
     public MavenFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
         if (!enabled) return new EmptyFormatStage();
-        return delegate.resolve(canonicalForms).withoutTransitivity();
+        return resolveTransitivity(delegate.resolve(canonicalForms));
+    }
+
+    private MavenFormatStage resolveTransitivity(MavenStrategyStage stage) {
+        return transitivity ? stage.withTransitivity() : stage.withoutTransitivity();
     }
 }

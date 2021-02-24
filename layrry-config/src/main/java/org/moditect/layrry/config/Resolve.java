@@ -24,6 +24,7 @@ public class Resolve {
     private boolean remote = true;
     private boolean workOffline = false;
     private boolean useMavenCentral = true;
+    private boolean useTransitivity = false;
     private String fromFile;
 
     public Map<String, Repository> getLocalRepositories() {
@@ -58,6 +59,14 @@ public class Resolve {
         this.useMavenCentral = useMavenCentral;
     }
 
+    public boolean isUseTransitivity() {
+        return useTransitivity;
+    }
+
+    public void setUseTransitivity(boolean useTransitivity) {
+        this.useTransitivity = useTransitivity;
+    }
+
     public String getFromFile() {
         return fromFile;
     }
@@ -71,6 +80,7 @@ public class Resolve {
         return "Resolve [remote=" + remote +
             ", workOffline=" + workOffline +
             ", useMavenCentral=" + useMavenCentral +
+            ", useTransitivity=" + useTransitivity +
             ", fromFile=" + fromFile +
             ", localRepositories=" + localRepositories + "]";
     }

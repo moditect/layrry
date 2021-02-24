@@ -56,6 +56,7 @@ public class LayersFactory {
         remote.enabled(resolve.isRemote());
         remote.workOffline(resolve.isWorkOffline());
         remote.withMavenCentralRepo(resolve.isUseMavenCentral());
+        remote.withTransitivity(resolve.isUseTransitivity());
         String fromFilePath = resolve.getFromFile();
         if (fromFilePath != null && !fromFilePath.isEmpty()) {
             remote.fromFile(layersConfigDir.resolve(resolve.getFromFile()).toAbsolutePath());

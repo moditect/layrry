@@ -24,6 +24,7 @@ public class RemoteResolveImpl implements RemoteResolve {
     private boolean enabled = true;
     private boolean workOffline;
     private boolean useMavenCentral = true;
+    private boolean useTransitivity = false;
     private Path fromFile;
 
     boolean enabled() {
@@ -38,6 +39,10 @@ public class RemoteResolveImpl implements RemoteResolve {
         return useMavenCentral;
     }
 
+    boolean useTransitivity() {
+        return useTransitivity;
+    }
+
     Path fromFile() {
         return fromFile;
     }
@@ -50,6 +55,8 @@ public class RemoteResolveImpl implements RemoteResolve {
             .append(workOffline)
             .append(", useMavenCentral=")
             .append(useMavenCentral)
+            .append(", useTransitivity=")
+            .append(useTransitivity)
             .append(", fromFile=")
             .append(fromFile)
             .append("]")
@@ -77,6 +84,12 @@ public class RemoteResolveImpl implements RemoteResolve {
     @Override
     public RemoteResolveImpl withMavenCentralRepo(boolean useMavenCentral) {
         this.useMavenCentral = useMavenCentral;
+        return this;
+    }
+
+    @Override
+    public RemoteResolveImpl withTransitivity(boolean useTransitivity) {
+        this.useTransitivity = useTransitivity;
         return this;
     }
 }
