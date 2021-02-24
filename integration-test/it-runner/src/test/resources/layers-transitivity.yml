@@ -20,20 +20,17 @@ resolve:
 layers:
   log:
     modules:
-      # - "org.apache.logging.log4j:log4j-api:2.14.0"
       - "org.apache.logging.log4j:log4j-core:2.14.0"
       - "org.moditect.layrry.it:it-logconfig:1.0.0"
   foo:
     parents:
       - "log"
     modules:
-      # - "org.moditect.layrry.it:it-greeter:1.0.0"
       - "org.moditect.layrry.it:it-foo:1.0.0"
   bar:
     parents:
       - "log"
     modules:
-      # - "org.moditect.layrry.it:it-greeter:2.0.0"
       - "org.moditect.layrry.it:it-bar:1.0.0"
   app:
     parents:
