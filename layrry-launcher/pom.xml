@@ -63,6 +63,7 @@
           <assembleDirectory>${project.build.directory}/binary</assembleDirectory>
           <repositoryLayout>flat</repositoryLayout>
           <repositoryName>lib</repositoryName>
+          <useWildcardClassPath>true</useWildcardClassPath>
           <programs>
             <program>
               <mainClass>${application.main.class}</mainClass>
