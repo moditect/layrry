@@ -63,6 +63,8 @@
           <assembleDirectory>${project.build.directory}/binary</assembleDirectory>
           <repositoryLayout>flat</repositoryLayout>
           <repositoryName>lib</repositoryName>
+          <unixScriptTemplate>${project.basedir}/src/main/assembly/unixBinTemplate</unixScriptTemplate>
+          <windowsScriptTemplate>${project.basedir}/src/main/assembly/windowsBinTemplate</windowsScriptTemplate>
           <programs>
             <program>
               <mainClass>${application.main.class}</mainClass>
