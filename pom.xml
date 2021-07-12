@@ -37,6 +37,7 @@
     <version.clean.plugin>3.1.0</version.clean.plugin>
     <version.compiler.plugin>3.8.1</version.compiler.plugin>
     <version.dependency.plugin>3.1.2</version.dependency.plugin>
+    <version.deploy.plugin>3.0.0-M1</version.deploy.plugin>
     <version.enforcer.plugin>3.0.0-M3</version.enforcer.plugin>
     <version.exec.plugin>3.0.0</version.exec.plugin>
     <version.failsafe.plugin>3.0.0-M5</version.failsafe.plugin>
@@ -45,12 +46,16 @@
     <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
     <version.jar.plugin>3.1.2</version.jar.plugin>
     <version.license.plugin>3.0</version.license.plugin>
+    <version.nexus.plugin>1.6.8</version.nexus.plugin>
+    <version.release.plugin>3.0.0-M1</version.release.plugin>
     <version.resources.plugin>3.1.0</version.resources.plugin>
     <version.shade.plugin>3.2.4</version.shade.plugin>
     <version.source.plugin>3.2.1</version.source.plugin>
     <version.surefire.plugin>3.0.0-M4</version.surefire.plugin>
     <version.versions.plugin>2.8.1</version.versions.plugin>
     <version.log4j>2.14.0</version.log4j>
+    <local.repository.path>/tmp/repository</local.repository.path>
+    <nexus.url>https://oss.sonatype.org</nexus.url>
   </properties>
 
   <licenses>
@@ -66,25 +71,35 @@
       <id>gunnarmorling</id>
       <name>Gunnar Morling</name>
       <url>https://www.morling.dev/</url>
-      <roles>
-        <role>developer</role>
-      </roles>
     </developer>
     <developer>
       <id>aalmiray</id>
       <name>Andres Almiray</name>
       <url>http://andresalmiray.com/</url>
-      <roles>
-        <role>developer</role>
-      </roles>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/moditect/layrry.git</connection>
+    <connection>scm:git:${project.url}.git</connection>
     <developerConnection>scm:git:git@github.com:moditect/layrry.git</developerConnection>
-    <url>https://github.com/moditect/layrry</url>
+    <url>${project.url}</url>
   </scm>
+
+  <issueManagement>
+    <system>github.com</system>
+    <url>${project.url}/issues</url>
+  </issueManagement>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>${nexus.url}/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>${nexus.url}/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
   <modules>
     <module>layrry-platform</module>
@@ -93,8 +108,6 @@
     <module>layrry-config-toml</module>
     <module>layrry-core</module>
     <module>layrry-launcher</module>
-    <module>integration-test</module>
-    <module>examples</module>
   </modules>
 
   <dependencyManagement>
@@ -204,6 +217,11 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${version.deploy.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
           <version>${version.install.plugin}</version>
         </plugin>
@@ -246,76 +264,16 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>${version.jar.plugin}</version>
-          <configuration>
-            <archive>
-              <manifestEntries>
-                <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
-                <Build-Timestamp>${git.build.time}</Build-Timestamp>
-                <Build-Revision>${git.commit.id}</Build-Revision>
-                <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
-              </manifestEntries>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
           <version>${version.git.plugin}</version>
-          <executions>
-            <execution>
-              <id>get-the-git-infos</id>
-              <goals>
-                <goal>revision</goal>
-              </goals>
-              <phase>validate</phase>
-            </execution>
-          </executions>
-          <configuration>
-            <verbose>false</verbose>
-            <failOnNoGitDirectory>false</failOnNoGitDirectory>
-            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-            <generateGitPropertiesFilename>${project.build.directory}/git.properties
-            </generateGitPropertiesFilename>
-            <dateFormat>yyyy-MM-dd'T'HH:mm:ssXXX</dateFormat>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
           <version>${version.enforcer.plugin}</version>
-          <executions>
-            <execution>
-              <phase>validate</phase>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules combine.children="override">
-                  <requireMavenVersion>
-                    <version>3.6.3</version>
-                  </requireMavenVersion>
-                  <requireJavaVersion>
-                    <version>${maven.compiler.release}</version>
-                  </requireJavaVersion>
-                  <enforceBytecodeVersion>
-                    <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
-                  </enforceBytecodeVersion>
-                  <dependencyConvergence/>
-                  <requireUpperBoundDeps/>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-          <dependencies>
-            <dependency>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>extra-enforcer-rules</artifactId>
-              <version>1.3</version>
-            </dependency>
-          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -327,8 +285,19 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${version.javadoc.plugin}</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${version.release.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>${version.nexus.plugin}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>com.mycila</groupId>
@@ -356,12 +325,76 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
+              <Build-Timestamp>${git.build.time}</Build-Timestamp>
+              <Build-Revision>${git.commit.id}</Build-Revision>
+              <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
+            </manifestEntries>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>collect-git-properties</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <verbose>false</verbose>
+          <failOnNoGitDirectory>false</failOnNoGitDirectory>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>${project.build.directory}/git.properties
+          </generateGitPropertiesFilename>
+          <dateFormat>yyyy-MM-dd'T'HH:mm:ssXXX</dateFormat>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules combine.children="override">
+                <requireMavenVersion>
+                  <version>3.6.3</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>${maven.compiler.release}</version>
+                </requireJavaVersion>
+                <enforceBytecodeVersion>
+                  <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
+                </enforceBytecodeVersion>
+                <dependencyConvergence/>
+                <requireUpperBoundDeps/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.3</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -369,52 +402,184 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-          </execution>
-        </executions>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>publication,gpg</releaseProfiles>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+        </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.coderplus.maven.plugins</groupId>
-        <artifactId>copy-rename-maven-plugin</artifactId>
-        <version>1.0</version>
-        <executions>
-          <execution>
-            <id>copy-license-file</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <sourceFile>${session.executionRootDirectory}/LICENSE.txt</sourceFile>
-              <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-layrry</destinationFile>
-            </configuration>
-          </execution>
-        </executions>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>central</serverId>
+          <nexusUrl>${nexus.url}</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>test</id>
+      <activation>
+        <property>
+          <name>release</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>integration-test</module>
+        <module>examples</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>publication</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <attach>true</attach>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <attach>true</attach>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.coderplus.maven.plugins</groupId>
+            <artifactId>copy-rename-maven-plugin</artifactId>
+            <version>1.0</version>
+            <executions>
+              <execution>
+                <id>copy-license-file</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <sourceFile>${session.executionRootDirectory}/LICENSE.txt</sourceFile>
+                  <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-layrry</destinationFile>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- requires passing -Dgpg.passphrase=x.y.z -->
+    <profile>
+      <id>gpg</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>local-deploy</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>local-snapshot</id>
+          <url>file://${local.repository.path}/snapshot</url>
+        </snapshotRepository>
+        <repository>
+          <id>local-release</id>
+          <url>file://${local.repository.path}/release</url>
+        </repository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <inherited>false</inherited>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${local.repository.path}</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.0.0</version>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>generate-repository-directories</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <target>
+                    <mkdir dir="${local.repository.path}/snapshot"/>
+                    <mkdir dir="${local.repository.path}/release"/>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
