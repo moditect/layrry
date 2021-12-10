@@ -79,6 +79,11 @@ public class LayrryLinksTest {
 
         FilesHelper.copyFiles(preparedPluginDir.resolve(TOURNAMENT_PLUGIN_NAME), pluginDir1);
 
+        Files.find(pluginDir1,
+                Integer.MAX_VALUE,
+                (filePath, fileAttr) -> fileAttr.isRegularFile())
+             .forEach(System.out::println);
+
         await().atMost(30, TimeUnit.SECONDS).until(() -> {
             return given()
             .when()
