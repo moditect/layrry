@@ -350,6 +350,7 @@
                 <exclude>mvnw.cmd</exclude>
                 <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
                 <exclude>.mvn/wrapper/MavenWrapperDownloader.java</exclude>
+                <exclude>.github/dependabot.yml</exclude>
               </excludes>
             </configuration>
           </execution>
