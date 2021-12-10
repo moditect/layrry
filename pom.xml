@@ -154,7 +154,7 @@
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
-        <version>9.4.36.v20210114</version>
+        <version>9.4.41.v20210516</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
