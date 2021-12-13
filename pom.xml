@@ -43,7 +43,7 @@
     <version.git.plugin>4.9.10</version.git.plugin>
     <version.install.plugin>3.0.0-M1</version.install.plugin>
     <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
-    <version.jar.plugin>3.1.2</version.jar.plugin>
+    <version.jar.plugin>3.2.0</version.jar.plugin>
     <version.license.plugin>3.0</version.license.plugin>
     <version.resources.plugin>3.1.0</version.resources.plugin>
     <version.shade.plugin>3.2.4</version.shade.plugin>
