@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020 The ModiTect authors
+ *  Copyright 2020 - 2022 The ModiTect authors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
