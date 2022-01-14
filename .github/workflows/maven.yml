@@ -47,7 +47,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: 'Build'
-      run: mvn install --file pom.xml
+      run: ./mvnw -B install --file pom.xml
 
     - name: 'Release with JReleaser'
       if: github.event_name == 'push'
