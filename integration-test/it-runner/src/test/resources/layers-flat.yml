@@ -23,8 +23,8 @@ resolve:
 layers:
   log:
     modules:
-      - "org.apache.logging.log4j:log4j-api:2.17.0"
-      - "org.apache.logging.log4j:log4j-core:2.17.0"
+      - "org.apache.logging.log4j:log4j-api:2.17.1"
+      - "org.apache.logging.log4j:log4j-core:2.17.1"
       - "org.moditect.layrry.it:it-logconfig:1.0.0"
   foo:
     parents:
