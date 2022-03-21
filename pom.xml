@@ -227,7 +227,7 @@
           <plugin>
             <groupId>org.jreleaser</groupId>
             <artifactId>jreleaser-maven-plugin</artifactId>
-            <version>0.10.0</version>
+            <version>1.0.0-M3</version>
             <inherited>false</inherited>
             <configuration>
               <jreleaser>
@@ -283,6 +283,7 @@
                       </categories>
                       <hide>
                         <categories>merge</categories>
+                        <contributors>dependabot,GitHub</contributors>
                       </hide>
                     </changelog>
                   </github>
