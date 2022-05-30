@@ -49,7 +49,7 @@
     <version.appsembler.plugin>2.1.0</version.appsembler.plugin>
     <version.assembly.plugin>3.3.0</version.assembly.plugin>
     <version.exec.plugin>3.0.0</version.exec.plugin>
-    <version.shade.plugin>3.2.4</version.shade.plugin>
+    <version.shade.plugin>3.3.0</version.shade.plugin>
     <version.log4j>2.17.2</version.log4j>
   </properties>
 
@@ -227,7 +227,7 @@
           <plugin>
             <groupId>org.jreleaser</groupId>
             <artifactId>jreleaser-maven-plugin</artifactId>
-            <version>1.0.0-M3</version>
+            <version>1.0.0</version>
             <inherited>false</inherited>
             <configuration>
               <jreleaser>
