@@ -66,17 +66,16 @@ jobs:
           then
             NEXT_VERSION=$COMPUTED_NEXT_VERSION
           fi
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
           ./mvnw -B -ntp versions:set versions:commit -DnewVersion=$RELEASE_VERSION
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Action"
           git commit -a -m "🏁 Releasing version $RELEASE_VERSION"
           git push origin HEAD:master
-          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITUB_ENV
-          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITUB_ENV
 
       - name: Build
         run: |
-          ./mvnw -B -ntp install
+          ./mvnw -B -ntp install -DskipTests=true
 
       - name: 'Release to Maven Central'
         env:
@@ -88,7 +87,7 @@ jobs:
           export MAVEN_OPTS=--illegal-access=permit
           ./mvnw --no-transfer-progress -B --file pom.xml \
             -Drepository.url=https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
-            -Dmaven.site.skip=true -Drelease=true deploy
+            -Dmaven.site.skip=true -Drelease=true -DskipTests=true deploy
 
       - name: 'Release to GitHub'
         env:
@@ -98,14 +97,14 @@ jobs:
         run: |
           ./mvnw -B -ntp -pl :layrry-aggregator -Pjreleaser jreleaser:full-release
 
-      - name: JReleaser output
+      - name: 'JReleaser output'
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: jreleaser
           path: |
-            out/jreleaser/trace.log
-            out/jreleaser/output.properties
+            target/jreleaser/trace.log
+            target/jreleaser/output.properties
 
       - name: 'Set next version'
         run: |

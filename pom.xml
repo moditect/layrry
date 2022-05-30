@@ -227,7 +227,7 @@
           <plugin>
             <groupId>org.jreleaser</groupId>
             <artifactId>jreleaser-maven-plugin</artifactId>
-            <version>1.0.0-M3</version>
+            <version>1.0.0</version>
             <inherited>false</inherited>
             <configuration>
               <jreleaser>
@@ -302,6 +302,14 @@
                       </artifact>
                     </artifacts>
                   </layrry>
+                  <layrry-uberjar>
+                    <type>SINGLE_JAR</type>
+                    <artifacts>
+                      <artifact>
+                        <path>layrry-launcher/target/layrry-launcher-{{projectVersion}}-all.jar</path>
+                      </artifact>
+                    </artifacts>
+                  </layrry-uberjar>
                 </distributions>
               </jreleaser>
             </configuration>
