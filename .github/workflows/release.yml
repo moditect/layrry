@@ -66,12 +66,12 @@ jobs:
           then
             NEXT_VERSION=$COMPUTED_NEXT_VERSION
           fi
+          echo "$NEXT_VERSION=$NEXT_VERSION" >> GITHUB_ENV
           ./mvnw -B -ntp versions:set versions:commit -DnewVersion=$RELEASE_VERSION
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Action"
           git commit -a -m "🏁 Releasing version $RELEASE_VERSION"
           git push origin HEAD:master
-          echo "BUMP_VERSION=$NEXT_VERSION" >> $GITUB_ENV
 
       - name: Build
         run: |
@@ -108,8 +108,8 @@ jobs:
 
       - name: 'Set next version'
         run: |
-          ./mvnw -B versions:set versions:commit -DnewVersion=${{ env.BUMP_VERSION }}
+          ./mvnw -B versions:set versions:commit -DnewVersion=${{ env.$NEXT_VERSION }}
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Action"
-          git commit -a -m "⬆️  Next version ${{ env.BUMP_VERSION }}"
+          git commit -a -m "⬆️  Next version ${{ env.$NEXT_VERSION }}"
           git push origin HEAD:master
