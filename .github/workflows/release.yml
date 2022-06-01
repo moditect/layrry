@@ -75,7 +75,7 @@ jobs:
 
       - name: Build
         run: |
-          ./mvnw -B -ntp install
+          ./mvnw -B -ntp install -DskipTests=true
 
       - name: 'Release to Maven Central'
         env:
@@ -87,7 +87,7 @@ jobs:
           export MAVEN_OPTS=--illegal-access=permit
           ./mvnw --no-transfer-progress -B --file pom.xml \
             -Drepository.url=https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
-            -Dmaven.site.skip=true -Drelease=true deploy
+            -Dmaven.site.skip=true -Drelease=true -DskipTests=true deploy
 
       - name: 'Release to GitHub'
         env:

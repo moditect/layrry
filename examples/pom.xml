@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.moditect.layrry</groupId>
     <artifactId>layrry-aggregator</artifactId>
-    <version>1.0.0.Alpha2</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.moditect.layrry.example</groupId>
