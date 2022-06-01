@@ -66,7 +66,7 @@ jobs:
           then
             NEXT_VERSION=$COMPUTED_NEXT_VERSION
           fi
-          echo "$NEXT_VERSION=$NEXT_VERSION" >> GITHUB_ENV
+          echo "$NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
           ./mvnw -B -ntp versions:set versions:commit -DnewVersion=$RELEASE_VERSION
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Action"
@@ -97,14 +97,14 @@ jobs:
         run: |
           ./mvnw -B -ntp -pl :layrry-aggregator -Pjreleaser jreleaser:full-release
 
-      - name: JReleaser output
+      - name: 'JReleaser output'
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: jreleaser
           path: |
-            out/jreleaser/trace.log
-            out/jreleaser/output.properties
+            target/jreleaser/trace.log
+            target/jreleaser/output.properties
 
       - name: 'Set next version'
         run: |
