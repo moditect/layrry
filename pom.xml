@@ -47,7 +47,7 @@
     <maven.compiler.target>1</maven.compiler.target>
     <maven.compiler.release>11</maven.compiler.release>
     <version.appsembler.plugin>2.1.0</version.appsembler.plugin>
-    <version.assembly.plugin>3.3.0</version.assembly.plugin>
+    <version.assembly.plugin>3.4.0</version.assembly.plugin>
     <version.exec.plugin>3.0.0</version.exec.plugin>
     <version.shade.plugin>3.3.0</version.shade.plugin>
     <version.log4j>2.17.2</version.log4j>
