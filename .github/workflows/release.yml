@@ -89,7 +89,7 @@ jobs:
           export GPG_TTY=$(tty)
           ./mvnw --no-transfer-progress -B --file pom.xml \
             -Drepository.url=https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
-            -Dmaven.site.skip=true -Drelease=true -DskipTests=true deploy
+            -Dmaven.site.skip=true -Drelease=true -DskipTests=true deploy -e
 
       - name: 'Release to GitHub'
         env:
