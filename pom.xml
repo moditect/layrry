@@ -330,6 +330,7 @@
                 <announce>
                   <twitter>
                     <active>RELEASE</active>
+                    <status>🚀 Layrry {{projectVersion}} has been released! {{releaseNotesUrl}}</status>
                   </twitter>
                 </announce>
               </jreleaser>
