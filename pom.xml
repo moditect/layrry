@@ -52,7 +52,7 @@
     <version.nexus.plugin>1.6.13</version.nexus.plugin>
     <version.exec.plugin>3.1.0</version.exec.plugin>
     <version.shade.plugin>3.3.0</version.shade.plugin>
-    <version.log4j>2.18.0</version.log4j>
+    <version.log4j>2.19.0</version.log4j>
   </properties>
 
   <scm>
