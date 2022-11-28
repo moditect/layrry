@@ -45,11 +45,6 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRO }}
-          server-id: central
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Cache Maven
         uses: actions/cache@v3
@@ -58,16 +53,13 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: 'Test Build Readiness'
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Test Build Readiness
         run: |
           export GPG_TTY=$(tty)
-          ./mvnw -ntp --file pom.xml -Dmaven.site.skip=true -Drelease=true verify -e
+          ./mvnw -ntp -B --file pom.xml -Dmaven.site.skip=true -Drelease=true verify -e
+          ./mvnw -ntp -B --file pom.xml clean
 
-      - name: 'Set release version'
+      - name: Set release version
         id: version
         run: |
           chmod +x mvnw
@@ -86,25 +78,12 @@ jobs:
           git commit -a -m "🏁 Releasing version $RELEASE_VERSION"
           git push origin HEAD:master
 
-        # clean needed to remove previous build
-        # install needed by tests
-        # don't @ me <_<
-      - name: Build
+      - name: Stage artifacts
         run: |
-          ./mvnw -ntp -B clean install -DskipTests=true
+          ./mvnw -ntp -B --file pom.xml -Ppublication -DaltDeploymentRepository=local::file:target/staging-deploy \
+          -Dmaven.site.skip=true install deploy -e
 
-      - name: 'Release to Maven Central'
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: |
-          export GPG_TTY=$(tty)
-          ./mvnw -ntp --file pom.xml \
-            -Drepository.url=https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
-            -Dmaven.site.skip=true -Drelease=true -DskipTests=true deploy -e
-
-      - name: 'Release to GitHub'
+      - name: Release
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_SDKMAN_CONSUMER_KEY: ${{ secrets.JRELEASER_SDKMAN_CONSUMER_KEY }}
@@ -116,10 +95,13 @@ jobs:
           JRELEASER_TWITTER_CONSUMER_SECRET: ${{ secrets.JRELEASER_TWITTER_CONSUMER_SECRET }}
           JRELEASER_TWITTER_ACCESS_TOKEN: ${{ secrets.JRELEASER_TWITTER_ACCESS_TOKEN }}
           JRELEASER_TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.JRELEASER_TWITTER_ACCESS_TOKEN_SECRET }}
+          JRELEASER_MASTODON_ACCESS_TOKEN: ${{ secrets.JRELEASER_MASTODON_ACCESS_TOKEN }}
+          JRELEASER_NEXUS2_MAVEN_CENTRAL_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          JRELEASER_NEXUS2_MAVEN_CENTRAL_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         run: |
           ./mvnw -ntp -B -pl :layrry-aggregator -Pjreleaser jreleaser:full-release
 
-      - name: 'JReleaser output'
+      - name: JReleaser output
         if: always()
         uses: actions/upload-artifact@v3
         with:
@@ -128,7 +110,7 @@ jobs:
             target/jreleaser/trace.log
             target/jreleaser/output.properties
 
-      - name: 'Set next version'
+      - name: Set next version
         run: |
           ./mvnw -B versions:set versions:commit -DnewVersion=${{ env.NEXT_VERSION }}
           git config --global user.email "${{ env.USER_EMAIL }}"

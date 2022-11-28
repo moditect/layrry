@@ -45,4 +45,4 @@ jobs:
       - name: Build
         run: |
           chmod +x mvnw
-          ./mvnw -B -ntp install
+          ./mvnw -ntp -B install

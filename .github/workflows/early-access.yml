@@ -35,17 +35,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: n1hility/cancel-previous-runs@v2
+      - name: Cancel previous run
+        uses: styfle/cancel-workflow-action@0.11.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Version
         id: vars
         shell: bash
         run: |
           chmod +x mvnw
-          version=$(./mvnw -ntp help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "VERSION=$(echo $version)" >>$GITHUB_OUTPUT
+          version=$(./mvnw -ntp -B help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$(echo $version)" >> $GITHUB_OUTPUT
 
   release:
     name: release
@@ -72,7 +73,7 @@ jobs:
       - name: Build
         run: |
           chmod +x mvnw
-          ./mvnw -B -ntp install
+          ./mvnw -ntp -B install
 
       - name: Release
         env:
@@ -83,7 +84,7 @@ jobs:
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: |
-          ./mvnw -B -ntp -pl :layrry-aggregator -Pjreleaser jreleaser:release
+          ./mvnw -ntp -B -pl :layrry-aggregator -Pjreleaser jreleaser:release
 
       - name: JReleaser output
         if: always()
