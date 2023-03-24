@@ -16,6 +16,6 @@
 module org.moditect.layrry.example.greeter.fr {
     requires org.moditect.layrry.example.greeter.core;
     requires org.moditect.layrry.example.greeter.dateutil;
-    provides org.moditect.layrry.example.greeter.api.GreeterFactory with 
+    provides org.moditect.layrry.example.greeter.api.GreeterFactory with
              org.moditect.layrry.example.greeter.fr.FrenchGreeterFactory;
 }
