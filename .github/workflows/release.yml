@@ -1,5 +1,5 @@
 #
-#  Copyright 2020 The ModiTect authors
+#  Copyright 2020-2023 The ModiTect authors
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -45,24 +45,19 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRO }}
-
-      - name: Cache Maven
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          cache: maven
 
       - name: Test Build Readiness
         run: |
           export GPG_TTY=$(tty)
+          chmod +x mvnw
           ./mvnw -ntp -B --file pom.xml -Dmaven.site.skip=true -Drelease=true verify -e
           ./mvnw -ntp -B --file pom.xml clean
 
       - name: Set release version
         id: version
         run: |
-          chmod +x mvnw
+          BRANCH="layrry-${{ github.event.inputs.version }}"
           RELEASE_VERSION=${{ github.event.inputs.version }}
           NEXT_VERSION=${{ github.event.inputs.next }}
           PLAIN_VERSION=`echo ${RELEASE_VERSION} | awk 'match($0, /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)/) { print substr($0, RSTART, RLENGTH); }'`
@@ -71,12 +66,14 @@ jobs:
           then
             NEXT_VERSION=$COMPUTED_NEXT_VERSION
           fi
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
           echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-          ./mvnw -ntp -B versions:set versions:commit -DnewVersion=$RELEASE_VERSION
           git config --global user.email "${{ env.USER_EMAIL }}"
           git config --global user.name "${{ env.USER_NAME }}"
+          git checkout -b $BRANCH
+          ./mvnw -ntp -B versions:set versions:commit -DnewVersion=$RELEASE_VERSION
           git commit -a -m "🏁 Releasing version $RELEASE_VERSION"
-          git push origin HEAD:master
+          git push origin $BRANCH
 
       - name: Stage artifacts
         run: |
@@ -85,6 +82,7 @@ jobs:
 
       - name: Release
         env:
+          JRELEASER_BRANCH: ${{ env.BRANCH }}
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_SDKMAN_CONSUMER_KEY: ${{ secrets.JRELEASER_SDKMAN_CONSUMER_KEY }}
           JRELEASER_SDKMAN_CONSUMER_TOKEN: ${{ secrets.JRELEASER_SDKMAN_CONSUMER_TOKEN }}
@@ -116,4 +114,4 @@ jobs:
           git config --global user.email "${{ env.USER_EMAIL }}"
           git config --global user.name "${{ env.USER_NAME }}"
           git commit -a -m "⬆️  Next version ${{ env.NEXT_VERSION }}"
-          git push origin HEAD:master
+          git push origin ${{ env.BRANCH }}
