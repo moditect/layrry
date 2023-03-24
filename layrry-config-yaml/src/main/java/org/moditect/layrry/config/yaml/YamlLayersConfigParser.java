@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.moditect.layrry.config.LayersConfig;
 import org.moditect.layrry.config.LayersConfigParser;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.Property;
@@ -52,7 +53,7 @@ public class YamlLayersConfigParser implements LayersConfigParser {
 
     @Override
     public LayersConfig parse(InputStream inputStream) throws IOException {
-        Constructor c = new Constructor(LayersConfig.class);
+        Constructor c = new Constructor(LayersConfig.class, new LoaderOptions());
 
         c.setPropertyUtils(new PropertyUtils() {
             @Override

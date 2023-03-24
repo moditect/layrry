@@ -17,7 +17,7 @@ module org.moditect.layrry.example.greeter.core {
     requires org.moditect.layrry.platform;
     exports org.moditect.layrry.example.greeter.api;
     exports org.moditect.layrry.example.greeter.app;
-    provides org.moditect.layrry.platform.PluginLifecycleListener with 
+    provides org.moditect.layrry.platform.PluginLifecycleListener with
              org.moditect.layrry.example.greeter.app.internal.GreeterPluginLifecycleListener;
     uses org.moditect.layrry.example.greeter.api.GreeterFactory;
 }
