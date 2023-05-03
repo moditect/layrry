@@ -51,7 +51,7 @@ jobs:
         run: |
           export GPG_TTY=$(tty)
           chmod +x mvnw
-          ./mvnw -ntp -B --file pom.xml -Dmaven.site.skip=true -Drelease=true verify -e
+          ./mvnw -ntp -B --file pom.xml -Dmaven.site.skip=true -Ddeploy=true install -e
           ./mvnw -ntp -B --file pom.xml clean
 
       - name: Set release version
