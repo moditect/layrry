@@ -29,6 +29,8 @@
   <artifactId>layrry-launcher</artifactId>
   <packaging>jar</packaging>
   <name>Layrry Launcher</name>
+  <description>${project.name}</description>
+  <url>https://github.com/moditect/layrry</url>
 
   <properties>
     <application.main.class>org.moditect.layrry.launcher.LayrryLauncher</application.main.class>

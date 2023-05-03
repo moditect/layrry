@@ -29,6 +29,8 @@
   <artifactId>layrry-config</artifactId>
   <packaging>jar</packaging>
   <name>Layrry Config</name>
+  <description>${project.name}</description>
+  <url>https://github.com/moditect/layrry</url>
 
   <dependencies>
     <dependency>

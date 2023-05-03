@@ -29,5 +29,7 @@
   <artifactId>layrry-platform</artifactId>
   <packaging>jar</packaging>
   <name>Layrry Platform</name>
+  <description>${project.name}</description>
+  <url>https://github.com/moditect/layrry</url>
 
 </project>

@@ -29,6 +29,8 @@
   <artifactId>layrry-config-toml</artifactId>
   <packaging>jar</packaging>
   <name>TOML config support for Layrry</name>
+  <description>${project.name}</description>
+  <url>https://github.com/moditect/layrry</url>
 
   <dependencies>
     <dependency>
