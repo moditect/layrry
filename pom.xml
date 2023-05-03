@@ -27,7 +27,7 @@
 
   <groupId>org.moditect.layrry</groupId>
   <artifactId>layrry-aggregator</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0.Final</version>
   <packaging>pom</packaging>
 
   <name>Layrry Aggregator</name>
@@ -47,7 +47,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.release>11</maven.compiler.release>
     <!-- value comes from property git.commit.author.time -->
-    <project.build.outputTimestamp>${git.commit.author.time}</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-05-03T09:41:01Z</project.build.outputTimestamp>
     <version.appsembler.plugin>2.1.0</version.appsembler.plugin>
     <version.assembly.plugin>3.5.0</version.assembly.plugin>
     <version.exec.plugin>3.1.0</version.exec.plugin>
