@@ -3,7 +3,7 @@
 :project-owner:   moditect
 :project-name:    layrry
 :project-group:   org.moditect.layrry
-:project-version: 1.0.0.Alpha2
+:project-version: 1.0.0.Final
 
 image:https://github.com/{project-owner}/{project-name}/workflows/Build/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions"]
 image:https://img.shields.io/maven-central/v/{project-group}/{project-name}-core.svg[Download, link="https://search.maven.org/#search|ga|1|{project-group}"]
