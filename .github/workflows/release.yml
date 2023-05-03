@@ -78,7 +78,7 @@ jobs:
       - name: Stage artifacts
         run: |
           ./mvnw -ntp -B --file pom.xml -Ppublication -DaltDeploymentRepository=local::file:target/staging-deploy \
-          -Dmaven.site.skip=true install deploy -e
+          -Dmaven.site.skip=true -Drelease=true -DskipTests deploy -e
 
       - name: Release
         env:
