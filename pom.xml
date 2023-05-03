@@ -44,16 +44,16 @@
     <java.version>17</java.version>
     <!-- bytecode compatibility set to 11 -->
     <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>1</maven.compiler.target>
+    <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.release>11</maven.compiler.release>
     <!-- value comes from property git.commit.author.time -->
     <project.build.outputTimestamp>${git.commit.author.time}</project.build.outputTimestamp>
     <version.appsembler.plugin>2.1.0</version.appsembler.plugin>
     <version.assembly.plugin>3.5.0</version.assembly.plugin>
-    <version.gpg.plugin>1.6</version.gpg.plugin> <!-- make it work with -pinentry-mode=loopback -->
     <version.exec.plugin>3.1.0</version.exec.plugin>
     <version.shade.plugin>3.4.1</version.shade.plugin>
     <version.log4j>2.20.0</version.log4j>
+    <gpg.skip>true</gpg.skip>
   </properties>
 
   <scm>
@@ -62,22 +62,6 @@
     <url>${repository.url}</url>
     <tag>HEAD</tag>
   </scm>
-
-  <developers>
-    <developer>
-      <id>gunnarmorling</id>
-      <name>Gunnar Morling</name>
-      <url>https://www.morling.dev</url>
-      <roles>
-        <role>author</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>aalmiray</id>
-      <name>Andres Almiray</name>
-      <url>https://andresalmiray.com</url>
-    </developer>
-  </developers>
 
   <modules>
     <module>layrry-platform</module>
