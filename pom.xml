@@ -206,7 +206,7 @@
       <id>test</id>
       <activation>
         <property>
-          <name>release</name>
+          <name>deploy</name>
           <value>!true</value>
         </property>
       </activation>
@@ -214,6 +214,23 @@
         <module>integration-test</module>
         <module>examples</module>
       </modules>
+    </profile>
+    <profile>
+      <id>deploy</id>
+      <activation>
+        <property>
+          <name>deploy</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <properties>
+        <altDeploymentRepository>local::file:target/staging-deploy</altDeploymentRepository>
+        <skipTests>true</skipTests>
+        <maven.site.skip>true</maven.site.skip>
+      </properties>
+      <build>
+        <defaultGoal>deploy</defaultGoal>
+      </build>
     </profile>
     <profile>
       <id>jreleaser</id>
