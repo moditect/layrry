@@ -8,7 +8,9 @@
 image:https://github.com/{project-owner}/{project-name}/workflows/Build/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions"]
 image:https://img.shields.io/maven-central/v/{project-group}/{project-name}-core.svg[Download, link="https://search.maven.org/#search|ga|1|{project-group}"]
 
-_Latest version: {project-version} (http://andresalmiray.com/layrry-1-0-0-alpha1-has-been-released/[announcement])_
+_Latest version: {project-version}_
+
+http://andresalmiray.com/layrry-1-0-0-alpha1-has-been-released/[1.0.0.Alpha1 announcement]
 
 Layrry is a launcher and Java API for executing modularized Java applications.
 
@@ -635,7 +637,7 @@ Layrry can be built from source by running the following command
 
 [source]
 ----
-$ mvn install
+$ ./mvnw install
 ----
 
 Java 11 or later is needed in order to do so.

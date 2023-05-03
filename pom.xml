@@ -1,6 +1,6 @@
 <!--
 
-     Copyright 2020 - 2022 The ModiTect authors
+     Copyright 2020 - 2023 The ModiTect authors
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -238,7 +238,7 @@
           <plugin>
             <groupId>org.jreleaser</groupId>
             <artifactId>jreleaser-maven-plugin</artifactId>
-            <version>1.5.1</version>
+            <version>1.6.0</version>
             <inherited>false</inherited>
             <configuration>
               <jreleaser>
