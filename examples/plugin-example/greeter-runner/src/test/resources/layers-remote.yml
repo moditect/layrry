@@ -17,7 +17,7 @@
 layers:
   layrry-platform:
     modules:
-      - "org.moditect.layrry:layrry-platform:1.0.0-SNAPSHOT"
+      - "org.moditect.layrry:layrry-platform:1.1.0-SNAPSHOT"
   api:
     modules:
       - "org.moditect.layrry.example.greeter:greeter-core:1.0.0"

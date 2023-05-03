@@ -15,7 +15,7 @@
 #
 
 [layers.layrry-platform]
-  modules = ["org.moditect.layrry:layrry-platform:1.0.0-SNAPSHOT"]
+  modules = ["org.moditect.layrry:layrry-platform:1.1.0-SNAPSHOT"]
 [layers.api]
   modules = ["org.moditect.layrry.example.greeter:greeter-core:1.0.0"]
   parents = ["layrry-platform"]
