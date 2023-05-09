@@ -21,8 +21,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 
 public class ConfigurableLocalArtifactResolverSystemImpl implements ConfigurableLocalArtifactResolverSystem {
     private final Map<String, LocalRepository> localRepositories = new LinkedHashMap<>();
@@ -60,7 +59,7 @@ public class ConfigurableLocalArtifactResolverSystemImpl implements Configurable
     }
 
     @Override
-    public LocalFormatStage resolve() throws IllegalStateException, ResolutionException {
+    public LocalFormatStage resolve() throws IllegalStateException, ArtifactResolutionException {
         Collection<LocalResolvedArtifact> artifacts = new ArrayList<>();
 
         for (LocalRepository repository : localRepositories.values()) {
@@ -71,7 +70,7 @@ public class ConfigurableLocalArtifactResolverSystemImpl implements Configurable
     }
 
     @Override
-    public LocalFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public LocalFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ArtifactResolutionException {
         Collection<LocalResolvedArtifact> artifacts = new ArrayList<>();
 
         for (LocalRepository repository : localRepositories.values()) {
@@ -82,7 +81,7 @@ public class ConfigurableLocalArtifactResolverSystemImpl implements Configurable
     }
 
     @Override
-    public LocalFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public LocalFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ArtifactResolutionException {
         Collection<LocalResolvedArtifact> artifacts = new ArrayList<>();
 
         for (LocalRepository repository : localRepositories.values()) {
@@ -93,7 +92,7 @@ public class ConfigurableLocalArtifactResolverSystemImpl implements Configurable
     }
 
     @Override
-    public LocalFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public LocalFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ArtifactResolutionException {
         Collection<LocalResolvedArtifact> artifacts = new ArrayList<>();
 
         for (LocalRepository repository : localRepositories.values()) {

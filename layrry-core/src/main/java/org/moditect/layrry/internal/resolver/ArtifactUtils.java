@@ -27,13 +27,16 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jboss.shrinkwrap.resolver.api.maven.PackagingType;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
 
 class ArtifactUtils {
     private static final Pattern ARTIFACT_PATTERN = Pattern.compile("(.*?)\\-(\\d[\\d+\\.]*?)\\.jar");
     private static final Pattern ARTIFACT_PATTERN2 = Pattern.compile("(.*?)\\-(\\d[\\d+\\-_A-Za-z\\.]*?)\\.jar");
+
+    static Artifact fromCanonical(String canonicalForm) {
+        return new DefaultArtifact(canonicalForm); // unsure what "canonical form" is, so change here if needed
+    }
 
     static LocalResolvedArtifact fromPaths(Path basedir, Path file) {
         String version = file.getParent().toFile().getName();
@@ -57,7 +60,7 @@ class ArtifactUtils {
             classifier = matcher.group(1);
         }
 
-        MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate(groupId, artifactId, version, PackagingType.JAR, classifier);
+        Artifact mavenCoordinate = new DefaultArtifact(groupId, artifactId, classifier, "jar", version);
         return new LocalResolvedArtifactImpl(mavenCoordinate, file.toFile());
     }
 
@@ -67,7 +70,7 @@ class ArtifactUtils {
             String artifactId = matcher.group(1);
             String version = matcher.group(2);
 
-            MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate("*", artifactId, version, PackagingType.JAR, null);
+            Artifact mavenCoordinate = new DefaultArtifact("*", artifactId, null, "jar", version);
             return new LocalResolvedArtifactImpl(mavenCoordinate, file);
         }
 
@@ -85,7 +88,7 @@ class ArtifactUtils {
             }
 
             // can't tell if version has classifier or not
-            MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate("*", artifactId, version, PackagingType.JAR, null);
+            Artifact mavenCoordinate = new DefaultArtifact("*", artifactId, null, "jar", version);
             return new LocalResolvedArtifactImpl(mavenCoordinate, file);
         }
 
@@ -117,7 +120,7 @@ class ArtifactUtils {
                         }
                     }
 
-                    MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate(props.getProperty("groupId"), artifactId, v, PackagingType.JAR, classifier);
+                    Artifact mavenCoordinate = new DefaultArtifact(props.getProperty("groupId"), artifactId, classifier, "jar", v);
                     return new LocalResolvedArtifactImpl(mavenCoordinate, file);
                 }
             }
@@ -128,15 +131,15 @@ class ArtifactUtils {
         return null;
     }
 
-    static boolean coordinatesMatch(MavenCoordinate a, MavenCoordinate b) {
+    static boolean coordinatesMatch(Artifact a, Artifact b) {
         // Do we have an exact match?
         if (a.equals(b) && a.getVersion().equals(b.getVersion()))
             return true;
 
         // Is the group missing?
         if ("*".equals(a.getGroupId()) || "*".equals(b.getGroupId())) {
-            a = MavenCoordinates.createCoordinate("*", a.getArtifactId(), a.getVersion(), a.getPackaging(), a.getClassifier());
-            b = MavenCoordinates.createCoordinate("*", b.getArtifactId(), b.getVersion(), b.getPackaging(), b.getClassifier());
+            a = new DefaultArtifact("*", a.getArtifactId(), a.getClassifier(), a.getExtension(), a.getVersion());
+            b = new DefaultArtifact("*", b.getArtifactId(), b.getClassifier(), b.getExtension(), b.getVersion());
         }
         if (a.equals(b) && a.getVersion().equals(b.getVersion()))
             return true;
@@ -148,7 +151,7 @@ class ArtifactUtils {
         if (!isBlank(bc) && isBlank(ac)) {
             // let b.version += " " + b.classifier
             // b.classifier = null
-            b = MavenCoordinates.createCoordinate(b.getGroupId(), b.getArtifactId(), b.getVersion() + "-" + bc, b.getPackaging(), null);
+            b = new DefaultArtifact(b.getGroupId(), b.getArtifactId(), b.getClassifier(), null, b.getVersion() + "-" + bc);
         }
 
         return a.equals(b) && a.getVersion().equals(b.getVersion());

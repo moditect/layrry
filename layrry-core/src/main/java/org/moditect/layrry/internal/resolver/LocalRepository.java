@@ -18,8 +18,6 @@ package org.moditect.layrry.internal.resolver;
 import java.nio.file.Path;
 import java.util.Collection;
 
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-
 public interface LocalRepository {
     /**
      * Returns the unique ID of this {@link LocalRepository}. The ID is arbitrary. There is no default, and this is
@@ -43,11 +41,11 @@ public interface LocalRepository {
      */
     Path getPath();
 
-    Collection<LocalResolvedArtifact> resolve() throws IllegalStateException, ResolutionException;
+    Collection<LocalResolvedArtifact> resolve() throws IllegalStateException;
 
-    Collection<LocalResolvedArtifact> resolve(String canonicalForm) throws IllegalStateException, ResolutionException;
+    Collection<LocalResolvedArtifact> resolve(String canonicalForm) throws IllegalStateException;
 
-    Collection<LocalResolvedArtifact> resolve(String... canonicalForms) throws IllegalStateException, ResolutionException;
+    Collection<LocalResolvedArtifact> resolve(String... canonicalForms) throws IllegalStateException;
 
-    Collection<LocalResolvedArtifact> resolve(Collection<String> canonicalForms) throws IllegalStateException, ResolutionException;
+    Collection<LocalResolvedArtifact> resolve(Collection<String> canonicalForms) throws IllegalStateException;
 }

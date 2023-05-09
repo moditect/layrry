@@ -15,23 +15,39 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.io.File;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.resolution.ArtifactResult;
 
 public class CompositeFormatStageImpl implements CompositeFormatStage {
     private final LocalFormatStage local;
-    private final MavenFormatStage remote;
+    private final Collection<ArtifactResult> remote;
 
-    public CompositeFormatStageImpl(LocalFormatStage local, MavenFormatStage remote) {
+    public CompositeFormatStageImpl(LocalFormatStage local, Collection<ArtifactResult> remote) {
         this.local = local != null ? local : new EmptyLocalFormatStage();
-        this.remote = remote != null ? remote : new EmptyFormatStage();
+        this.remote = remote != null ? remote : Collections.emptyList();
+    }
+
+    private Path[] remoteAsPathArray() {
+        return remote.stream()
+                .map(ArtifactResult::getArtifact)
+                .map(Artifact::getFile)
+                .filter(Objects::nonNull)
+                .map(File::toPath)
+                .collect(Collectors.toSet())
+                .toArray(new Path[remote.size()]);
     }
 
     @Override
     public Path[] asPath() {
         Path[] a = local.asPath();
-        Path[] b = remote.as(Path.class);
+        Path[] b = remoteAsPathArray();
         Path[] c = new Path[a.length + b.length];
         System.arraycopy(a, 0, c, 0, a.length);
         System.arraycopy(b, 0, c, a.length, b.length);

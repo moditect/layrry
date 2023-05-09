@@ -17,8 +17,7 @@ package org.moditect.layrry.internal.resolver;
 
 import java.util.Collection;
 
-import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 
 /**
  * Resolves artifacts using a locally configured repositories.
@@ -30,10 +29,10 @@ public interface LocalArtifactResolver {
      * @return The {@link LocalFormatStage} for the user to define the artifact format to use.
      * @throws IllegalStateException
      * If no dependencies have yet been added
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
      */
-    LocalFormatStage resolve() throws IllegalStateException, ResolutionException;
+    LocalFormatStage resolve() throws IllegalStateException, ArtifactResolutionException;
 
     /**
      * Begins resolution by defining the single desired dependency (in canonical form).
@@ -43,12 +42,10 @@ public interface LocalArtifactResolver {
      * @return The {@link LocalFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinate is supplied
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
-     * @throws CoordinateParseException
-     * If the specified canonical form is invalid
      */
-    LocalFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    LocalFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ArtifactResolutionException;
 
     /**
      * Begins resolution by defining a set of desired dependencies (in canonical form).
@@ -58,12 +55,10 @@ public interface LocalArtifactResolver {
      * @return The {@link LocalFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinates are supplied
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
-     * @throws CoordinateParseException
-     * If one or more of the specified canonical forms is invalid
      */
-    LocalFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    LocalFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ArtifactResolutionException;
 
     /**
      * Begins resolution by defining a set of desired dependencies (in canonical form).
@@ -73,10 +68,8 @@ public interface LocalArtifactResolver {
      * @return The {@link LocalFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinates are supplied
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
-     * @throws CoordinateParseException
-     * If one or more of the specified canonical forms is invalid
      */
-    LocalFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    LocalFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ArtifactResolutionException;
 }

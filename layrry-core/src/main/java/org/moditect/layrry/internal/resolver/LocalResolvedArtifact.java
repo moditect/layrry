@@ -17,8 +17,6 @@ package org.moditect.layrry.internal.resolver;
 
 import java.io.File;
 
-import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
-
 /**
  * Encapsulation of a resolved Maven-based artifact's metadata form a local repository.
  */

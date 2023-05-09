@@ -17,23 +17,22 @@ package org.moditect.layrry.internal.resolver;
 
 import java.io.File;
 
-import org.jboss.shrinkwrap.resolver.api.maven.MavenArtifactInfo;
-import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.util.artifact.JavaScopes;
 
 class LocalResolvedArtifactImpl implements LocalResolvedArtifact {
     private static final MavenArtifactInfo[] NO_DEPENDENCIES = new MavenArtifactInfo[0];
 
-    private final MavenCoordinate mavenCoordinate;
+    private final Artifact mavenCoordinate;
     private final File file;
 
-    LocalResolvedArtifactImpl(MavenCoordinate mavenCoordinate, File file) {
+    LocalResolvedArtifactImpl(Artifact mavenCoordinate, File file) {
         this.mavenCoordinate = mavenCoordinate;
         this.file = file;
     }
 
     @Override
-    public MavenCoordinate getCoordinate() {
+    public Artifact getCoordinate() {
         return mavenCoordinate;
     }
 
@@ -44,7 +43,7 @@ class LocalResolvedArtifactImpl implements LocalResolvedArtifact {
 
     @Override
     public boolean isSnapshotVersion() {
-        return getResolvedVersion().endsWith("-SNAPSHOT");
+        return mavenCoordinate.isSnapshot();
     }
 
     @Override
@@ -58,8 +57,8 @@ class LocalResolvedArtifactImpl implements LocalResolvedArtifact {
     }
 
     @Override
-    public ScopeType getScope() {
-        return ScopeType.COMPILE;
+    public String getScope() {
+        return JavaScopes.COMPILE;
     }
 
     @Override

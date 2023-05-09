@@ -15,15 +15,17 @@
  */
 package org.moditect.layrry.internal.resolver;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,9 +52,16 @@ public class FlatLocalRepositoryTest {
         repository.newFile("bbb-1.2.3-SNAPSHOT.jar");
         File jarfile = repository.newFile("ccc-1.2.3-mac.jar");
 
-        JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "ccc-1.2.3-mac.jar")
-                .addAsResource(pomProperties, "/META-INF/maven/com/acme/ccc/pom.properties");
-        archive.as(ZipExporter.class).exportTo(jarfile, true);
+        Manifest manifest = new Manifest();
+        manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        props.store(bos, null);
+        try (JarOutputStream jar = new JarOutputStream(new FileOutputStream(jarfile), manifest)) {
+            JarEntry entry = new JarEntry("/META-INF/maven/com/acme/ccc/pom.properties");
+            jar.putNextEntry(entry);
+            jar.write(bos.toByteArray());
+            jar.closeEntry();
+        }
     }
 
     @Test

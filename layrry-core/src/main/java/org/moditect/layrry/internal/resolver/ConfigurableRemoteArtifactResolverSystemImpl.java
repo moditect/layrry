@@ -16,20 +16,27 @@
 package org.moditect.layrry.internal.resolver;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
-import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.resolution.ArtifactResult;
+
+import eu.maveniverse.maven.mima.context.Context;
+import eu.maveniverse.maven.mima.context.ContextOverrides;
+import eu.maveniverse.maven.mima.context.Runtimes;
 
 public class ConfigurableRemoteArtifactResolverSystemImpl implements ConfigurableRemoteArtifactResolverSystem {
-    private final ConfigurableMavenResolverSystem delegate;
+    private final ContextOverrides.Builder contextOverridesBuilder;
     private boolean enabled = true;
 
-    public ConfigurableRemoteArtifactResolverSystemImpl(ConfigurableMavenResolverSystem delegate) {
-        this.delegate = delegate;
+    public ConfigurableRemoteArtifactResolverSystemImpl() {
+        this.contextOverridesBuilder = ContextOverrides.Builder.create();
+        this.contextOverridesBuilder.withUserSettings(true);
     }
 
     @Override
@@ -39,48 +46,54 @@ public class ConfigurableRemoteArtifactResolverSystemImpl implements Configurabl
     }
 
     @Override
-    public RemoteResolve fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException {
-        delegate.fromFile(file.toFile());
+    public RemoteResolve fromFile(Path file) throws IllegalArgumentException {
+        this.contextOverridesBuilder.settingsXml(file);
         return this;
     }
 
     @Override
     public RemoteResolve workOffline(boolean workOffline) {
-        delegate.workOffline(workOffline);
+        this.contextOverridesBuilder.offline(workOffline);
         return this;
     }
 
     @Override
     public RemoteResolve withMavenCentralRepo(boolean useMavenCentral) {
-        delegate.withMavenCentralRepo(useMavenCentral);
+        this.contextOverridesBuilder.repositories(Collections.singletonList(ContextOverrides.CENTRAL));
         return this;
     }
 
     @Override
-    public MavenFormatStage resolve() throws IllegalStateException, ResolutionException {
+    public Collection<ArtifactResult> resolve() throws IllegalStateException, ArtifactResolutionException {
         if (!enabled)
-            return new EmptyFormatStage();
-        return delegate.resolve().withoutTransitivity();
+            return Collections.emptyList();
+        return resolve(Collections.emptyList()); // ?
     }
 
     @Override
-    public MavenFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public Collection<ArtifactResult> resolve(String canonicalForm) throws IllegalArgumentException, ArtifactResolutionException {
         if (!enabled)
-            return new EmptyFormatStage();
-        return delegate.resolve(canonicalForm).withoutTransitivity();
+            return Collections.emptyList();
+        return resolve(Collections.singletonList(canonicalForm));
     }
 
     @Override
-    public MavenFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public Collection<ArtifactResult> resolve(String... canonicalForms) throws IllegalArgumentException, ArtifactResolutionException {
         if (!enabled)
-            return new EmptyFormatStage();
-        return delegate.resolve(canonicalForms).withoutTransitivity();
+            return Collections.emptyList();
+        return resolve(Arrays.asList(canonicalForms));
     }
 
     @Override
-    public MavenFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public Collection<ArtifactResult> resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ArtifactResolutionException {
         if (!enabled)
-            return new EmptyFormatStage();
-        return delegate.resolve(canonicalForms).withoutTransitivity();
+            return Collections.emptyList();
+        try (Context context = Runtimes.INSTANCE.getRuntime().create(this.contextOverridesBuilder.build())) {
+            List<ArtifactRequest> requests = canonicalForms.stream()
+                    .map(ArtifactUtils::fromCanonical)
+                    .map(a -> new ArtifactRequest(a, context.remoteRepositories(), "layrri"))
+                    .collect(Collectors.toList());
+            return context.repositorySystem().resolveArtifacts(context.repositorySystemSession(), requests);
+        }
     }
 }

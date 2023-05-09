@@ -26,9 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
-import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
+import org.eclipse.aether.artifact.Artifact;
 
 /**
  * Organizes artifacts in a directory tree that follows the Maven coordinate conventions.
@@ -93,14 +91,14 @@ public class DefaultLocalRepository implements LocalRepository {
     }
 
     @Override
-    public Collection<LocalResolvedArtifact> resolve() throws IllegalStateException, ResolutionException {
+    public Collection<LocalResolvedArtifact> resolve() throws IllegalStateException {
         return getLocalMavenResolvedArtifacts()
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Collection<LocalResolvedArtifact> resolve(String canonicalForm) throws IllegalStateException, ResolutionException {
-        MavenCoordinate mavenCoordinate = MavenCoordinates.createCoordinate(canonicalForm);
+    public Collection<LocalResolvedArtifact> resolve(String canonicalForm) throws IllegalStateException {
+        Artifact mavenCoordinate = ArtifactUtils.fromCanonical(canonicalForm);
 
         return getLocalMavenResolvedArtifacts()
                 .filter(a -> ArtifactUtils.coordinatesMatch(a.getCoordinate(), mavenCoordinate))
@@ -108,13 +106,13 @@ public class DefaultLocalRepository implements LocalRepository {
     }
 
     @Override
-    public Collection<LocalResolvedArtifact> resolve(String... canonicalForms) throws IllegalStateException, ResolutionException {
+    public Collection<LocalResolvedArtifact> resolve(String... canonicalForms) throws IllegalStateException {
         if (canonicalForms == null || canonicalForms.length == 0) {
             return Collections.emptySet();
         }
 
-        Set<MavenCoordinate> mavenCoordinates = Arrays.stream(canonicalForms)
-                .map(MavenCoordinates::createCoordinate)
+        Set<Artifact> mavenCoordinates = Arrays.stream(canonicalForms)
+                .map(ArtifactUtils::fromCanonical)
                 .collect(Collectors.toSet());
 
         return getLocalMavenResolvedArtifacts()
@@ -123,13 +121,13 @@ public class DefaultLocalRepository implements LocalRepository {
     }
 
     @Override
-    public Collection<LocalResolvedArtifact> resolve(Collection<String> canonicalForms) throws IllegalStateException, ResolutionException {
+    public Collection<LocalResolvedArtifact> resolve(Collection<String> canonicalForms) throws IllegalStateException {
         if (canonicalForms == null || canonicalForms.isEmpty()) {
             return Collections.emptySet();
         }
 
-        Set<MavenCoordinate> mavenCoordinates = canonicalForms.stream()
-                .map(MavenCoordinates::createCoordinate)
+        Set<Artifact> mavenCoordinates = canonicalForms.stream()
+                .map(ArtifactUtils::fromCanonical)
                 .collect(Collectors.toSet());
 
         return getLocalMavenResolvedArtifacts()
