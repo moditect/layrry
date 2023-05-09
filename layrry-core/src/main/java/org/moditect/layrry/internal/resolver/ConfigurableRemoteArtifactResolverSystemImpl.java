@@ -59,7 +59,11 @@ public class ConfigurableRemoteArtifactResolverSystemImpl implements Configurabl
 
     @Override
     public RemoteResolve withMavenCentralRepo(boolean useMavenCentral) {
-        this.contextOverridesBuilder.repositories(Collections.singletonList(ContextOverrides.CENTRAL));
+        if (useMavenCentral) {
+            this.contextOverridesBuilder.repositories(Collections.singletonList(ContextOverrides.CENTRAL));
+        } else {
+            this.contextOverridesBuilder.repositories(null);
+        }
         return this;
     }
 
@@ -67,7 +71,7 @@ public class ConfigurableRemoteArtifactResolverSystemImpl implements Configurabl
     public Collection<ArtifactResult> resolve() throws IllegalStateException, ArtifactResolutionException {
         if (!enabled)
             return Collections.emptyList();
-        return resolve(Collections.emptyList()); // ?
+        return resolve(Collections.emptyList()); // what is being resolved here?
     }
 
     @Override
