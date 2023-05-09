@@ -23,6 +23,8 @@ import org.eclipse.aether.artifact.Artifact;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
+ *
+ * TODO: copied from shrinkwrap. Is this REALLY needed?
  */
 public interface MavenArtifactInfo {
 
