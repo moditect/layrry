@@ -54,7 +54,7 @@
     <version.shade.plugin>3.4.1</version.shade.plugin>
     <version.log4j>2.20.0</version.log4j>
     <version.slf4j>1.7.36</version.slf4j>
-    <version.mima>2.0.0</version.mima>
+    <version.mima>2.1.0</version.mima>
     <version.resolver>1.9.10</version.resolver>
     <gpg.skip>true</gpg.skip>
   </properties>
