@@ -17,7 +17,6 @@ package org.moditect.layrry.internal;
 
 import java.nio.file.Path;
 
-import org.jboss.shrinkwrap.resolver.api.InvalidConfigurationFileException;
 import org.moditect.layrry.RemoteResolve;
 
 public class RemoteResolveImpl implements RemoteResolve {
@@ -63,7 +62,7 @@ public class RemoteResolveImpl implements RemoteResolve {
     }
 
     @Override
-    public RemoteResolveImpl fromFile(Path file) throws IllegalArgumentException, InvalidConfigurationFileException {
+    public RemoteResolveImpl fromFile(Path file) throws IllegalArgumentException {
         this.fromFile = file;
         return this;
     }

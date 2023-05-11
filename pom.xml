@@ -53,6 +53,9 @@
     <version.exec.plugin>3.1.0</version.exec.plugin>
     <version.shade.plugin>3.4.1</version.shade.plugin>
     <version.log4j>2.20.0</version.log4j>
+    <version.slf4j>1.7.36</version.slf4j>
+    <version.mima>2.1.0</version.mima>
+    <version.resolver>1.9.10</version.resolver>
     <gpg.skip>true</gpg.skip>
   </properties>
 
@@ -105,11 +108,24 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.shrinkwrap.resolver</groupId>
-        <artifactId>shrinkwrap-resolver-bom</artifactId>
-        <version>3.1.4</version>
-        <scope>import</scope>
-        <type>pom</type>
+        <groupId>eu.maveniverse.maven.mima</groupId>
+        <artifactId>context</artifactId>
+        <version>${version.mima}</version>
+      </dependency>
+      <dependency>
+        <groupId>eu.maveniverse.maven.mima.runtime</groupId>
+        <artifactId>standalone-static-uber</artifactId>
+        <version>${version.mima}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.resolver</groupId>
+        <artifactId>maven-resolver-api</artifactId>
+        <version>${version.resolver}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.resolver</groupId>
+        <artifactId>maven-resolver-util</artifactId>
+        <version>${version.resolver}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -124,7 +140,12 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.36</version>
+        <version>${version.slf4j}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${version.slf4j}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>

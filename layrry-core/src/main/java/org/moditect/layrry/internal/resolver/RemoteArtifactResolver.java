@@ -17,9 +17,8 @@ package org.moditect.layrry.internal.resolver;
 
 import java.util.Collection;
 
-import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.resolution.ArtifactResult;
 
 /**
  * Resolves artifacts using a fully configured Maven instance.
@@ -31,10 +30,10 @@ public interface RemoteArtifactResolver {
      * @return The {@link MavenFormatStage} for the user to define the artifact format to use.
      * @throws IllegalStateException
      * If no dependencies have yet been added
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
      */
-    MavenFormatStage resolve() throws IllegalStateException, ResolutionException;
+    Collection<ArtifactResult> resolve() throws IllegalStateException, ArtifactResolutionException;
 
     /**
      * Begins resolution by defining the single desired dependency (in canonical form).
@@ -44,12 +43,10 @@ public interface RemoteArtifactResolver {
      * @return The {@link MavenFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinate is supplied
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
-     * @throws CoordinateParseException
-     * If the specified canonical form is invalid
      */
-    MavenFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    Collection<ArtifactResult> resolve(String canonicalForm) throws IllegalArgumentException, ArtifactResolutionException;
 
     /**
      * Begins resolution by defining a set of desired dependencies (in canonical form).
@@ -59,12 +56,10 @@ public interface RemoteArtifactResolver {
      * @return The {@link MavenFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinates are supplied
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
-     * @throws CoordinateParseException
-     * If one or more of the specified canonical forms is invalid
      */
-    MavenFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    Collection<ArtifactResult> resolve(String... canonicalForms) throws IllegalArgumentException, ArtifactResolutionException;
 
     /**
      * Begins resolution by defining a set of desired dependencies (in canonical form).
@@ -74,10 +69,8 @@ public interface RemoteArtifactResolver {
      * @return The {@link MavenFormatStage} for the user to define the artifact format to use.
      * @throws IllegalArgumentException
      * If no coordinates are supplied
-     * @throws ResolutionException
+     * @throws ArtifactResolutionException
      * If an error occurred in resolution
-     * @throws CoordinateParseException
-     * If one or more of the specified canonical forms is invalid
      */
-    MavenFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException;
+    Collection<ArtifactResult> resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ArtifactResolutionException;
 }

@@ -17,8 +17,7 @@ package org.moditect.layrry.internal.resolver;
 
 import java.util.Collection;
 
-import org.jboss.shrinkwrap.resolver.api.CoordinateParseException;
-import org.jboss.shrinkwrap.resolver.api.ResolutionException;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 
 public class ResolveImpl implements Resolve, ArtifactResolver {
     private ConfigurableLocalArtifactResolverSystem local;
@@ -34,25 +33,25 @@ public class ResolveImpl implements Resolve, ArtifactResolver {
         return fetchRemote();
     }
 
-    public CompositeFormatStage resolve() throws IllegalStateException, ResolutionException {
+    public CompositeFormatStage resolve() throws IllegalStateException, ArtifactResolutionException {
         return new CompositeFormatStageImpl(
                 fetchLocal().resolve(),
                 fetchRemote().resolve());
     }
 
-    public CompositeFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public CompositeFormatStage resolve(String canonicalForm) throws IllegalArgumentException, ArtifactResolutionException {
         return new CompositeFormatStageImpl(
                 fetchLocal().resolve(canonicalForm),
                 fetchRemote().resolve(canonicalForm));
     }
 
-    public CompositeFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public CompositeFormatStage resolve(String... canonicalForms) throws IllegalArgumentException, ArtifactResolutionException {
         return new CompositeFormatStageImpl(
                 fetchLocal().resolve(canonicalForms),
                 fetchRemote().resolve(canonicalForms));
     }
 
-    public CompositeFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ResolutionException, CoordinateParseException {
+    public CompositeFormatStage resolve(Collection<String> canonicalForms) throws IllegalArgumentException, ArtifactResolutionException {
         return new CompositeFormatStageImpl(
                 fetchLocal().resolve(canonicalForms),
                 fetchRemote().resolve(canonicalForms));
@@ -70,7 +69,7 @@ public class ResolveImpl implements Resolve, ArtifactResolver {
     private ConfigurableRemoteArtifactResolverSystem fetchRemote() {
         synchronized (this) {
             if (remote == null) {
-                remote = new ConfigurableRemoteArtifactResolverSystemImpl(org.jboss.shrinkwrap.resolver.api.maven.Maven.configureResolver());
+                remote = new ConfigurableRemoteArtifactResolverSystemImpl();
             }
             return remote;
         }

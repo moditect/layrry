@@ -39,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.moditect.layrry.Layers;
 import org.moditect.layrry.LocalResolve;
 import org.moditect.layrry.RemoteResolve;
@@ -218,7 +219,12 @@ public class LayersImpl implements Layers {
 
     private List<Path> getModulePathEntries(Layer layer) {
         List<String> moduleGavs = layer.getModuleGavs();
-        return Arrays.asList(resolve.resolve(moduleGavs).asPath());
+        try {
+            return Arrays.asList(resolve.resolve(moduleGavs).asPath());
+        }
+        catch (ArtifactResolutionException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private Class<?> getMainClass(String main) throws ClassNotFoundException {
