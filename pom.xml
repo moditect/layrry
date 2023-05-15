@@ -49,7 +49,7 @@
     <!-- value comes from property git.commit.author.time -->
     <project.build.outputTimestamp>${git.commit.author.time}</project.build.outputTimestamp>
     <version.appsembler.plugin>2.1.0</version.appsembler.plugin>
-    <version.assembly.plugin>3.5.0</version.assembly.plugin>
+    <version.assembly.plugin>3.6.0</version.assembly.plugin>
     <version.exec.plugin>3.1.0</version.exec.plugin>
     <version.shade.plugin>3.4.1</version.shade.plugin>
     <version.log4j>2.20.0</version.log4j>
